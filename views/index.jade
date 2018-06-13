@@ -1,0 +1,66 @@
+extends layout
+
+block content
+    h1= title
+    #tempData(style='display: none;')
+    div(id='cardDad')
+    #filters
+        if(filters)
+            each filter, i in filters
+                div= filter
+                    a.filterButton(href='employeesTable?remove=' + i) Remove Filter
+                    a.filterButton(href='employeesTable?not=' + i) Inverse Filter
+    div(style='overflow-x:auto;')
+        table
+            tbody
+                tr
+                    td
+                        a(href='/employeesTable?sortby=employeeId')
+                            div='Employee ID'
+                    td
+                        a(href='/employeesTable?sortby=firstName')
+                            div= "First Name"
+                    td
+                        a(href='/employeesTable?sortby=lastName')
+                            div= "Last Name"
+                    td= "Category"
+                    td= "Office Location"
+                    td= "Building"
+                    td= "Username"
+                    td= "Email"
+                    td
+                        a(href='/employeesTable?sortby=rotationGroup')
+                            div= "Roation Group"
+                    td
+                        a(href='/employeesTable?sortby=dateSwitched')
+                            div= "Date Switched"
+                    td= "Notes"
+                each employee in employees
+                    tr(onclick='getCard(#{employee.EmployeeID})')
+                        td= employee.EmployeeID
+                        td= employee.FirstName
+                        td= employee.LastName
+                        td= employee.Category
+                        td= employee.Office
+                        td= employee.Building
+                        td= employee.UserName
+                        td= employee.Email
+                        td
+                            a(href='/employeesTable?where=rotationGroup=#{employee.RotationGroup}')
+                                div= employee.RotationGroup
+                        td
+                            a(href='/employeesTable?where=dateSwitched=#{employee.DateSwitched}')
+                                div= employee.DateSwitched
+                        td= employee.Notes
+    script.
+        function getCard(employeeID) {
+            console.log(employeeID);
+            $.ajax({
+                type: "GET",
+                url: "card?employeeId=" + employeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#cardDad").html(data);
+                $("#cardDad").css('display', 'block');
+            });
+        }

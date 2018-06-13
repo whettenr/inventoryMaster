@@ -1,0 +1,447 @@
+doctype html
+html
+    head
+        style.
+
+            @import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css);
+
+            * {
+                box-sizing: border-box;
+            }
+
+            input[type=text], textarea {
+                width: 100%;
+                /*padding: 12px;*/
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                resize: vertical;
+                /*font-size: 16pt;*/
+
+            }
+
+            label {
+                padding: 12px 12px 12px 0;
+                display: inline-block;
+            }
+
+            input[type=submit] {
+                background-color: #4CAF50;
+                color: white;
+                padding: 12px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                float: left;
+                margin: 0;
+            }
+
+            input[type=submit]:hover {
+                background-color: #45a049;
+            }
+
+            select {
+                padding: 3px;
+                margin: auto;
+                -webkit-border-radius: 4px;
+                -moz-border-radius: 4px;
+                border-radius: 4px;
+                background: #ffffff;
+                color: #000000;
+                border: none;
+                outline: none;
+                display: inline-block;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                cursor: pointer;
+                /*font-size: 16pt;*/
+                text-align: center;
+            }
+
+            .container {
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+                width: 90%;
+                margin: auto;
+            }
+
+            .col-25 {
+                float: left;
+                width: 11%;
+                margin-top: 6px;
+                padding-left: 12px;
+                text-align: center;
+            }
+
+            .col-75 {
+                float: left;
+                width: 22%;
+                margin-top: 6px;
+            }
+
+            /* Clear floats after the columns */
+            .row:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            .info {
+                float: right;
+                width: 30%;
+            }
+
+            .categories {
+                overflow: hidden;
+                background-color: navy;
+                font-family: Arial;
+            }
+
+            .categories div {
+                float: left;
+                font-size: 16px;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+            /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+            @media screen and (max-width: 2000px) {
+                .col-25, .col-75 {
+                    width: 45%;
+                    margin-top: 0;
+                    /*font-size: 24pt;*/
+                    color: black;
+                    text-align: left;
+
+                }
+
+                .button {
+                    background-color: red;
+                    color: white;
+                    padding: 12px 20px;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    float: right;
+                    margin-top: 10px;
+                }
+
+                .next {
+                    background-color: #45a049;
+                }
+
+                .row {
+                    border-bottom: solid 2px;
+                }
+
+                .info {
+                    float: right;
+                    width: 30%;
+                }
+
+                select {
+                    width: 100%;
+                    margin-top: 10px;
+                }
+
+                input {
+                    margin-top: 10px;
+                }
+
+                label {
+                    /*font-size: xx-large;*/
+
+                }
+
+                .custom-select-wrapper {
+                    display: inline-block;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    margin-top: 25px;
+                }
+
+                textarea {
+                    /*font-size: 16pt;*/
+                }
+
+            }
+
+            .fa {
+                width: 60px;
+                display: block;
+                text-align: center;
+                color: #990000;
+                font: normal 25px 'FontAwesome';
+                line-height: 60px;
+                text-rendering: auto;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            .fa-angle-double-down:before {
+                content: ""
+            }
+
+            .bounce {
+                /*position: absolute;*/
+                bottom: 15px;
+                left: 50%;
+                width: 30px;
+                height: 30px;
+                margin-left: -50px;
+                margin-top: -40px;
+                animation: bounce 2s infinite;
+                -webkit-animation: bounce 2s infinite;
+                -moz-animation: bounce 2s infinite;
+                -o-animation: bounce 2s infinite;
+            }
+
+            @-webkit-keyframes bounce {
+                0%, 20%, 50%, 80%, 100% {
+                    -webkit-transform: translateX(0);
+                }
+                40% {
+                    -webkit-transform: translateX(-30px);
+                }
+                60% {
+                    -webkit-transform: translateX(-15px);
+                }
+            }
+
+            @-moz-keyframes bounce {
+                0%, 20%, 50%, 80%, 100% {
+                    -moz-transform: translateX(0);
+                }
+                40% {
+                    -moz-transform: translateX(-30px);
+                }
+                60% {
+                    -moz-transform: translateX(-15px);
+                }
+            }
+
+            @-o-keyframes bounce {
+                0%, 20%, 50%, 80%, 100% {
+                    -o-transform: translateX(0);
+                }
+                40% {
+                    -o-transform: translateX(-30px);
+                }
+                60% {
+                    -o-transform: translateX(-15px);
+                }
+            }
+
+            @keyframes bounce {
+                0%, 20%, 50%, 80%, 100% {
+                    transform: translateX(0);
+                }
+                40% {
+                    transform: translateX(-30px);
+                }
+                60% {
+                    transform: translateX(-15px);
+                }
+            }
+
+    body
+        .container
+            .info
+                button.button(value='Cancel' onclick='goBack();') Cancel
+                button.button.next#showOtherInfo(value='Next' onclick='showOther();') Next
+                button.button.next#showHardwareInfo(value='Next' onclick='showHardware();' style='display: none;') Next
+            form(action='/newComputer', method='post')
+
+
+                .info
+                    input#submit(type='submit', value='Submit' style='display: none;')
+                    br
+                h2 New Computer
+                h3 #{employee.FirstName} #{employee.LastName}
+                div(class='categories')
+                    #mainInfoButton(onclick='showMain();') Main Info
+                    #otherInfoButton(onclick='showOther();') Other Info
+                    #hardwareInfoButton(onclick='showHardware();') Hardware Info
+
+                br
+                #mainInfo
+                    .row
+                        .col-25
+                            label(for='icn') ICN:
+                        .col-75
+                            input#icn(type='text', name='icn', placeholder='ICN' value='#{ICN}')
+                    .row
+                        .col-25
+                            label(for='employee') Employee:
+                        .col-75
+                            select#employee.selectpicker(name='EmployeeID')
+                                each person in employees
+                                    if(person.EmployeeID === EmployeeID)
+                                        option(value=person.EmployeeID selected) #{person.FirstName} #{person.LastName}
+                                    else
+                                        option(value=person.EmployeeID) #{person.FirstName} #{person.LastName}
+                    .row
+                        .col-25
+                            label(for='make') Make:
+                        .col-75
+                            select#make.custom-select.sources(name='make', placeholder='Make' onchange='refreshModelOptions()')
+                                each makeOption in makeOptions
+                                    if(makeOption.Make === "None")
+                                        option(value=makeOption.Make selected) #{makeOption.Make}
+                                    else
+                                        option(value=makeOption.Make) #{makeOption.Make}
+                    .row
+                        .col-25
+                            label(for='model') Model:
+                        .col-75
+                            select#model.custom-select.sources(name='model', placeholder='Model' onchange='newModel();')
+                                each modelOption in modelOptions
+                                    option(value=modelOption.Model) #{modelOption.Model}
+                    .row
+                        .col-25
+                            label(for='type') Type:
+                        .col-75
+                            select#type.custom-select.sources(name='type', placeholder='Computer Type' onchange='stopBounce(typeBounce)')
+                                each typeOption in typeOptions
+                                    if(typeOption.Type === "None")
+                                        option(value=typeOption.Type selected) #{typeOption.Type}
+                                    else
+                                        option(value=typeOption.Type) #{typeOption.Type}
+
+                            #typeBounce.bounce
+                                i(class="fa fa-angle-double-down") &#8594;
+                    .row
+                        .col-25
+                            label(for='notes') Notes:
+                        .col-75
+                            textarea#notes(name='notes', placeholder='Write something..', style='height:200px')
+                #otherInfo(style='display: none;')
+                    .row
+                        .col-25
+                            label(for='serialNumber') Serial Number:
+                        .col-75
+                            input#serialNumber(type='text', name='serialNumber', placeholder='Serial Number')
+                    .row
+                        .col-25
+                            label(for='serviceTag') Service Tag:
+                        .col-75
+                            input#serviceTag(type='text', name='serviceTag', placeholder='Service Tag')
+                    .row
+                        .col-25
+                            label(for='expressServiceCode') Express Service Code:
+                        .col-75
+                            input#expressServiceCode(type='text', name='expressServiceCode', placeholder='Express Service Code')
+                    .row
+                        .col-25
+                            label(for='dateAcquired') Date Acquired:
+                        .col-75
+                            input#dateAcquired(type='date', name='dateAcquired', placeholder='Date Acquired')
+                    .row
+                        .col-25
+                            label(for='warranty') Warranty:
+                        .col-75
+                            input#warranty(type='text', name='warranty', placeholder='Warranty')
+                    .row
+                        .col-25
+                            label(for='homeCheckout') Home Checkout:
+                        .col-75
+                            input#homeCheckout(type='text', name='homeCheckout', placeholder='Home Checkout')
+                #hardwareInfo(style='display: none;')
+                    .row
+                        .col-25
+                            label(for='processorType') Processor Type:
+                        .col-75
+                            select#processorType.custom-select.sources(name='processorType')
+                                each processorType in processorTypeOptions
+                                    option(value=processorType.ProcessorType) #{processorType.ProcessorType}
+                    .row
+                        .col-25
+                            label(for='processorSpeed') Processor Speed:
+                        .col-75
+                            select#processorSpeed.custom-select.sources(name='processorSpeed')
+                                each processorSpeed in processorSpeedOptions
+                                    option(value=processorSpeed.ProcessorSpeed) #{processorSpeed.ProcessorSpeed}
+                    .row
+                        .col-25
+                            label(for='memory') Memory:
+                        .col-75
+                            select#memory.custom-select.sources(name='memory')
+                                each memory in memoryOptions
+                                    option(value=memory.Memory) #{memory.Memory}
+                    .row
+                        .col-25
+                            label(for='hardDrive') Hard Drive:
+                        .col-75
+                            select#hardDrive.custom-select.sources(name='hardDrive')
+                                each hardDrive in hardDriveOptions
+                                    option(value=hardDrive.HardDrive) #{hardDrive.HardDrive}
+                    .row
+                        .col-25
+                            label(for='graphicsCard') Graphics Card:
+                        .col-75
+                            select#graphicsCard.custom-select.sources(name='graphicsCard')
+                                each graphicsCard in graphicsCardOptions
+                                    option(value=graphicsCard.VCName) #{graphicsCard.VCName}
+    script.
+        function goBack() {
+            $("#cardInfo").css('display', 'block');
+            $("#computerInfo").css('display', 'none');
+        }
+        function showMain() {
+            $("#mainInfo").css('display', 'block');
+            $("#otherInfo").css('display', 'none');
+            $("#hardwareInfo").css('display', 'none');
+        }
+        function showOther() {
+            $("#mainInfo").css('display', 'none');
+            $("#otherInfo").css('display', 'block');
+            $("#hardwareInfo").css('display', 'none');
+            $("#showOtherInfo").css('display', 'none');
+            $("#showHardwareInfo").css('display', 'block');
+
+        }
+        function showHardware() {
+            $("#mainInfo").css('display', 'none');
+            $("#otherInfo").css('display', 'none');
+            $("#hardwareInfo").css('display', 'block');
+            $("#showHardwareInfo").css('display', 'none');
+            $("#submit").css('display', 'block');
+
+        }
+        function newModel() {
+            if($("#model").val() === "Add a New Option") {
+                let model = prompt("New Model:");
+                if (model !== null && model !== "") {
+                    console.log(model);
+                    $("#model").append(new Option(model, model));
+                    $("#model").val(model);
+                }
+            }
+        }
+        function refreshModelOptions() {
+            if($("#make").val() === "Add a New Option"){
+                let make = prompt("New Make:");
+                if(make !== null && make !== ""){
+                    console.log(make);
+                    $("#make").append(new Option(make, make));
+                    $("#make").val(make);
+                    newModel();
+                }
+            }
+            else{
+                $.ajax({
+                    type: "GET",
+                    url: "getModelOptions?make=" + $("#make").val(),
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#model").html(data);
+                });
+            }
+        }
+
+        function stopBounce(id) {
+            console.log(id);
+            $('#' + id.id).css('display', 'none');
+        }

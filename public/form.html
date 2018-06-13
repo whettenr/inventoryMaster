@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://s.codepen.io/assets/libs/modernizr.js" type="text/javascript"></script>
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,400,300,600&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+    <style>
+        /* NOTE: The styles were added inline because Prefixfree needs access to your styles and they must be inlined if they are on local disk! */
+        body {
+            background: #ededed;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .center {
+            position: absolute;
+            display: inline-block;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /** Custom Select **/
+        .custom-select-wrapper {
+            position: relative;
+            display: inline-block;
+            user-select: none;
+        }
+        .custom-select-wrapper select {
+            display: none;
+        }
+        .custom-select {
+            position: relative;
+            display: inline-block;
+        }
+        .custom-select-trigger {
+            position: relative;
+            display: block;
+            /*width: 130px;*/
+            padding: 0 84px 0 22px;
+            font-size: 22px;
+            font-weight: 300;
+            color: #fff;
+            line-height: 60px;
+            background: #5c9cd8;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .custom-select-trigger:after {
+            position: absolute;
+            display: block;
+            content: '';
+            width: 10px; height: 10px;
+            top: 50%; right: 25px;
+            margin-top: -3px;
+            border-bottom: 1px solid #fff;
+            border-right: 1px solid #fff;
+            transform: rotate(45deg) translateY(-50%);
+            transition: all .4s ease-in-out;
+            transform-origin: 50% 0;
+        }
+        .custom-select.opened .custom-select-trigger:after {
+            margin-top: 3px;
+            transform: rotate(-135deg) translateY(-50%);
+        }
+        .custom-options {
+            position: absolute;
+            display: block;
+            top: 100%; left: 0; right: 0;
+            min-width: 100%;
+            margin: 15px 0;
+            border: 1px solid #b5b5b5;
+            border-radius: 4px;
+            box-sizing: border-box;
+            box-shadow: 0 2px 1px rgba(0,0,0,.07);
+            background: #fff;
+            transition: all .4s ease-in-out;
+
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(-15px);
+        }
+        .custom-select.opened .custom-options {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+        .custom-options:before {
+            position: absolute;
+            display: block;
+            content: '';
+            bottom: 100%; right: 25px;
+            width: 7px; height: 7px;
+            margin-bottom: -4px;
+            border-top: 1px solid #b5b5b5;
+            border-left: 1px solid #b5b5b5;
+            background: #fff;
+            transform: rotate(45deg);
+            transition: all .4s ease-in-out;
+        }
+        .option-hover:before {
+            background: #f9f9f9;
+        }
+        .custom-option {
+            position: relative;
+            display: block;
+            padding: 0 22px;
+            border-bottom: 1px solid #b5b5b5;
+            font-size: 18px;
+            font-weight: 600;
+            color: #b5b5b5;
+            line-height: 47px;
+            cursor: pointer;
+            transition: all .4s ease-in-out;
+        }
+        .custom-option:first-of-type {
+            border-radius: 4px 4px 0 0;
+        }
+        .custom-option:last-of-type {
+            border-bottom: 0;
+            border-radius: 0 0 4px 4px;
+        }
+        .custom-option:hover,
+        .custom-option.selection {
+            background: #f9f9f9;
+        }
+    </style>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        input[type=text], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+
+        label {
+            padding: 12px 12px 12px 0;
+            display: inline-block;
+        }
+
+        input[type=submit] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            float: right;
+        }
+
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+
+        .container {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        .col-25 {
+            float: left;
+            width: 5%;
+            margin-top: 6px;
+            padding-left: 12px;
+            text-align: center;
+        }
+
+        .col-75 {
+            float: left;
+            width: 20%;
+            margin-top: 6px;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        .info {
+            float: left;
+        }
+
+        /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
+        @media screen and (max-width: 1000px) {
+            .col-25, .col-75, input[type=submit] {
+                width: 100%;
+                margin-top: 0;
+            }
+            label {
+                font-size: xx-large;
+            }
+            .custom-select-wrapper {
+                display: inline-block;
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%);
+                margin-top: 25px;
+            }
+            input[type="color"],
+            input[type="date"],
+            input[type="datetime"],
+            input[type="datetime-local"],
+            input[type="email"],
+            input[type="month"],
+            input[type="number"],
+            input[type="password"],
+            input[type="search"],
+            input[type="tel"],
+            input[type="text"],
+            input[type="time"],
+            input[type="url"],
+            input[type="week"],
+            select:focus,
+            textarea {
+                font-size: 16px;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prefixfree/1.0.7/prefixfree.min.js"></script>
+</head>
+<body>
+
+<h2>Responsive Form</h2>
+<p>Resize the browser window to see the effect. When the screen is less than 600px wide, make the two columns stack on
+    top of each other instead of next to each other.</p>
+
+<div class="container">
+    <form action="/form" method="post">
+        <div class="row">
+            <div class="info">
+                <h2>Computer</h2>
+                <h3>Ken Alford</h3>
+            </div>
+            <input type="submit" value="Submit">
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="icn">ICN:</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="icn" name="icn" placeholder="ICN">
+            </div>
+
+
+            <div class="col-25">
+                <label for="make">Make:</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="make" name="make" placeholder="Make">
+            </div>
+            <div class="col-25">
+                <label for="type">Type:</label>
+            </div>
+            <div class="col-75">
+                <select name="type" id="type" class="custom-select sources" placeholder="Type">
+                    <option value="on-rotation">On Rotation</option>
+                    <option value="off-rotation">Off Rotation</option>
+                    <option value="funded">Funded</option>
+                    <option value="trickle">Trickle Down</option>
+                </select>
+            </div>
+
+            <div class="col-25">
+                <label for="notes">Notes:</label>
+            </div>
+            <div class="col-75">
+                <textarea id="notes" name="notes" placeholder="Write something.." style="height:200px"></textarea>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+<script src="javascripts/index.js"></script>
+

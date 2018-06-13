@@ -1,0 +1,82 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='/stylesheets/card.css')
+    #cardDad(style='display: none;')
+        #card
+            #computerInfo
+    h1= title
+    if(filters)
+        each filter, i in filters
+            div= filter
+                a.filterButton(href='computerTable?remove=' + i) Remove Filter
+                a.filterButton(href='computerTable?not=' + i) Inverse Filter
+
+    div= "Count: " + Object.keys(computers).length
+    div(style='overflow-x:auto;')
+        table
+            tbody
+                tr
+                    td
+                        a(href='/computerTable?sortby=ICN')
+                            div='ICN'
+                    td
+                        a(href='/computerTable?sortby=firstname')
+                            div= "First Name"
+                    td
+                        a(href='/computerTable?sortby=lastName')
+                            div= "Last Name"
+                    td
+                        a(href='/computerTable?sortby=Make')
+                            div= "Make"
+                    td= "Model"
+                    td= "Serial Number"
+                    td= "Service Tag"
+                    td= "Express Service Code"
+                    td= "Type"
+                    td= "Date Acquired"
+                    td= "Warranty"
+                    td= "Home Checkout"
+                    td= "Notes"
+                each computer in computers
+                    tr(onclick='getComputerInfo(#{computer.ICN}, #{computer.EmployeeID})')
+                        td
+                            a(href='/computerTable?where=ICN=#{computer.ICN}')
+                                div= computer.ICN
+                                //i(class="material-icons") laptop
+                        td= computer.FirstName
+                        td= computer.LastName
+                        td
+                            a(href='/computerTable?where=Make=\'#{computer.Make}\'')
+                                div= computer.Make
+                        td
+                            a(href='/computerTable?where=Model=\'#{computer.Model}\'')
+                                div= computer.Model
+                        td= computer.SerialNumber
+                        td= computer.ServiceTag
+                        td= computer.ExpressServiceCode
+                        td= computer.Type
+                        td= computer.DateAcquired
+                        td= computer.Warranty
+                        td= computer.HomeCheckout
+                        td= computer.Notes
+    script.
+
+        function getComputerInfo(ICN, EmployeeID) {
+            console.log(ICN);
+            $.ajax({
+                type: "GET",
+                url: "computer?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#computerInfo").html(data);
+                $("#cardDad").css('display', 'block');
+                $("#cardInfo").css('display', 'none');
+                document.getElementById("button").onclick = function () {
+                    console.log('clicked');
+                    $("#cardDad").css('display', 'none');
+                };
+            });
+        }
+
+

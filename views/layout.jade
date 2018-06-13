@@ -1,0 +1,68 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
+    link(rel='stylesheet', href="https://www.w3schools.com/w3css/4/w3.css")
+  body
+    div(class='navbar')
+      a(href='/') Home
+      a(href='/employees') Employees
+      a(href='/otherSlots') Other Slots
+      div(class='dropdown')
+          div(class='dropbtn') Rotations
+          div(class='dropdown-content')
+              a(href='/employeesTable?where=rotationGroup=1&clear=1') Rotation 1
+              a(href='/employeesTable?where=rotationGroup=2&clear=1') Rotation 2
+              a(href='/employeesTable?where=rotationGroup=3&clear=1') Rotation 3
+              a(href='/employeesTable?where=rotationGroup=4&clear=1') Rotation 4
+      div(class='dropdown')
+        div(class='dropbtn') Tables
+        div(class='dropdown-content')
+          a(href='/employeesTable') Employees
+          a(href='/computerTable') Computers
+      a(href='#') Add
+    block content
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+    script.
+        function dragStart(event) {
+            console.log(event.target);
+            event.dataTransfer.setData("Text", event.target.innerHTML);
+        }
+
+        function allowDrop(event) {
+            event.target.style.backgroundColor = 'red';
+            event.preventDefault();
+        }
+        function stop(event) {
+            document.getElementById("mySidebar").style.display = "none";
+        }
+
+        function dragLeave(event) {
+            event.target.style.backgroundColor = '#ffffff';
+        }
+
+        function dragging(event) {
+            document.getElementById("mySidebar").style.width = "25%";
+            document.getElementById("mySidebar").style.display = "block";
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            var data = event.dataTransfer.getData("Text");
+            //        event.target.appendChild(document.getElementById(data));
+            console.log(event);
+            document.getElementById("demo").innerHTML = data + " Was moved to " + event.target.innerHTML;
+        }
+
+        function w3_open() {
+            document.getElementById("mySidebar").style.width = "25%";
+            document.getElementById("mySidebar").style.display = "block";
+        }
+        function w3_close() {
+            console.log('closer');
+            document.getElementById("mySidebar").style.display = "none";
+        }
+
+

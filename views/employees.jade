@@ -1,0 +1,28 @@
+extends layout
+
+block content
+    #tempData(style='display: none;')
+    div(id='cardDad')
+    table
+        tbody
+            each employee, i in employees
+                if (i % 6 === 0)
+                    tr
+                td
+                        div(onclick='getCard(#{employee.EmployeeID})')
+                            img(src='#{employee.PictureURL}' onerror='javascript:this.src="images/default.png"')
+                            br
+                            p= employee.FirstName + ' ' + employee.LastName
+
+    script.
+        function getCard(employeeID) {
+            console.log(employeeID);
+            $.ajax({
+                type: "GET",
+                url: "card?employeeId=" + employeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#cardDad").html(data);
+                $("#cardDad").css('display', 'block');
+            });
+        }
