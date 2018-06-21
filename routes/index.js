@@ -242,11 +242,11 @@ router.get('/card', function (req, res, next) {
         })
         .then(rows => {
             monitorRows = rows;
-            return database.query('SELECT * FROM printer WHERE EmployeeId = ' + employeeId)
+            return database.query('SELECT * FROM Printer WHERE EmployeeId = ' + employeeId)
         })
         .then(rows => {
             printerRows = rows;
-            return database.query('SELECT * FROM peripheral WHERE EmployeeId = ' + employeeId)
+            return database.query('SELECT * FROM Peripheral WHERE EmployeeId = ' + employeeId)
         })
         .then(rows => {
             peripheralRows = rows;
