@@ -23,7 +23,7 @@ body {
 
 table {
   font-family: arial, sans-serif;
-  border-spacing: 0;
+  /*border-spacing: 0;*/
   width: 100%;
   border: 1px solid #ddd;
 }

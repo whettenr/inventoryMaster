@@ -29,18 +29,15 @@ class Database {
         });
     }
 }
-let config = {
-    host: 'localhost',
-    user: 'root',
-    password: 'Mlhlt2200!',
-    database: 'drupalTest'
-};
+
+let config = require('./config');
+
 let filters = [];
 let employeeFilters = [];
 let finalQuery = "";
 /* GET home page. */
 router.get('/employeesTable', function (req, res, next) {
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
     if(req.query.clear){
         employeeFilters = [];
     }
@@ -116,8 +113,8 @@ router.get('/employeesTable', function (req, res, next) {
 });
 
 router.get('/computerTable', function (req, res, next) {
-    let connection = mysql.createConnection(config);
-    let database = new Database(config);
+    let connection = mysql.createConnection(config.getConfig());
+    let database = new Database(config.getConfig());
     let computers = {};
 
     let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.employeeId';
@@ -189,7 +186,7 @@ router.get('/computerTable', function (req, res, next) {
 });
 
 router.get('/employees', function (req, res, next) {
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
     let employees = {};
 
     database.query('Select * FROM employee WHERE EmployeeID < 88 OR (EmployeeID > 199 AND EmployeeID < 300) ORDER BY EmployeeID')
@@ -206,7 +203,7 @@ router.get('/employees', function (req, res, next) {
 });
 
 router.get('/otherSlots', function (req, res, next) {
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
     let employees = {};
 
     database.query('Select * FROM employee WHERE EmployeeID >= 88 AND (EmployeeID <= 199 OR EmployeeID >= 300) ORDER BY EmployeeID')
@@ -232,7 +229,7 @@ router.get('/card', function (req, res, next) {
     let peripheralRows = {};
     let employees;
 
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
 
     database.query('SELECT * FROM employee WHERE employeeId = ' + employeeId)
         .then(rows => {
@@ -275,7 +272,7 @@ router.get('/card', function (req, res, next) {
 
 router.get('/getModelOptions', function (req, res, next) {
     let Make = req.query.make;
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
 
     let modelOptions = {};
 
@@ -300,7 +297,7 @@ router.get('/item', function (req, res, next) {
     let categories = {};
     let computer = {};
 
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
     database.query('SHOW COLUMNS FROM computer')
         .then(rows => {
             categories = rows;
@@ -332,7 +329,7 @@ router.get('/computer', function (req, res, next) {
     let hardware = {};
     let processorTypeOptions = {};
 
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
 
     database.query('SELECT DISTINCT Make FROM Computer')
         .then(rows => {
@@ -394,7 +391,7 @@ router.get('/monitor', function (req, res, next) {
     let monitor = {};
     let employee = {};
 
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
 
     database.query('SELECT DISTINCT Make FROM Monitor')
         .then(rows => {
@@ -440,7 +437,7 @@ router.get('/printer', function (req, res, next) {
     let printer = {};
     let employee = {};
 
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
 
     database.query('SELECT DISTINCT Make FROM Printer')
         .then(rows => {
@@ -487,7 +484,7 @@ router.get('/peripheral', function (req, res, next) {
     let employee = {};
     let itemOptions = {};
 
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
 
     database.query('SELECT DISTINCT Make FROM Peripheral')
         .then(rows => {
@@ -543,7 +540,7 @@ router.get('/newComputer', function (req, res, next) {
     let hardDriveOptions = {};
     let graphicsCardOptions = {};
 
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
     database.query('SELECT * FROM computer ORDER BY ICN DESC LIMIT 1')
         .then(rows => {
             ICN = rows[0].ICN + 1;
@@ -574,26 +571,36 @@ router.get('/newComputer', function (req, res, next) {
         })
         .then(rows => {
             processorTypeOptions = rows;
+            processorTypeOptions[processorTypeOptions.length] = {ProcessorType: 'None'};
+            processorTypeOptions[processorTypeOptions.length] = {ProcessorType: 'Add a New Option'};
             return database.query('SELECT DISTINCT ProcessorSpeed FROM hardware ORDER BY ProcessorSpeed')
 
         })
         .then(rows => {
             processorSpeedOptions = rows;
+            processorSpeedOptions[processorSpeedOptions.length] = {ProcessorSpeed: 'None'};
+            processorSpeedOptions[processorSpeedOptions.length] = {ProcessorSpeed: 'Add a New Option'};
             return database.query('SELECT DISTINCT Memory FROM hardware ORDER BY Memory')
 
         })
         .then(rows => {
             memoryOptions = rows;
+            memoryOptions[memoryOptions.length] = {Memory: 'None'};
+            memoryOptions[memoryOptions.length] = {Memory: 'Add a New Option'};
             return database.query('SELECT DISTINCT HardDrive FROM hardware ORDER BY HardDrive')
 
         })
         .then(rows => {
             hardDriveOptions = rows;
+            hardDriveOptions[hardDriveOptions.length] = {HardDrive: 'None'};
+            hardDriveOptions[hardDriveOptions.length] = {HardDrive: 'Add a New Option'};
             return database.query('SELECT DISTINCT VCName FROM hardware ORDER BY VCName')
 
         })
         .then(rows => {
             graphicsCardOptions = rows;
+            graphicsCardOptions[graphicsCardOptions.length] = {VCName: 'None'};
+            graphicsCardOptions[graphicsCardOptions.length] = {VCName: 'Add a New Option'};
             return database.close();
         })
         .then(() => {
@@ -618,11 +625,58 @@ router.get('/newComputer', function (req, res, next) {
         })
 });
 
+router.get('/newMonitor', function (req, res, next) {
+    let ICN = 0;
+    let EmployeeID = parseInt(req.query.EmployeeID);
+    let makeOptions = {};
+    let modelOptions = {};
+    let employees = {};
+    let monitor = {};
+    let employee = {};
+
+    let database = new Database(config.getConfig());
+
+    database.query('SELECT DISTINCT Make FROM Monitor')
+        .then(rows => {
+            makeOptions = rows;
+            return database.query('Select * FROM employee ORDER BY LastName');
+        })
+        .then(rows => {
+            employees = rows;
+            return database.query('Select FirstName, LastName FROM employee WHERE EmployeeID = ' + EmployeeID)
+        })
+        .then(rows => {
+            employee = rows[0];
+            return database.query('SELECT DISTINCT Model FROM Monitor');
+        })
+        .then(rows => {
+            modelOptions = rows;
+            return database.query('SELECT * FROM Monitor ORDER BY ICN DESC LIMIT 1');
+        })
+        .then(rows => {
+            ICN = rows[0].ICN + 1;
+            return database.close();
+        })
+        .then(() => {
+            res.render('newMonitor', {
+                ICN,
+                makeOptions,
+                modelOptions,
+                employees,
+                employee,
+                EmployeeID
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
 router.get('/download/rotation', function (req, res, next) {
     let rotation = req.query.rotation;
     let Rows = {};
 
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
     database.query('SELECT employeeId, firstName, lastName, category, officeLocation, building, username, dateSwitched, notes FROM employee WHERE rotationGroup = ' + rotation + ' ORDER BY employeeId;')
         .then(rows => {
             Rows = rows;
@@ -649,7 +703,7 @@ router.get('/download/rotation', function (req, res, next) {
 });
 
 router.post('/newComputer', function (req, res, next) {
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
     let hardwareId = -1;
 
     database.query('SELECT * FROM hardware WHERE ProcessorType = ? and ProcessorSpeed = ? and Memory = ? and HardDrive = ? and VCName = ?', [req.body.processorType, req.body.processorSpeed, req.body.memory, req.body.hardDrive, req.body.graphicsCard])
@@ -665,7 +719,7 @@ router.post('/newComputer', function (req, res, next) {
                 hardwareId = rows.insertId;
             }
             return database.query("INSERT INTO computer (ICN, EmployeeID, Make, Model, SerialNumber, ServiceTag, HardwareID, ExpressServiceCode, Type, DateAcquired, Warranty, HomeCheckout, Notes) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                [req.body.icn, req.body.employeeId, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, hardwareId, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.icn])
+                [req.body.icn, req.body.EmployeeID, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, hardwareId, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.icn])
 
         })
         .then(() => {
@@ -681,7 +735,7 @@ router.post('/newComputer', function (req, res, next) {
 });
 
 router.post('/form', function (req, res, next) {
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
     database.query("UPDATE computer Set ICN = ?, EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ? WHERE ICN = ?",
         [req.body.icn, req.body.employeeId, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.icn])
         .then(rows => {
@@ -697,7 +751,7 @@ router.post('/form', function (req, res, next) {
 });
 
 router.post('/monitor', function (req, res, next) {
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
     database.query("UPDATE Monitor SET EmployeeID = ?, Make = ?, Model = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.make, req.body.model, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
         .then(rows => {
@@ -717,7 +771,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/updateDates', function (req, res, next) {
-    let database = new Database(config);
+    let database = new Database(config.getConfig());
     let employeeIds = {};
     database.query("SELECT EmployeeID FROM employee")
         .then(rows => {

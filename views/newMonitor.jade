@@ -255,12 +255,12 @@ html
     body
         .container
             .info
-            form(action='/peripheral', method='post' id='form')
+            form(action='/monitor', method='post' id='form')
                 .info
                     #button.button.cancel(onclick='goBack();') Cancel
                     #go(onclick='go();') Submit
                     br
-                h2 Peripheral
+                h2 Monitor
                 h3 #{employee.FirstName} #{employee.LastName}
                 div(class='categories')
                     #mainInfoButton(onclick='showMain();') Main Info
@@ -273,35 +273,26 @@ html
                         .col-25
                             label(for='icn') ICN:
                         .col-75
-                            input#icn(style='background-color: #f2f2f2; border: none; margin-top: 10px;', type='text', name='icn', placeholder='ICN', readonly="readonly", onclick='alert("this is not editable");' value='#{peripheral.ICN}')
+                            input#icn(type='text', name='icn', placeholder='ICN' value='#{ICN}')
                     .row
                         .col-25
                             label(for='employee') Employee:
                         .col-75
                             select#employee.selectpicker(name='employeeId', placeholder='Employee' onchange="alert(\"You just changed who this was assigned to. Please update the Type.\")")
                                 each employee in employees
-                                    if(employee.EmployeeID === peripheral.EmployeeID)
+                                    if(employee.EmployeeID === EmployeeID)
                                         option(value=employee.EmployeeID name='#{employee.FirstName} #{employee.LastName}' selected) #{employee.FirstName} #{employee.LastName}
                                     else
                                         option(value=employee.EmployeeID name='#{employee.FirstName} #{employee.LastName}')  #{employee.FirstName} #{employee.LastName}
                             #surplus.button(onclick='surplus();') Surplus
-                    .row
-                        .col-25
-                            label(for='item') Item:
-                        .col-75
-                            select#item.custom-select.sources(name='item', placeholder='Item')
-                                each itemOption in itemOptions
-                                    if(itemOption.Item === peripheral.Item)
-                                        option(value=itemOption.Item selected) #{itemOption.Item}
-                                    else
-                                        option(value=itemOption.Item) #{itemOption.Item}
+
                     .row
                         .col-25
                             label(for='make') Make:
                         .col-75
                             select#make.custom-select.sources(name='make', placeholder='Make' onchange='refreshModelOptions()')
                                 each makeOption in makeOptions
-                                    if(makeOption.Make === peripheral.Make)
+                                    if(makeOption.Make === 'None')
                                         option(value=makeOption.Make selected) #{makeOption.Make}
                                     else
                                         option(value=makeOption.Make) #{makeOption.Make}
@@ -311,49 +302,41 @@ html
                         .col-75
                             select#model.custom-select.sources(name='model', placeholder='Model')
                                 each modelOption in modelOptions
-                                    if(modelOption.Model === peripheral.Model)
-                                        option(value=modelOption.Model selected) #{modelOption.Model}
-                                    else
-                                        option(value=modelOption.Model) #{modelOption.Model}
+                                    option(value=modelOption.Model) #{modelOption.Model}
                     .row
                         .col-25
                             label(for='notes') Notes:
                         .col-75
                             textarea#notes(name='notes', placeholder='Write something..', style='height:200px')
-                                | #{peripheral.Notes}
                 #otherInfo(style='display: none;')
                     .row
                         .col-25
                             label(for='serialNumber') Serial Number:
                         .col-75
-                            input#serialNumber(type='text', name='serialNumber', placeholder='Serial Number' value='#{peripheral.SerialNumber}')
+                            input#serialNumber(type='text', name='serialNumber', placeholder='Serial Number')
                     .row
                         .col-25
                             label(for='dateAcquired') Date Acquired:
                         .col-75
-                            input#dateAcquired(type='date' name='dateAcquired', placeholder='Date Acquired' value='#{peripheral.DateAcquired}')
+                            input#dateAcquired(type='date' name='dateAcquired', placeholder='Date Acquired')
                     .row
                         .col-25
                             label(for='warranty') Warranty:
                         .col-75
-                            input#warranty(type='text', name='warranty', placeholder='Warranty' value='#{peripheral.Warranty}')
+                            input#warranty(type='text', name='warranty', placeholder='Warranty')
                     .row
                         .col-25
                             label(for='homeCheckout') Home Checkout:
                         .col-75
-                            input#homeCheckout(type='text', name='homeCheckout', placeholder='Home Checkout' value='#{peripheral.HomeCheckout}')
+                            input#homeCheckout(type='text', name='homeCheckout', placeholder='Home Checkout')
                 #historyInfo(style='display: none;')
                     .row
                         .col-25
                             label(for='history') History:
                         .col-75
-                            textarea#history(name='history' style='height:200px' readonly='readonly') #{peripheral.History}
+                            textarea#history(name='history' style='height:200px' readonly='readonly')
     script.
-        let icn = "#{peripheral.ICN}";
         let employee = "#{employee.FirstName} #{employee.LastName}";
-        let make = "#{peripheral.Make}";
-        let model = "#{peripheral.Model}";
-        let notes = "#{peripheral.Notes}";
         let date = new Date();
         function goBack() {
             $("#cardInfo").css('display', 'block');

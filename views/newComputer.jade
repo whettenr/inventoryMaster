@@ -353,35 +353,35 @@ html
                         .col-25
                             label(for='processorType') Processor Type:
                         .col-75
-                            select#processorType.custom-select.sources(name='processorType')
+                            select#processorType.custom-select.sources(name='processorType' onchange='newProcessorType();')
                                 each processorType in processorTypeOptions
                                     option(value=processorType.ProcessorType) #{processorType.ProcessorType}
                     .row
                         .col-25
                             label(for='processorSpeed') Processor Speed:
                         .col-75
-                            select#processorSpeed.custom-select.sources(name='processorSpeed')
+                            select#processorSpeed.custom-select.sources(name='processorSpeed' onchange='newProcessorSpeed();')
                                 each processorSpeed in processorSpeedOptions
                                     option(value=processorSpeed.ProcessorSpeed) #{processorSpeed.ProcessorSpeed}
                     .row
                         .col-25
                             label(for='memory') Memory:
                         .col-75
-                            select#memory.custom-select.sources(name='memory')
+                            select#memory.custom-select.sources(name='memory' onchange='newMemory();')
                                 each memory in memoryOptions
                                     option(value=memory.Memory) #{memory.Memory}
                     .row
                         .col-25
                             label(for='hardDrive') Hard Drive:
                         .col-75
-                            select#hardDrive.custom-select.sources(name='hardDrive')
+                            select#hardDrive.custom-select.sources(name='hardDrive' onchange='newHardDrive();')
                                 each hardDrive in hardDriveOptions
                                     option(value=hardDrive.HardDrive) #{hardDrive.HardDrive}
                     .row
                         .col-25
                             label(for='graphicsCard') Graphics Card:
                         .col-75
-                            select#graphicsCard.custom-select.sources(name='graphicsCard')
+                            select#graphicsCard.custom-select.sources(name='graphicsCard' onchange='newGraphicsCard();')
                                 each graphicsCard in graphicsCardOptions
                                     option(value=graphicsCard.VCName) #{graphicsCard.VCName}
     script.
@@ -417,6 +417,56 @@ html
                     console.log(model);
                     $("#model").append(new Option(model, model));
                     $("#model").val(model);
+                }
+            }
+        }
+        function newProcessorType() {
+            if ($("#processorType").val() === "Add a New Option") {
+                let add = prompt("New Processor Type:");
+                if (add !== null && add !== "") {
+                    console.log(add);
+                    $("#processorType").append(new Option(add, add));
+                    $("#processorType").val(add);
+                }
+            }
+        }
+        function newProcessorSpeed() {
+            if ($("#processorSpeed").val() === "Add a New Option") {
+                let add = prompt("New Processor Speed:");
+                if (add !== null && add !== "") {
+                    console.log(add);
+                    $("#processorSpeed").append(new Option(add, add));
+                    $("#processorSpeed").val(add);
+                }
+            }
+        }
+        function newMemory() {
+            if ($("#memory").val() === "Add a New Option") {
+                let add = prompt("New Memory:");
+                if (add !== null && add !== "") {
+                    console.log(add);
+                    $("#memory").append(new Option(add, add));
+                    $("#memory").val(add);
+                }
+            }
+        }
+        function newHardDrive() {
+            if ($("#hardDrive").val() === "Add a New Option") {
+                let add = prompt("New Hard Drive:");
+                if (add !== null && add !== "") {
+                    console.log(add);
+                    $("#hardDrive").append(new Option(add, add));
+                    $("#hardDrive").val(add);
+                }
+            }
+        }
+        function newGraphicsCard() {
+            if ($("#graphicsCard").val() === "Add a New Option") {
+                let add = prompt("New Hard Drive:");
+                if (add !== null && add !== "") {
+                    console.log(add);
+                    $("#graphicsCard").append(new Option(add, add));
+                    $("#graphicsCard").val(add);
                 }
             }
         }

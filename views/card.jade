@@ -14,7 +14,7 @@ link(rel='stylesheet', href='/stylesheets/card.css')
                 div(class='dropbtn') Add Item
                 div(class='dropdown-content')
                     div(onclick='newComputer(#{employee.EmployeeID})') New Computer
-                    div(href='/computerTable') New Monitor
+                    div(onclick='newMonitor(#{employee.EmployeeID})') New Monitor
                     div(href='/computerTable') New Printer
                     div(href='/computerTable') New Peripheral
         br
@@ -162,6 +162,18 @@ link(rel='stylesheet', href='/stylesheets/card.css')
                     $("#cardInfo").css('display', 'none');
 
 
+               });
+            }
+
+            function newMonitor(EmployeeID) {
+                $.ajax({
+                        type: "GET",
+                        url: "newMonitor?EmployeeID=" + EmployeeID,
+                        data: {format: 'html'}
+                }).done(function (data) {
+                    $("#computerInfo").html(data);
+                    $("#computerInfo").css('display', 'block');
+                    $("#cardInfo").css('display', 'none');
                });
             }
 

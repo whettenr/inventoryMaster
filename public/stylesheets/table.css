@@ -1,0 +1,55 @@
+#table {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-spacing: 0 20px;
+    /*border-collapse: collapse;*/
+    margin: auto;
+    width: 50%;
+}
+
+#table td, #table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+    border-right: 0;
+    border-left: 0;
+}
+
+#table td:last-child {
+    border-right: 1px solid #ddd;
+}
+
+#table td:first-child {
+    border-left: 1px solid #ddd;
+}
+
+tr {
+    -webkit-transition: height 1s; /* For Safari 3.1 to 6.0 */
+    transition: height 1s;
+    height: 50px;
+}
+
+tr:hover {
+    /*background-color: #ddd;*/
+    height: 100px;
+}
+
+tr:hover img, tr.hover img {
+    height: 80px;
+}
+
+#table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+img {
+    -webkit-transition: height 2s; /* For Safari 3.1 to 6.0 */
+    transition: height 2s;
+    height: 37px;
+}
+
+img:hover {
+    height: 80px;
+}

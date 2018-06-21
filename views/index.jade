@@ -1,6 +1,7 @@
 extends layout
 
 block content
+    link(rel='stylesheet', href='/stylesheets/table.css')
     h1= title
     #tempData(style='display: none;')
     div(id='cardDad')
@@ -11,30 +12,30 @@ block content
                     a.filterButton(href='employeesTable?remove=' + i) Remove Filter
                     a.filterButton(href='employeesTable?not=' + i) Inverse Filter
     div(style='overflow-x:auto;')
-        table
+        table#table
             tbody
-                tr
-                    td
+                tr#myHeader
+                    th
                         a(href='/employeesTable?sortby=employeeId')
                             div='Employee ID'
-                    td
+                    th
                         a(href='/employeesTable?sortby=firstName')
                             div= "First Name"
-                    td
+                    th
                         a(href='/employeesTable?sortby=lastName')
                             div= "Last Name"
-                    td= "Category"
-                    td= "Office Location"
-                    td= "Building"
-                    td= "Username"
-                    td= "Email"
-                    td
+                    th= "Category"
+                    th= "Office Location"
+                    th= "Building"
+                    //th= "Username"
+                    //th= "Email"
+                    //th
                         a(href='/employeesTable?sortby=rotationGroup')
                             div= "Roation Group"
-                    td
+                    //th
                         a(href='/employeesTable?sortby=dateSwitched')
                             div= "Date Switched"
-                    td= "Notes"
+                    //th= "Notes"
                 each employee in employees
                     tr(onclick='getCard(#{employee.EmployeeID})')
                         td= employee.EmployeeID
@@ -43,15 +44,15 @@ block content
                         td= employee.Category
                         td= employee.Office
                         td= employee.Building
-                        td= employee.UserName
-                        td= employee.Email
-                        td
+                        //td= employee.UserName
+                        //td= employee.Email
+                        //td
                             a(href='/employeesTable?where=rotationGroup=#{employee.RotationGroup}')
                                 div= employee.RotationGroup
-                        td
+                        //td
                             a(href='/employeesTable?where=dateSwitched=#{employee.DateSwitched}')
                                 div= employee.DateSwitched
-                        td= employee.Notes
+                        //td= employee.Notes
     script.
         function getCard(employeeID) {
             console.log(employeeID);
@@ -63,4 +64,19 @@ block content
                 $("#cardDad").html(data);
                 $("#cardDad").css('display', 'block');
             });
+        }
+
+        window.onscroll = function () {
+            myFunction()
+        };
+
+        var header = document.getElementById("myHeader");
+        var sticky = header.offsetTop;
+
+        function myFunction() {
+            if (window.pageYOffset >= sticky) {
+                header.classList.add("sticky");
+            } else {
+                header.classList.remove("sticky");
+            }
         }
