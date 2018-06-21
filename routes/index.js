@@ -238,7 +238,7 @@ router.get('/card', function (req, res, next) {
         })
         .then(rows => {
             computerRows = rows;
-            return database.query('SELECT * FROM monitor WHERE EmployeeId = ' + employeeId)
+            return database.query('SELECT * FROM Monitor WHERE EmployeeId = ' + employeeId)
         })
         .then(rows => {
             monitorRows = rows;
