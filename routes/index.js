@@ -291,6 +291,27 @@ router.get('/getModelOptions', function (req, res, next) {
         })
 });
 
+router.get('/getPeripheralModelOptions', function (req, res, next) {
+    let Make = req.query.make;
+    let database = new Database(config.getConfig());
+
+    let modelOptions = {};
+
+    database.query('SELECT DISTINCT Model FROM Peripheral WHERE Make = ? ORDER BY Model', [Make])
+        .then(rows => {
+            modelOptions = rows;
+            modelOptions[modelOptions.length] = {Model: 'Add a New Option'};
+
+            database.close();
+        })
+        .then(() => {
+            res.render('getModelOptions', {modelOptions});
+        })
+        .catch(err => {
+            console.log(err);
+        })
+});
+
 router.get('/item', function (req, res, next) {
 
     let ICN = 10540;
@@ -526,6 +547,58 @@ router.get('/peripheral', function (req, res, next) {
         });
 });
 
+router.get('/newPeripheral', function (req, res, next) {
+    let ICN = 0;
+    let EmployeeID = parseInt(req.query.EmployeeID);
+    let makeOptions = {};
+    let modelOptions = {};
+    let employees = {};
+    let employee = {};
+    let itemOptions = {};
+
+    let database = new Database(config.getConfig());
+
+    database.query('SELECT DISTINCT Make FROM Peripheral')
+        .then(rows => {
+            makeOptions = rows;
+            return database.query('Select * FROM Employee ORDER BY LastName');
+        })
+        .then(rows => {
+            employees = rows;
+            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID)
+        })
+        .then(rows => {
+            employee = rows[0];
+            return database.query('SELECT * FROM Peripheral ORDER BY ICN DESC LIMIT 1');
+        })
+        .then(rows => {
+            ICN = rows[0].ICN + 1;
+            return database.query('SELECT DISTINCT Model FROM Peripheral');
+        })
+        .then(rows => {
+            modelOptions = rows;
+            return database.query('SELECT DISTINCT Item FROM Peripheral')
+        })
+        .then(rows => {
+            itemOptions = rows;
+            return database.close();
+        })
+        .then(() => {
+            res.render('newPeripheral', {
+                ICN,
+                EmployeeID,
+                makeOptions,
+                modelOptions,
+                itemOptions,
+                employees,
+                employee,
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
 router.get('/newComputer', function (req, res, next) {
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
@@ -734,10 +807,48 @@ router.post('/newComputer', function (req, res, next) {
         });
 });
 
+router.post('/newMonitor', function (req, res, next) {
+    let database = new Database(config.getConfig());
+
+    database.query('INSERT INTO Monitor (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout) VALUES (?)', [[req.body.icn, req.body.EmployeeID, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout]])
+        .then(rows => {
+            if(rows)
+                console.log(rows);
+            return database.close();
+        })
+        .then(() => {
+            res.redirect('/employees');
+
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
+router.post('/newPeripheral', function (req, res, next) {
+    let database = new Database(config.getConfig());
+
+    database.query('INSERT INTO Peripheral (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout) VALUES (?)', [[req.body.icn, req.body.employeeId, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout]])
+        .then(rows => {
+            if(rows){
+                console.log(rows);
+                console.log('INSERT INTO Peripheral (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout) VALUES (?,?,?,?,?,?,?,?,?,?)'+req.body.icn+req.body.employeeId+req.body.item+req.body.make+req.body.model+req.body.notes+req.body.serialNumber+req.body.dateAcquired+req.body.warranty+req.body.homeCheckout);
+            }
+            return database.close();
+        })
+        .then(() => {
+            res.redirect('/employees');
+
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
 router.post('/form', function (req, res, next) {
     let database = new Database(config.getConfig());
-    database.query("UPDATE Computer Set ICN = ?, EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ? WHERE ICN = ?",
-        [req.body.icn, req.body.employeeId, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.icn])
+    database.query("UPDATE Computer Set EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ? WHERE ICN = ?",
+        [req.body.employeeId, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.icn])
         .then(rows => {
             return database.close();
         })

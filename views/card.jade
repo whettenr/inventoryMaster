@@ -16,7 +16,7 @@ link(rel='stylesheet', href='/stylesheets/card.css')
                     div(onclick='newComputer(#{employee.EmployeeID})') New Computer
                     div(onclick='newMonitor(#{employee.EmployeeID})') New Monitor
                     div(href='/computerTable') New Printer
-                    div(href='/computerTable') New Peripheral
+                    div(onclick='newPeripheral(#{employee.EmployeeID})') New Peripheral
         br
         h4.left Computers:
         #mySidebar.sidebar.w3-bar-block.w3-card.w3-animate-right(style='display:none')
@@ -165,6 +165,19 @@ link(rel='stylesheet', href='/stylesheets/card.css')
                });
             }
 
+            function newPeripheral(EmployeeID) {
+                $.ajax({
+                    type: "GET",
+                    url: "newPeripheral?EmployeeID=" + EmployeeID,
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#computerInfo").html(data);
+                    $("#computerInfo").css('display', 'block');
+                    $("#cardInfo").css('display', 'none');
+
+
+                });
+            }
             function newMonitor(EmployeeID) {
                 $.ajax({
                         type: "GET",
