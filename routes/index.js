@@ -141,10 +141,10 @@ router.get('/computerTable', function (req, res, next) {
         }
     }
     if (filters.length > 0) {
-        query += " WHERE computer.";
+        query += " WHERE Computer.";
         for (let filter in filters) {
             query += filters[filter];
-            query += ' and computer.';
+            query += ' and Computer.';
             console.log(filter);
         }
         query = query.substr(0, query.length - 14);
@@ -234,7 +234,7 @@ router.get('/card', function (req, res, next) {
     database.query('SELECT * FROM Employee WHERE employeeId = ' + employeeId)
         .then(rows => {
             employeeRows = rows;
-            return database.query('SELECT * FROM computer WHERE EmployeeId = ' + employeeId);
+            return database.query('SELECT * FROM Computer WHERE EmployeeId = ' + employeeId);
         })
         .then(rows => {
             computerRows = rows;
@@ -295,14 +295,14 @@ router.get('/item', function (req, res, next) {
 
     let ICN = 10540;
     let categories = {};
-    let computer = {};
+    let Computer = {};
 
     let database = new Database(config.getConfig());
-    database.query('SHOW COLUMNS FROM computer')
+    database.query('SHOW COLUMNS FROM Computer')
         .then(rows => {
             categories = rows;
             console.log(categories[0].Field);
-            return database.query('SELECT * FROM computer WHERE ICN = ' + ICN);
+            return database.query('SELECT * FROM Computer WHERE ICN = ' + ICN);
         })
         .then(rows => {
             computer = rows;
@@ -541,14 +541,14 @@ router.get('/newComputer', function (req, res, next) {
     let graphicsCardOptions = {};
 
     let database = new Database(config.getConfig());
-    database.query('SELECT * FROM computer ORDER BY ICN DESC LIMIT 1')
+    database.query('SELECT * FROM Computer ORDER BY ICN DESC LIMIT 1')
         .then(rows => {
             ICN = rows[0].ICN + 1;
             return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID);
         })
         .then(rows => {
             employee = rows[0];
-            return database.query('SELECT DISTINCT Make FROM computer ORDER BY Make');
+            return database.query('SELECT DISTINCT Make FROM Computer ORDER BY Make');
         })
         .then(rows => {
             makeOptions = rows;
@@ -558,7 +558,7 @@ router.get('/newComputer', function (req, res, next) {
         })
         .then(rows => {
             // modelOptions = rows;
-            return database.query('Select DISTINCT Type FROM computer ORDER BY Type');
+            return database.query('Select DISTINCT Type FROM Computer ORDER BY Type');
         })
         .then(rows => {
             typeOptions = rows;
@@ -718,7 +718,7 @@ router.post('/newComputer', function (req, res, next) {
             if (hardwareId === -1) {
                 hardwareId = rows.insertId;
             }
-            return database.query("INSERT INTO computer (ICN, EmployeeID, Make, Model, SerialNumber, ServiceTag, HardwareID, ExpressServiceCode, Type, DateAcquired, Warranty, HomeCheckout, Notes) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            return database.query("INSERT INTO Computer (ICN, EmployeeID, Make, Model, SerialNumber, ServiceTag, HardwareID, ExpressServiceCode, Type, DateAcquired, Warranty, HomeCheckout, Notes) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 [req.body.icn, req.body.EmployeeID, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, hardwareId, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.icn])
 
         })
@@ -736,7 +736,7 @@ router.post('/newComputer', function (req, res, next) {
 
 router.post('/form', function (req, res, next) {
     let database = new Database(config.getConfig());
-    database.query("UPDATE computer Set ICN = ?, EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ? WHERE ICN = ?",
+    database.query("UPDATE Computer Set ICN = ?, EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ? WHERE ICN = ?",
         [req.body.icn, req.body.employeeId, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.icn])
         .then(rows => {
             return database.close();
