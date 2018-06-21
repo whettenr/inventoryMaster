@@ -41,7 +41,7 @@ router.get('/employeesTable', function (req, res, next) {
     if(req.query.clear){
         employeeFilters = [];
     }
-    let query = 'Select * FROM employee';
+    let query = 'Select * FROM Employee';
     if (req.query.remove) {
         let splice = parseInt(req.query.remove);
         employeeFilters.splice(splice, 1);
@@ -189,7 +189,7 @@ router.get('/employees', function (req, res, next) {
     let database = new Database(config.getConfig());
     let employees = {};
 
-    database.query('Select * FROM employee WHERE EmployeeID < 88 OR (EmployeeID > 199 AND EmployeeID < 300) ORDER BY EmployeeID')
+    database.query('Select * FROM Employee WHERE EmployeeID < 88 OR (EmployeeID > 199 AND EmployeeID < 300) ORDER BY EmployeeID')
         .then(rows => {
             employees = rows;
         })
@@ -206,7 +206,7 @@ router.get('/otherSlots', function (req, res, next) {
     let database = new Database(config.getConfig());
     let employees = {};
 
-    database.query('Select * FROM employee WHERE EmployeeID >= 88 AND (EmployeeID <= 199 OR EmployeeID >= 300) ORDER BY EmployeeID')
+    database.query('Select * FROM Employee WHERE EmployeeID >= 88 AND (EmployeeID <= 199 OR EmployeeID >= 300) ORDER BY EmployeeID')
         .then(rows => {
             employees = rows;
         })
@@ -231,7 +231,7 @@ router.get('/card', function (req, res, next) {
 
     let database = new Database(config.getConfig());
 
-    database.query('SELECT * FROM employee WHERE employeeId = ' + employeeId)
+    database.query('SELECT * FROM Employee WHERE employeeId = ' + employeeId)
         .then(rows => {
             employeeRows = rows;
             return database.query('SELECT * FROM computer WHERE EmployeeId = ' + employeeId);
@@ -334,11 +334,11 @@ router.get('/computer', function (req, res, next) {
     database.query('SELECT DISTINCT Make FROM Computer')
         .then(rows => {
             makeOptions = rows;
-            return database.query('Select * FROM employee ORDER BY LastName');
+            return database.query('Select * FROM Employee ORDER BY LastName');
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select FirstName, LastName FROM employee WHERE EmployeeID = ' + EmployeeID)
+            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID)
         })
         .then(rows => {
             employee = rows[0];
@@ -396,11 +396,11 @@ router.get('/monitor', function (req, res, next) {
     database.query('SELECT DISTINCT Make FROM Monitor')
         .then(rows => {
             makeOptions = rows;
-            return database.query('Select * FROM employee ORDER BY LastName');
+            return database.query('Select * FROM Employee ORDER BY LastName');
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select FirstName, LastName FROM employee WHERE EmployeeID = ' + EmployeeID)
+            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID)
         })
         .then(rows => {
             employee = rows[0];
@@ -442,11 +442,11 @@ router.get('/printer', function (req, res, next) {
     database.query('SELECT DISTINCT Make FROM Printer')
         .then(rows => {
             makeOptions = rows;
-            return database.query('Select * FROM employee ORDER BY LastName');
+            return database.query('Select * FROM Employee ORDER BY LastName');
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select FirstName, LastName FROM employee WHERE EmployeeID = ' + EmployeeID)
+            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID)
         })
         .then(rows => {
             employee = rows[0];
@@ -489,11 +489,11 @@ router.get('/peripheral', function (req, res, next) {
     database.query('SELECT DISTINCT Make FROM Peripheral')
         .then(rows => {
             makeOptions = rows;
-            return database.query('Select * FROM employee ORDER BY LastName');
+            return database.query('Select * FROM Employee ORDER BY LastName');
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select FirstName, LastName FROM employee WHERE EmployeeID = ' + EmployeeID)
+            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID)
         })
         .then(rows => {
             employee = rows[0];
@@ -544,7 +544,7 @@ router.get('/newComputer', function (req, res, next) {
     database.query('SELECT * FROM computer ORDER BY ICN DESC LIMIT 1')
         .then(rows => {
             ICN = rows[0].ICN + 1;
-            return database.query('Select FirstName, LastName FROM employee WHERE EmployeeID = ' + EmployeeID);
+            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID);
         })
         .then(rows => {
             employee = rows[0];
@@ -563,7 +563,7 @@ router.get('/newComputer', function (req, res, next) {
         .then(rows => {
             typeOptions = rows;
             typeOptions[typeOptions.length] = {Type: 'None'};
-            return database.query('Select * FROM employee ORDER BY lastName');
+            return database.query('Select * FROM Employee ORDER BY lastName');
         })
         .then(rows => {
             employees = rows;
@@ -639,11 +639,11 @@ router.get('/newMonitor', function (req, res, next) {
     database.query('SELECT DISTINCT Make FROM Monitor')
         .then(rows => {
             makeOptions = rows;
-            return database.query('Select * FROM employee ORDER BY LastName');
+            return database.query('Select * FROM Employee ORDER BY LastName');
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select FirstName, LastName FROM employee WHERE EmployeeID = ' + EmployeeID)
+            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID)
         })
         .then(rows => {
             employee = rows[0];
@@ -677,7 +677,7 @@ router.get('/download/rotation', function (req, res, next) {
     let Rows = {};
 
     let database = new Database(config.getConfig());
-    database.query('SELECT employeeId, firstName, lastName, category, officeLocation, building, username, dateSwitched, notes FROM employee WHERE rotationGroup = ' + rotation + ' ORDER BY employeeId;')
+    database.query('SELECT employeeId, firstName, lastName, category, officeLocation, building, username, dateSwitched, notes FROM Employee WHERE rotationGroup = ' + rotation + ' ORDER BY employeeId;')
         .then(rows => {
             Rows = rows;
             return database.close();
@@ -773,7 +773,7 @@ router.get('/', function (req, res, next) {
 router.get('/updateDates', function (req, res, next) {
     let database = new Database(config.getConfig());
     let employeeIds = {};
-    database.query("SELECT EmployeeID FROM employee")
+    database.query("SELECT EmployeeID FROM Employee")
         .then(rows => {
             employeeIds = rows;
             for(let i in employeeIds){
