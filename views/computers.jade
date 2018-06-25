@@ -55,7 +55,9 @@ block content
                         td= computer.SerialNumber
                         td= computer.ServiceTag
                         td= computer.ExpressServiceCode
-                        td= computer.Type
+                        td
+                            a(href='/computerTable?where=Type=\'#{computer.Type}\'')
+                                div= computer.Type
                         td= computer.DateAcquired
                         td= computer.Warranty
                         td= computer.HomeCheckout

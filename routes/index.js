@@ -3,6 +3,7 @@ let mysql = require('mysql');
 let router = express.Router();
 let fs = require('fs');
 let csv = require('fast-csv');
+var cas = require('byu-cas');
 
 class Database {
     constructor(config) {
@@ -877,8 +878,71 @@ router.post('/monitor', function (req, res, next) {
     // res.render('home', {title: 'Welcome', name: 'McKay'})
 });
 
+router.post('/peripheral', function (req, res, next) {
+    let database = new Database(config.getConfig());
+    database.query("UPDATE Peripheral SET EmployeeID = ?, Item = ?, Make = ?, Model = ?, SerialNumber = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
+        [req.body.employeeId, req.body.item, req.body.make, req.body.model, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
+        .then(rows => {
+            return database.close();
+        })
+        .then(() => {
+            res.redirect('/employees');
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    // res.render('home', {title: 'Welcome', name: 'McKay'})
+});
+
 router.get('/', function (req, res, next) {
     res.render('home', {title: 'Welcome', name: 'McKay'})
+});
+
+router.get('/jsbSurplus', function (req, res, next) {
+    let employeeId = 300;
+    let employeeRows = {};
+    let computerRows = {};
+    let monitorRows = {};
+    let printerRows = {};
+    let peripheralRows = {};
+    let employees;
+
+    let database = new Database(config.getConfig());
+
+    database.query('SELECT * FROM Employee WHERE employeeId = ' + employeeId)
+        .then(rows => {
+            employeeRows = rows;
+            return database.query('SELECT * FROM Computer WHERE EmployeeId = ' + employeeId);
+        })
+        .then(rows => {
+            computerRows = rows;
+            return database.query('SELECT * FROM Monitor WHERE EmployeeId = ' + employeeId)
+        })
+        .then(rows => {
+            monitorRows = rows;
+            return database.query('SELECT * FROM Printer WHERE EmployeeId = ' + employeeId)
+        })
+        .then(rows => {
+            printerRows = rows;
+            return database.query('SELECT * FROM Peripheral WHERE EmployeeId = ' + employeeId)
+        })
+        .then(rows => {
+            peripheralRows = rows;
+            return database.close();
+        })
+        .then(() => {
+            // do something with someRows and otherRows
+            res.render('jsbSurplus', {
+                employee: employeeRows[0],
+                computers: computerRows,
+                monitors: monitorRows,
+                printers: printerRows,
+                peripherals: peripheralRows
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        });
 });
 
 router.get('/updateDates', function (req, res, next) {
@@ -900,22 +964,12 @@ router.get('/updateDates', function (req, res, next) {
 
 router.get('/test', function (req, res, next) {
 
-    let connection = mysql.createConnection({
-        host     : 'religion.byu.edu',
-        user     : 'mmcourt',
-        password : 'Mlhlt2200!'
-    });
+    res.redirect('https://cas.byu.edu/login?service=' + encodeURIComponent('https://religion.byu.edu'));
+});
 
-    connection.connect(function(err) {
-        if (err) {
-            console.error('error connecting: ' + err.stack);
-            return;
-        }
-
-        console.log('connected as id ' + connection.threadId);
-    });
-
-    res.render('test', {title: 'Welcome', name: 'McKay'})
+router.get('/getTicket', function (req, res, next) {
+    let ticket = req.body.ticket;
+    res.redirect('/');
 });
 
 module.exports = router;
