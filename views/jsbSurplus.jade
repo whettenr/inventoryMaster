@@ -1,0 +1,172 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='/stylesheets/card.css')
+    div
+        h4.left Computers:
+    table
+        tr
+            th
+                | ICN
+            th
+                | Make
+            th
+                | Model
+            th
+                | Type
+            th
+                | Date Acquired
+        each computer in computers
+            tr(ondragstart="dragStart(event)" ondragend="stop(event)" draggable="true" ondrag="dragging(event)" onclick="getComputerInfo(#{computer.ICN}, #{employee.EmployeeID})")
+                td= computer.ICN
+                td= computer.Make
+                td= computer.Model
+                td= computer.Type
+                td= computer.DateAcquired
+    div
+        h4.left Monitors:
+    table
+        tr
+            th
+                | ICN
+            th
+                | Make
+            th
+                | Model
+        each monitor in monitors
+            tr(ondragstart="dragStart(event)" ondragend="stop(event)" draggable="true" ondrag="dragging(event)" onclick="getMonitorInfo(#{monitor.ICN}, #{employee.EmployeeID})")
+                td= monitor.ICN
+                td= monitor.Make
+                td= monitor.Model
+    div
+        h4.left Printers:
+
+    table
+        tr
+            th
+                | ICN
+            th
+                | Make
+            th
+                | Model
+        each printer in printers
+            tr(ondragstart="dragStart(event)" ondragend="stop(event)" draggable="true" ondrag="dragging(event)" onclick="getPrinterInfo(#{printer.ICN}, #{printer.EmployeeID})")
+                td= printer.ICN
+                td= printer.Make
+                td= printer.Model
+    div
+        h4.left Peripherals:
+
+    table
+        tr
+            th
+                | ICN
+            th
+                | Item
+            th
+                | Make
+            th
+                | Model
+        each peripheral in peripherals
+            tr(ondragstart="dragStart(event)" ondragend="stop(event)" draggable="true" ondrag="dragging(event)" onclick="getPeripheralInfo(#{peripheral.ICN}, #{peripheral.EmployeeID})")
+                td= peripheral.ICN
+                td= peripheral.Item
+                td= peripheral.Make
+                td= peripheral.Model
+    br
+    script.
+        function getComputerInfo(ICN, EmployeeID) {
+            console.log(ICN);
+            $.ajax({
+                type: "GET",
+                url: "computer?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#computerInfo").html(data);
+                $("#computerInfo").css('display', 'block');
+                $("#cardInfo").css('display', 'none');
+
+
+            });
+        }
+        function getMonitorInfo(ICN, EmployeeID) {
+            console.log(ICN);
+            $.ajax({
+                type: "GET",
+                url: "monitor?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#computerInfo").html(data);
+                $("#computerInfo").css('display', 'block');
+                $("#cardInfo").css('display', 'none');
+
+
+            });
+        }
+        function getPrinterInfo(ICN, EmployeeID) {
+            console.log(ICN);
+            $.ajax({
+                type: "GET",
+                url: "printer?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#computerInfo").html(data);
+                $("#computerInfo").css('display', 'block');
+                $("#cardInfo").css('display', 'none');
+
+
+            });
+        }
+        function getPeripheralInfo(ICN, EmployeeID) {
+            console.log(ICN);
+            $.ajax({
+                type: "GET",
+                url: "peripheral?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#computerInfo").html(data);
+                $("#computerInfo").css('display', 'block');
+                $("#cardInfo").css('display', 'none');
+
+
+            });
+        }
+        function newComputer(EmployeeID) {
+            $.ajax({
+                type: "GET",
+                url: "newComputer?EmployeeID=" + EmployeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#computerInfo").html(data);
+                $("#computerInfo").css('display', 'block');
+                $("#cardInfo").css('display', 'none');
+
+
+            });
+        }
+
+        function newPeripheral(EmployeeID) {
+            $.ajax({
+                type: "GET",
+                url: "newPeripheral?EmployeeID=" + EmployeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#computerInfo").html(data);
+                $("#computerInfo").css('display', 'block');
+                $("#cardInfo").css('display', 'none');
+
+
+            });
+        }
+        function newMonitor(EmployeeID) {
+            $.ajax({
+                type: "GET",
+                url: "newMonitor?EmployeeID=" + EmployeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#computerInfo").html(data);
+                $("#computerInfo").css('display', 'block');
+                $("#cardInfo").css('display', 'none');
+            });
+        }
+
