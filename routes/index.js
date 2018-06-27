@@ -647,28 +647,28 @@ router.get('/newComputer', function (req, res, next) {
             processorTypeOptions = rows;
             processorTypeOptions[processorTypeOptions.length] = {ProcessorType: 'None'};
             processorTypeOptions[processorTypeOptions.length] = {ProcessorType: 'Add a New Option'};
-            return database.query('SELECT DISTINCT ProcessorSpeed FROM hardware ORDER BY ProcessorSpeed')
+            return database.query('SELECT DISTINCT ProcessorSpeed FROM Hardware ORDER BY ProcessorSpeed')
 
         })
         .then(rows => {
             processorSpeedOptions = rows;
             processorSpeedOptions[processorSpeedOptions.length] = {ProcessorSpeed: 'None'};
             processorSpeedOptions[processorSpeedOptions.length] = {ProcessorSpeed: 'Add a New Option'};
-            return database.query('SELECT DISTINCT Memory FROM hardware ORDER BY Memory')
+            return database.query('SELECT DISTINCT Memory FROM Hardware ORDER BY Memory')
 
         })
         .then(rows => {
             memoryOptions = rows;
             memoryOptions[memoryOptions.length] = {Memory: 'None'};
             memoryOptions[memoryOptions.length] = {Memory: 'Add a New Option'};
-            return database.query('SELECT DISTINCT HardDrive FROM hardware ORDER BY HardDrive')
+            return database.query('SELECT DISTINCT HardDrive FROM Hardware ORDER BY HardDrive')
 
         })
         .then(rows => {
             hardDriveOptions = rows;
             hardDriveOptions[hardDriveOptions.length] = {HardDrive: 'None'};
             hardDriveOptions[hardDriveOptions.length] = {HardDrive: 'Add a New Option'};
-            return database.query('SELECT DISTINCT VCName FROM hardware ORDER BY VCName')
+            return database.query('SELECT DISTINCT VCName FROM Hardware ORDER BY VCName')
 
         })
         .then(rows => {
@@ -780,13 +780,13 @@ router.post('/newComputer', function (req, res, next) {
     let database = new Database(config.getConfig());
     let hardwareId = -1;
 
-    database.query('SELECT * FROM hardware WHERE ProcessorType = ? and ProcessorSpeed = ? and Memory = ? and HardDrive = ? and VCName = ?', [req.body.processorType, req.body.processorSpeed, req.body.memory, req.body.hardDrive, req.body.graphicsCard])
+    database.query('SELECT * FROM Hardware WHERE ProcessorType = ? and ProcessorSpeed = ? and Memory = ? and HardDrive = ? and VCName = ?', [req.body.processorType, req.body.processorSpeed, req.body.memory, req.body.hardDrive, req.body.graphicsCard])
         .then(rows => {
             if (rows.length > 0) {
                 hardwareId = rows[0].HardwareID;
             }
             else
-                return database.query('INSERT INTO hardware (ProcessorType, ProcessorSpeed, Memory, HardDrive, VCName) VALUES (?)', [[req.body.processorType, req.body.processorSpeed, req.body.memory, req.body.hardDrive, req.body.graphicsCard]])
+                return database.query('INSERT INTO Hardware (ProcessorType, ProcessorSpeed, Memory, HardDrive, VCName) VALUES (?)', [[req.body.processorType, req.body.processorSpeed, req.body.memory, req.body.hardDrive, req.body.graphicsCard]])
         })
         .then(rows => {
             if (hardwareId === -1) {
