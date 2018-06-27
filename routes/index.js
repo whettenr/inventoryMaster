@@ -641,7 +641,7 @@ router.get('/newComputer', function (req, res, next) {
         })
         .then(rows => {
             employees = rows;
-            return database.query('SELECT DISTINCT ProcessorType FROM hardware ORDER BY ProcessorType')
+            return database.query('SELECT DISTINCT ProcessorType FROM Hardware ORDER BY ProcessorType')
         })
         .then(rows => {
             processorTypeOptions = rows;
@@ -964,11 +964,20 @@ router.get('/updateDates', function (req, res, next) {
 
 router.get('/test', function (req, res, next) {
 
-    res.redirect('https://cas.byu.edu/login?service=' + encodeURIComponent('https://religion.byu.edu'));
+    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('http://localhost:3000/getTicket'));
 });
 
 router.get('/getTicket', function (req, res, next) {
-    let ticket = req.body.ticket;
+    let ticket = req.query.ticket;
+    let service = 'http://localhost:3000/getTicket';
+
+    cas.validate(ticket, service).then(function success(response) {
+        console.log("Ticket valid! Hello, " + response.username);
+        console.dir(response.attributes);
+    }).catch(function error(e) {
+        console.log("Invalid ticket. Error message was: " + e.message);
+    });
+
     res.redirect('/');
 });
 
