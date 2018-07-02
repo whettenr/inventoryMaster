@@ -57,7 +57,7 @@ let finalQuery = "";
 /* GET home page. */
 
 function checkUser(netid) {
-    let possiblities = ['mmcourt', 'bquinlan'];
+    let possiblities = ['mmcourt', 'bquinlan', 'rbc9'];
     for (let i in possiblities) {
         if (possiblities[i] === netid) {
             return true;
@@ -67,8 +67,8 @@ function checkUser(netid) {
 }
 
 router.get('/employeesTable', function (req, res, next) {
-    if (!checkUser(req.session.user))
-        res.redirect('/test');
+    if (!req.session.user)
+        res.redirect('/cas');
     let database = new Database(config.getConfig());
     if (req.query.clear) {
         employeeFilters = [];
@@ -145,6 +145,8 @@ router.get('/employeesTable', function (req, res, next) {
 });
 
 router.get('/computerTable', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let connection = mysql.createConnection(config.getConfig());
     let database = new Database(config.getConfig());
     let computers = {};
@@ -218,6 +220,8 @@ router.get('/computerTable', function (req, res, next) {
 });
 
 router.get('/employees', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let database = new Database(config.getConfig());
     let employees = {};
 
@@ -235,6 +239,8 @@ router.get('/employees', function (req, res, next) {
 });
 
 router.get('/otherSlots', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let database = new Database(config.getConfig());
     let employees = {};
 
@@ -252,7 +258,8 @@ router.get('/otherSlots', function (req, res, next) {
 });
 
 router.get('/card', function (req, res, next) {
-
+    if (!req.session.user)
+        res.redirect('/cas');
     let employeeId = req.query.employeeId;
     let employeeRows = {};
     let computerRows = {};
@@ -303,6 +310,8 @@ router.get('/card', function (req, res, next) {
 });
 
 router.get('/getModelOptions', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let Make = req.query.make;
     let database = new Database(config.getConfig());
 
@@ -324,6 +333,8 @@ router.get('/getModelOptions', function (req, res, next) {
 });
 
 router.get('/getPeripheralModelOptions', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let Make = req.query.make;
     let database = new Database(config.getConfig());
 
@@ -345,7 +356,8 @@ router.get('/getPeripheralModelOptions', function (req, res, next) {
 });
 
 router.get('/item', function (req, res, next) {
-
+    if (!req.session.user)
+        res.redirect('/cas');
     let ICN = 10540;
     let categories = {};
     let Computer = {};
@@ -371,6 +383,8 @@ router.get('/item', function (req, res, next) {
 });
 
 router.get('/computer', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let ICN = req.query.ICN;
     let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
@@ -436,6 +450,8 @@ router.get('/computer', function (req, res, next) {
 });
 
 router.get('/monitor', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let ICN = req.query.ICN;
     let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
@@ -482,6 +498,8 @@ router.get('/monitor', function (req, res, next) {
 });
 
 router.get('/printer', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let ICN = req.query.ICN;
     let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
@@ -528,6 +546,8 @@ router.get('/printer', function (req, res, next) {
 });
 
 router.get('/peripheral', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let ICN = req.query.ICN;
     let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
@@ -580,6 +600,8 @@ router.get('/peripheral', function (req, res, next) {
 });
 
 router.get('/newPeripheral', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
     let makeOptions = {};
@@ -632,6 +654,8 @@ router.get('/newPeripheral', function (req, res, next) {
 });
 
 router.get('/newComputer', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
     let employee = {};
@@ -731,6 +755,8 @@ router.get('/newComputer', function (req, res, next) {
 });
 
 router.get('/newMonitor', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
     let makeOptions = {};
@@ -778,6 +804,8 @@ router.get('/newMonitor', function (req, res, next) {
 });
 
 router.get('/download/rotation', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let rotation = req.query.rotation;
     let Rows = {};
 
@@ -808,6 +836,8 @@ router.get('/download/rotation', function (req, res, next) {
 });
 
 router.post('/newComputer', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let database = new Database(config.getConfig());
     let hardwareId = -1;
 
@@ -840,6 +870,8 @@ router.post('/newComputer', function (req, res, next) {
 });
 
 router.post('/newMonitor', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let database = new Database(config.getConfig());
 
     database.query('INSERT INTO Monitor (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout) VALUES (?)', [[req.body.icn, req.body.EmployeeID, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout]])
@@ -858,6 +890,8 @@ router.post('/newMonitor', function (req, res, next) {
 });
 
 router.post('/newPeripheral', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let database = new Database(config.getConfig());
 
     database.query('INSERT INTO Peripheral (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout, History) VALUES (?)', [[req.body.icn, req.body.employeeId, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, ""]])
@@ -878,6 +912,8 @@ router.post('/newPeripheral', function (req, res, next) {
 });
 
 router.post('/form', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let database = new Database(config.getConfig());
     database.query("UPDATE Computer Set EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.icn])
@@ -894,6 +930,8 @@ router.post('/form', function (req, res, next) {
 });
 
 router.post('/monitor', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let database = new Database(config.getConfig());
     database.query("UPDATE Monitor SET EmployeeID = ?, Make = ?, Model = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.make, req.body.model, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
@@ -910,6 +948,8 @@ router.post('/monitor', function (req, res, next) {
 });
 
 router.post('/peripheral', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let database = new Database(config.getConfig());
     database.query("UPDATE Peripheral SET EmployeeID = ?, Item = ?, Make = ?, Model = ?, SerialNumber = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.item, req.body.make, req.body.model, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
@@ -930,13 +970,15 @@ router.get('/login', function (req, res) {
 });
 
 router.get('/', function (req, res, next) {
-    if (!checkUser(req.session.user))
-        res.redirect('/test');
+    if (!req.session.user)
+        res.redirect('/cas');
     console.log(req.session.user);
     res.render('home', {title: 'Welcome', name: req.session.user})
 });
 
 router.get('/jsbSurplus', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let employeeId = 300;
     let employeeRows = {};
     let computerRows = {};
@@ -984,6 +1026,8 @@ router.get('/jsbSurplus', function (req, res, next) {
 });
 
 router.get('/updateDates', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas');
     let database = new Database(config.getConfig());
     let employeeIds = {};
     database.query("SELECT EmployeeID FROM Employee")
@@ -1000,14 +1044,13 @@ router.get('/updateDates', function (req, res, next) {
     res.render('home', {title: 'Welcome', name: 'McKay'})
 });
 
-router.get('/test', function (req, res, next) {
-
-    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('http://religion.byu.edu:3000/getTicket'));
+router.get('/cas', function (req, res, next) {
+    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('http://localhost:3000/getTicket'));
 });
 
 router.get('/getTicket', function (req, res, next) {
     let ticket = req.query.ticket;
-    let service = 'http://religion.byu.edu:3000/getTicket';
+    let service = 'http://localhost:3000/getTicket';
     let username = '';
     cas.validate(ticket, service).then(function success(response) {
         console.log("Ticket valid! Hello, " + response.username);
