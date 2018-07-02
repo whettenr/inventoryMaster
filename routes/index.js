@@ -3,7 +3,14 @@ let mysql = require('mysql');
 let router = express.Router();
 let fs = require('fs');
 let csv = require('fast-csv');
-var cas = require('byu-cas');
+let cas = require('byu-cas');
+let cookieParser = require('cookie-parser');
+let LocalStrategy = require('passport-local').Strategy;
+let passport = require('passport');
+let session = require('express-session');
+const bodyParser = require('body-parser');
+let users = require('./users')();
+let axios = require('axios');
 
 class Database {
     constructor(config) {
@@ -33,13 +40,37 @@ class Database {
 
 let config = require('./config');
 
+
+// router.set('trust proxy', 1);
+router.use(session({secret: 'keyboard cat', cookie: {maxAge: 60000}}));
+
+// router.use('/api/users',
+//     bodyParser.urlencoded({ extended: true }),
+//     bodyParser.json(),
+//     userRouter);
+
+
 let filters = [];
 let employeeFilters = [];
 let finalQuery = "";
+
 /* GET home page. */
+
+function checkUser(netid) {
+    let possiblities = ['mmcourt', 'bquinlan'];
+    for (let i in possiblities) {
+        if (possiblities[i] === netid) {
+            return true;
+        }
+    }
+    return false;
+}
+
 router.get('/employeesTable', function (req, res, next) {
+    if (!checkUser(req.session.user))
+        res.redirect('/test');
     let database = new Database(config.getConfig());
-    if(req.query.clear){
+    if (req.query.clear) {
         employeeFilters = [];
     }
     let query = 'Select * FROM Employee';
@@ -105,7 +136,7 @@ router.get('/employeesTable', function (req, res, next) {
             // }
             // console.log("test");
         })
-        .then(()=> {
+        .then(() => {
             res.render('index', {title: 'Employees', employees: employees, filters: employeeFilters});
         })
         .catch(err => {
@@ -813,7 +844,7 @@ router.post('/newMonitor', function (req, res, next) {
 
     database.query('INSERT INTO Monitor (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout) VALUES (?)', [[req.body.icn, req.body.EmployeeID, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout]])
         .then(rows => {
-            if(rows)
+            if (rows)
                 console.log(rows);
             return database.close();
         })
@@ -829,11 +860,11 @@ router.post('/newMonitor', function (req, res, next) {
 router.post('/newPeripheral', function (req, res, next) {
     let database = new Database(config.getConfig());
 
-    database.query('INSERT INTO Peripheral (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout) VALUES (?)', [[req.body.icn, req.body.employeeId, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout]])
+    database.query('INSERT INTO Peripheral (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout, History) VALUES (?)', [[req.body.icn, req.body.employeeId, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, ""]])
         .then(rows => {
-            if(rows){
+            if (rows) {
                 console.log(rows);
-                console.log('INSERT INTO Peripheral (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout) VALUES (?,?,?,?,?,?,?,?,?,?)'+req.body.icn+req.body.employeeId+req.body.item+req.body.make+req.body.model+req.body.notes+req.body.serialNumber+req.body.dateAcquired+req.body.warranty+req.body.homeCheckout);
+                console.log('INSERT INTO Peripheral (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout, History) VALUES (?,?,?,?,?,?,?,?,?,?,?)' + req.body.icn + req.body.employeeId + req.body.item + req.body.make + req.body.model + req.body.notes + req.body.serialNumber + req.body.dateAcquired + req.body.warranty + req.body.homeCheckout, "");
             }
             return database.close();
         })
@@ -894,8 +925,15 @@ router.post('/peripheral', function (req, res, next) {
     // res.render('home', {title: 'Welcome', name: 'McKay'})
 });
 
+router.get('/login', function (req, res) {
+    res.render('login');
+});
+
 router.get('/', function (req, res, next) {
-    res.render('home', {title: 'Welcome', name: 'McKay'})
+    if (!checkUser(req.session.user))
+        res.redirect('/test');
+    console.log(req.session.user);
+    res.render('home', {title: 'Welcome', name: req.session.user})
 });
 
 router.get('/jsbSurplus', function (req, res, next) {
@@ -951,7 +989,7 @@ router.get('/updateDates', function (req, res, next) {
     database.query("SELECT EmployeeID FROM Employee")
         .then(rows => {
             employeeIds = rows;
-            for(let i in employeeIds){
+            for (let i in employeeIds) {
                 console.log("SELECT DateAcquired FROM Computer WHERE EmployeeID = " + employeeIds[i].EmployeeID + " AND Type = 'On Rotation'");
             }
         })
@@ -964,21 +1002,32 @@ router.get('/updateDates', function (req, res, next) {
 
 router.get('/test', function (req, res, next) {
 
-    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('http://localhost:3000/getTicket'));
+    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('http://religion.byu.edu:3000/getTicket'));
 });
 
 router.get('/getTicket', function (req, res, next) {
     let ticket = req.query.ticket;
-    let service = 'http://localhost:3000/getTicket';
-
+    let service = 'http://religion.byu.edu:3000/getTicket';
+    let username = '';
     cas.validate(ticket, service).then(function success(response) {
         console.log("Ticket valid! Hello, " + response.username);
+        username = response.username;
         console.dir(response.attributes);
-    }).catch(function error(e) {
-        console.log("Invalid ticket. Error message was: " + e.message);
-    });
+    })
+        .then(() => {
+            if (checkUser(username)) {
+                req.session.user = username;
+                res.redirect('/');
+            }
+            else {
+                res.redirect('/login');
+            }
+        })
+        .catch(function error(e) {
+            console.log("Invalid ticket. Error message was: " + e.message);
+        });
 
-    res.redirect('/');
+
 });
 
 module.exports = router;

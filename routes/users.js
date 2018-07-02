@@ -1,9 +1,30 @@
-var express = require('express');
-var router = express.Router();
+'use strict';
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+module.exports = Users;
 
-module.exports = router;
+function Users() {
+    const users = {};
+    let possiblities = ['mmcourt', 'bquinlan'];
+    users.create = async function(netid, password, name, email) {
+
+    };
+
+    users.authenticate = async function(netid) {
+      for(let i in possiblities){
+        if(possiblities[i] === netid){
+          return true;
+        }
+      }
+        return false;
+    };
+
+    users.exists = async function(netid) {
+
+    };
+
+    users.getUser = async function(netid) {
+
+    };
+
+    return users;
+}
