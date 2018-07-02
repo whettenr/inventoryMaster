@@ -5,11 +5,11 @@ module.exports = Users;
 function Users() {
     const users = {};
     let possiblities = ['mmcourt', 'bquinlan'];
-    users.create = async function(netid, password, name, email) {
+    users.create = function(netid, password, name, email) {
         console.log(netid);
     };
 
-    users.authenticate = async function(netid) {
+    users.authenticate = function(netid) {
       for(let i in possiblities){
         if(possiblities[i] === netid){
           return true;
@@ -18,12 +18,12 @@ function Users() {
         return false;
     };
 
-    users.exists = async function(netid) {
+    users.exists = function(netid) {
         console.log(netid);
 
     };
 
-    users.getUser = async function(netid) {
+    users.getUser = function(netid) {
         console.log(netid);
 
     };
