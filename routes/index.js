@@ -9,8 +9,8 @@ let LocalStrategy = require('passport-local').Strategy;
 let passport = require('passport');
 let session = require('express-session');
 const bodyParser = require('body-parser');
-let users = require('./users')();
-let axios = require('axios');
+// let users = require('./users')();
+// let axios = require('axios');
 
 class Database {
     constructor(config) {
