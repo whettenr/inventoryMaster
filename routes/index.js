@@ -42,7 +42,7 @@ let config = require('./config');
 
 
 // router.set('trust proxy', 1);
-router.use(session({secret: 'keyboard cat', cookie: {maxAge: 60000}}));
+// router.use(session({secret: 'keyboard cat', cookie: {maxAge: 60000}}));
 
 // router.use('/api/users',
 //     bodyParser.urlencoded({ extended: true }),
