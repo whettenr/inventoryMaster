@@ -22,8 +22,8 @@ block content
                 url: "card?employeeId=" + employeeID,
                 data: {format: 'html'}
             }).done(function (data) {
-                $("#cardDad").html(data);
                 $("#cardDad").addClass( "cardDadCss" );
+                $("#cardDad").html(data);
                 $("#cardDad").css('display', 'block');
             });
         }
