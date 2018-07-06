@@ -2,7 +2,7 @@ extends layout
 
 block content
     #tempData(style='display: none;')
-    div(id='cardDad')
+    div(id='cardDad' style='display: none;')
     table
         tbody
             each employee, i in employees
@@ -23,6 +23,7 @@ block content
                 data: {format: 'html'}
             }).done(function (data) {
                 $("#cardDad").html(data);
+                $("#cardDad").addClass( "cardDadCss" );
                 $("#cardDad").css('display', 'block');
             });
         }

@@ -1,32 +1,33 @@
 doctype html
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    link(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
-    link(rel='stylesheet', href="https://www.w3schools.com/w3css/4/w3.css")
-    link(type="text/css", rel="stylesheet", href="//cloud.typography.com/75214/6517752/css/fonts.css", media="all")
-    link(rel="stylesheet", href="https://cdn.byu.edu/byu-theme-components/latest/byu-theme-components.min.css")
-    script(async="", src="https://cdn.byu.edu/byu-theme-components/latest/byu-theme-components.min.js")
-    meta(name="viewport", content="width=device-width, initial-scale=1.0")
-  body
-      byu-header(full-width="")
-          span(slot="site-title") Religious Education Inventory
-          span(slot="site-title" class="subtitle") #{title}
-          byu-search(slot="search", action="https://www.google.com/#q=$1", method="get", placeholder="Search")
-          byu-user-info(slot="user")
-              a(slot="login", href="/cas") Sign In
-              a(slot="logout", href="/logout") Sign Out
-              span(slot="user-name") #{name}
-          byu-menu(slot="nav", collapsed="")
-              a(href="/") Home
-              a(href="/employees") Employees
-              a(href="/otherSlots") Other Slots
-              a(href="/") Rotations
-              a(href="/tables") Tables
-              a(href="/jsbSurplus") JSB Storage
-    block content
-    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+    head
+        title= title
+        link(rel='stylesheet', href='/stylesheets/card.css')
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        link(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
+        link(rel='stylesheet', href="https://www.w3schools.com/w3css/4/w3.css")
+        link(type="text/css", rel="stylesheet", href="//cloud.typography.com/75214/6517752/css/fonts.css", media="all")
+        link(rel="stylesheet", href="https://cdn.byu.edu/byu-theme-components/latest/byu-theme-components.min.css")
+        script(async="", src="https://cdn.byu.edu/byu-theme-components/latest/byu-theme-components.min.js")
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    body
+        byu-header(full-width="")
+            span(slot="site-title") Religious Education Inventory
+            span(slot="site-title" class="subtitle") #{title}
+            byu-search(slot="search", action="https://www.google.com/#q=$1", method="get", placeholder="Search")
+            byu-user-info(slot="user")
+                a(slot="login", href="/cas") Sign In
+                a(slot="logout", href="/logout") Sign Out
+                span(slot="user-name") #{name}
+            byu-menu(slot="nav", collapsed="")
+                a(href="/") Home
+                a(href="/employees") Employees
+                a(href="/otherSlots") Other Slots
+                a(href="/") Rotations
+                a(href="/tables") Tables
+                a(href="/jsbSurplus") JSB Storage
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+        block content
     script.
         function dragStart(event) {
             console.log(event.target);

@@ -1,4 +1,4 @@
-#cardDad {
+.cardDadCss {
     /*display: none; !* Hidden by default *!*/
     position: fixed; /* Stay in place */
     /*z-index: 1; !* Sit on top *!*/
@@ -38,28 +38,28 @@
 .left {
     padding-left: 25px;
 }
-table {
-    width: 100%;
-    text-align: center;
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    padding-bottom: 25px;
-}
-td, th {
-    /*border: 1px solid #ddd;*/
-    padding: 8px;
-}
+/*table {*/
+    /*width: 100%;*/
+    /*text-align: center;*/
+    /*font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;*/
+    /*border-collapse: collapse;*/
+    /*padding-bottom: 25px;*/
+/*}*/
+/*td, th {*/
+    /*!*border: 1px solid #ddd;*!*/
+    /*padding: 8px;*/
+/*}*/
 
-tr:nth-child(even){background-color: #f2f2f2;}
+/*tr:nth-child(even){background-color: #f2f2f2;}*/
 
-/*tr:hover {background-color: #ddd;}*/
+/*!*tr:hover {background-color: #ddd;}*!*/
 
-th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    background-color: #002E5D;
-    color: white;
-}
+/*th {*/
+    /*padding-top: 12px;*/
+    /*padding-bottom: 12px;*/
+    /*background-color: #002E5D;*/
+    /*color: white;*/
+/*}*/
 
 .close {
     border-style: solid;
