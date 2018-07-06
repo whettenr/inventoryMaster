@@ -5,24 +5,26 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
     link(rel='stylesheet', href="https://www.w3schools.com/w3css/4/w3.css")
+    link(type="text/css", rel="stylesheet", href="//cloud.typography.com/75214/6517752/css/fonts.css", media="all")
+    link(rel="stylesheet", href="https://cdn.byu.edu/byu-theme-components/latest/byu-theme-components.min.css")
+    script(async="", src="https://cdn.byu.edu/byu-theme-components/latest/byu-theme-components.min.js")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
   body
-    div(class='navbar')
-      a(href='/') Home
-      a(href='/employees') Employees
-      a(href='/otherSlots') Other Slots
-      div(class='dropdown')
-          div(class='dropbtn') Rotations
-          div(class='dropdown-content')
-              a(href='/employeesTable?where=rotationGroup=1&clear=1') Rotation 1
-              a(href='/employeesTable?where=rotationGroup=2&clear=1') Rotation 2
-              a(href='/employeesTable?where=rotationGroup=3&clear=1') Rotation 3
-              a(href='/employeesTable?where=rotationGroup=4&clear=1') Rotation 4
-      div(class='dropdown')
-        div(class='dropbtn') Tables
-        div(class='dropdown-content')
-          a(href='/employeesTable') Employees
-          a(href='/computerTable') Computers
-      a(href='jsbSurplus') JSB Surplus
+      byu-header(full-width="")
+          span(slot="site-title") Religious Education Inventory
+          span(slot="site-title" class="subtitle") #{title}
+          byu-search(slot="search", action="https://www.google.com/#q=$1", method="get", placeholder="Search")
+          byu-user-info(slot="user")
+              a(slot="login", href="/cas") Sign In
+              a(slot="logout", href="/logout") Sign Out
+              span(slot="user-name") #{name}
+          byu-menu(slot="nav", collapsed="")
+              a(href="/") Home
+              a(href="/employees") Employees
+              a(href="/otherSlots") Other Slots
+              a(href="/") Rotations
+              a(href="/tables") Tables
+              a(href="/jsbSurplus") JSB Storage
     block content
     script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
     script.

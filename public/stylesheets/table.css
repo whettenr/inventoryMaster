@@ -22,26 +22,27 @@
 }
 
 tr {
-    -webkit-transition: height 1s; /* For Safari 3.1 to 6.0 */
-    transition: height 1s;
+    /*-webkit-transition: height 1s; !* For Safari 3.1 to 6.0 *!*/
+    /*transition: height 1s;*/
     height: 50px;
 }
 
 tr:hover {
     /*background-color: #ddd;*/
-    height: 100px;
+    /*height: 100px;*/
 }
 
 tr:hover img, tr.hover img {
-    height: 80px;
+    /*height: 80px;*/
 }
 
 #table th {
     padding-top: 12px;
     padding-bottom: 12px;
-    text-align: left;
-    background-color: #4CAF50;
-    color: white;
+    /*text-align: left;*/
+    /*background-color: #4CAF50;*/
+    /*color: white;*/
+    border-top: 0;
 }
 
 img {

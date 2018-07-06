@@ -42,7 +42,7 @@ let config = require('./config');
 
 
 // router.set('trust proxy', 1);
-router.use(session({secret: 'keyboard cat', cookie: {maxAge: 60000}}));
+router.use(session({secret: 'keyboard cat', cookie: {maxAge: 3600000}, resave: false, saveUninitialized: false}));
 
 // router.use('/api/users',
 //     bodyParser.urlencoded({ extended: true }),
@@ -68,7 +68,7 @@ function checkUser(netid) {
 
 router.get('/employeesTable', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/employeesTable');
     let database = new Database(config.getConfig());
     if (req.query.clear) {
         employeeFilters = [];
@@ -137,7 +137,12 @@ router.get('/employeesTable', function (req, res, next) {
             // console.log("test");
         })
         .then(() => {
-            res.render('index', {title: 'Employees', employees: employees, filters: employeeFilters});
+            res.render('index', {
+                title: 'Employees',
+                employees: employees,
+                filters: employeeFilters,
+                name: req.session.user
+            });
         })
         .catch(err => {
             throw(err);
@@ -146,7 +151,7 @@ router.get('/employeesTable', function (req, res, next) {
 
 router.get('/computerTable', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/computerTable');
     let connection = mysql.createConnection(config.getConfig());
     let database = new Database(config.getConfig());
     let computers = {};
@@ -210,7 +215,12 @@ router.get('/computerTable', function (req, res, next) {
             computers = rows;
         })
         .then(() => {
-            res.render('computers', {title: 'Computers', computers: computers, filters: filters});
+            res.render('computers', {
+                title: 'Computers',
+                computers: computers,
+                filters: filters,
+                name: req.session.user
+            });
         })
         .catch(err => {
             console.log(err);
@@ -221,7 +231,7 @@ router.get('/computerTable', function (req, res, next) {
 
 router.get('/employees', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/employees');
     let database = new Database(config.getConfig());
     let employees = {};
 
@@ -230,7 +240,7 @@ router.get('/employees', function (req, res, next) {
             employees = rows;
         })
         .then(() => {
-            res.render('employees', {title: 'Employees', employees: employees});
+            res.render('employees', {title: 'Employees', employees: employees, name: req.session.user});
 
         })
         .catch(err => {
@@ -240,7 +250,7 @@ router.get('/employees', function (req, res, next) {
 
 router.get('/otherSlots', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/otherSlots');
     let database = new Database(config.getConfig());
     let employees = {};
 
@@ -249,7 +259,7 @@ router.get('/otherSlots', function (req, res, next) {
             employees = rows;
         })
         .then(() => {
-            res.render('index', {title: 'Employees', employees: employees});
+            res.render('index', {title: 'Other Slots', employees: employees, name: req.session.user});
 
         })
         .catch(err => {
@@ -259,7 +269,7 @@ router.get('/otherSlots', function (req, res, next) {
 
 router.get('/card', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/card?employeeId=' + req.query.employeeId);
     let employeeId = req.query.employeeId;
     let employeeRows = {};
     let computerRows = {};
@@ -311,7 +321,7 @@ router.get('/card', function (req, res, next) {
 
 router.get('/getModelOptions', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/getModelOptions');
     let Make = req.query.make;
     let database = new Database(config.getConfig());
 
@@ -334,7 +344,7 @@ router.get('/getModelOptions', function (req, res, next) {
 
 router.get('/getPeripheralModelOptions', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/getPeripheralModelOptions');
     let Make = req.query.make;
     let database = new Database(config.getConfig());
 
@@ -357,7 +367,7 @@ router.get('/getPeripheralModelOptions', function (req, res, next) {
 
 router.get('/item', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/item');
     let ICN = 10540;
     let categories = {};
     let Computer = {};
@@ -375,7 +385,12 @@ router.get('/item', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.render('item', {title: 'Welcome', categories: categories, computer: computer[0]})
+            res.render('item', {
+                title: 'Welcome',
+                categories: categories,
+                computer: computer[0],
+                name: req.session.user
+            })
         })
         .catch(err => {
             console.log(err);
@@ -384,7 +399,7 @@ router.get('/item', function (req, res, next) {
 
 router.get('/computer', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/computer?EmployeeID' + req.query.EmployeeID + "&ICN=" + req.query.ICN);
     let ICN = req.query.ICN;
     let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
@@ -451,7 +466,7 @@ router.get('/computer', function (req, res, next) {
 
 router.get('/monitor', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/monitor?EmployeeID=' + req.query.EmployeeID + "&ICN=" + req.query.ICN);
     let ICN = req.query.ICN;
     let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
@@ -490,6 +505,7 @@ router.get('/monitor', function (req, res, next) {
                 employees,
                 monitor,
                 employee,
+                name: req.session.user
             })
         })
         .catch(err => {
@@ -499,7 +515,7 @@ router.get('/monitor', function (req, res, next) {
 
 router.get('/printer', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/printer?EmployeeID=' + req.query.EmployeeID + "&ICN=" + req.query.ICN);
     let ICN = req.query.ICN;
     let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
@@ -538,6 +554,7 @@ router.get('/printer', function (req, res, next) {
                 employees,
                 printer,
                 employee,
+                name: req.session.user
             })
         })
         .catch(err => {
@@ -547,7 +564,7 @@ router.get('/printer', function (req, res, next) {
 
 router.get('/peripheral', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/peripheral?EmployeeID=' + req.query.EmployeeID + "&ICN=" + req.query.ICN);
     let ICN = req.query.ICN;
     let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
@@ -592,6 +609,7 @@ router.get('/peripheral', function (req, res, next) {
                 employees,
                 peripheral,
                 employee,
+                name: req.session.user
             })
         })
         .catch(err => {
@@ -601,7 +619,7 @@ router.get('/peripheral', function (req, res, next) {
 
 router.get('/newPeripheral', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/newPeripheral?EmployeeID='+req.query.EmployeeID);
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
     let makeOptions = {};
@@ -646,6 +664,7 @@ router.get('/newPeripheral', function (req, res, next) {
                 itemOptions,
                 employees,
                 employee,
+                name: req.session.user
             })
         })
         .catch(err => {
@@ -655,7 +674,7 @@ router.get('/newPeripheral', function (req, res, next) {
 
 router.get('/newComputer', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/newComputer?EmployeeID='+req.query.EmployeeID);
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
     let employee = {};
@@ -746,7 +765,8 @@ router.get('/newComputer', function (req, res, next) {
                 processorSpeedOptions,
                 memoryOptions,
                 hardDriveOptions,
-                graphicsCardOptions
+                graphicsCardOptions,
+                name: req.session.user
             })
         })
         .catch(err => {
@@ -756,7 +776,7 @@ router.get('/newComputer', function (req, res, next) {
 
 router.get('/newMonitor', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/newMonitor?EmployeeID='+req.query.EmployeeID);
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
     let makeOptions = {};
@@ -795,7 +815,8 @@ router.get('/newMonitor', function (req, res, next) {
                 modelOptions,
                 employees,
                 employee,
-                EmployeeID
+                EmployeeID,
+                name: req.session.user
             })
         })
         .catch(err => {
@@ -805,7 +826,7 @@ router.get('/newMonitor', function (req, res, next) {
 
 router.get('/download/rotation', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/download/rotation');
     let rotation = req.query.rotation;
     let Rows = {};
 
@@ -835,9 +856,13 @@ router.get('/download/rotation', function (req, res, next) {
 
 });
 
+router.get('/tables', function (req, res, next) {
+    res.render('tables', {title: 'Tables', name: req.session.user})
+});
+
 router.post('/newComputer', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/');
     let database = new Database(config.getConfig());
     let hardwareId = -1;
 
@@ -871,7 +896,7 @@ router.post('/newComputer', function (req, res, next) {
 
 router.post('/newMonitor', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/');
     let database = new Database(config.getConfig());
 
     database.query('INSERT INTO Monitor (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout) VALUES (?)', [[req.body.icn, req.body.EmployeeID, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout]])
@@ -891,7 +916,7 @@ router.post('/newMonitor', function (req, res, next) {
 
 router.post('/newPeripheral', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/');
     let database = new Database(config.getConfig());
 
     database.query('INSERT INTO Peripheral (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout, History) VALUES (?)', [[req.body.icn, req.body.employeeId, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, ""]])
@@ -913,7 +938,7 @@ router.post('/newPeripheral', function (req, res, next) {
 
 router.post('/form', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/');
     let database = new Database(config.getConfig());
     database.query("UPDATE Computer Set EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.icn])
@@ -931,7 +956,7 @@ router.post('/form', function (req, res, next) {
 
 router.post('/monitor', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/');
     let database = new Database(config.getConfig());
     database.query("UPDATE Monitor SET EmployeeID = ?, Make = ?, Model = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.make, req.body.model, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
@@ -949,7 +974,7 @@ router.post('/monitor', function (req, res, next) {
 
 router.post('/peripheral', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/');
     let database = new Database(config.getConfig());
     database.query("UPDATE Peripheral SET EmployeeID = ?, Item = ?, Make = ?, Model = ?, SerialNumber = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.item, req.body.make, req.body.model, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
@@ -969,16 +994,21 @@ router.get('/login', function (req, res) {
     res.render('login');
 });
 
+router.get('/logout', function (req, res) {
+    req.session.user = null;
+    res.render('login');
+});
+
 router.get('/', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/');
     console.log(req.session.user);
     res.render('home', {title: 'Welcome', name: req.session.user})
 });
 
 router.get('/jsbSurplus', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/jsbSurplus');
     let employeeId = 300;
     let employeeRows = {};
     let computerRows = {};
@@ -1017,7 +1047,8 @@ router.get('/jsbSurplus', function (req, res, next) {
                 computers: computerRows,
                 monitors: monitorRows,
                 printers: printerRows,
-                peripherals: peripheralRows
+                peripherals: peripheralRows,
+                name: req.session.user
             })
         })
         .catch(err => {
@@ -1027,7 +1058,7 @@ router.get('/jsbSurplus', function (req, res, next) {
 
 router.get('/updateDates', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas');
+        res.redirect('/cas?goTo=/');
     let database = new Database(config.getConfig());
     let employeeIds = {};
     database.query("SELECT EmployeeID FROM Employee")
@@ -1045,12 +1076,14 @@ router.get('/updateDates', function (req, res, next) {
 });
 
 router.get('/cas', function (req, res, next) {
-    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('http://religion.byu.edu:3000/getTicket'));
+    let goTo = req.query.goTo;
+    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('http://religion.byu.edu:3000/getTicket?goTo=' + goTo));
 });
 
 router.get('/getTicket', function (req, res, next) {
     let ticket = req.query.ticket;
-    let service = 'http://religion.byu.edu:3000/getTicket';
+    let goTo = req.query.goTo;
+    let service = 'http://religion.byu.edu:3000/getTicket?goTo=' + goTo;
     let username = '';
     cas.validate(ticket, service).then(function success(response) {
         console.log("Ticket valid! Hello, " + response.username);
@@ -1060,7 +1093,7 @@ router.get('/getTicket', function (req, res, next) {
         .then(() => {
             if (checkUser(username)) {
                 req.session.user = username;
-                res.redirect('/');
+                res.redirect(goTo);
             }
             else {
                 res.redirect('/login');
@@ -1068,6 +1101,7 @@ router.get('/getTicket', function (req, res, next) {
         })
         .catch(function error(e) {
             console.log("Invalid ticket. Error message was: " + e.message);
+            res.redirect('/login');
         });
 
 

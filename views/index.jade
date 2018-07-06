@@ -2,7 +2,6 @@ extends layout
 
 block content
     link(rel='stylesheet', href='/stylesheets/table.css')
-    h1= title
     #tempData(style='display: none;')
     div(id='cardDad')
     #filters
@@ -27,15 +26,15 @@ block content
                     th= "Category"
                     th= "Office Location"
                     th= "Building"
-                    //th= "Username"
-                    //th= "Email"
-                    //th
+                    th= "Username"
+                    th= "Email"
+                    th
                         a(href='/employeesTable?sortby=rotationGroup')
                             div= "Roation Group"
-                    //th
+                    th
                         a(href='/employeesTable?sortby=dateSwitched')
                             div= "Date Switched"
-                    //th= "Notes"
+                    th= "Notes"
                 each employee in employees
                     tr(onclick='getCard(#{employee.EmployeeID})')
                         td= employee.EmployeeID
@@ -44,15 +43,15 @@ block content
                         td= employee.Category
                         td= employee.Office
                         td= employee.Building
-                        //td= employee.UserName
-                        //td= employee.Email
-                        //td
+                        td= employee.UserName
+                        td= employee.Email
+                        td
                             a(href='/employeesTable?where=rotationGroup=#{employee.RotationGroup}')
                                 div= employee.RotationGroup
-                        //td
+                        td
                             a(href='/employeesTable?where=dateSwitched=#{employee.DateSwitched}')
                                 div= employee.DateSwitched
-                        //td= employee.Notes
+                        td= employee.Notes
     script.
         function getCard(employeeID) {
             console.log(employeeID);

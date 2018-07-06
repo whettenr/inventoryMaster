@@ -5,7 +5,7 @@ body {
 
 .navbar {
   overflow: hidden;
-  background-color: navy;
+  background-color: #002E5D;
   font-family: Arial;
 }
 
@@ -25,7 +25,7 @@ table {
   font-family: arial, sans-serif;
   /*border-spacing: 0;*/
   width: 100%;
-  border: 1px solid #ddd;
+  /*border: 1px solid #ddd;*/
 }
 
 td, th {
@@ -76,7 +76,7 @@ a:visited{
 
 .navbar a:hover, .dropdown:hover .dropbtn {
   background-color: grey;
-  color: navy;
+  color: #002E5D;
 }
 
 .dropdown-content, .dropdown-content a:visited {
@@ -123,7 +123,7 @@ a:visited{
   text-decoration: none;
   padding: 3px;
   margin: 3px;
-  background-color: lightseagreen;
+  background-color: #0057B8;
 }
 
 
