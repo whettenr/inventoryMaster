@@ -279,6 +279,9 @@ router.get('/monitorsTable', function (req, res, next) {
     else if (req.query.sortby === 'Make') {
         query += ' ORDER BY Make';
     }
+    else if (req.query.sortby === 'Model') {
+        query += ' ORDER BY Model';
+    }
     else if (req.query.sortby === 'firstName') {
         query += ' ORDER BY firstName';
     }
