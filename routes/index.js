@@ -1143,7 +1143,7 @@ router.get('/download/monitors', function (req, res, next) {
 
             writableStream.on("finish", function () {
                 console.log("DONE!");
-                let file = __dirname + '/../Monitors.csv';
+                let file = __dirname + '/../bin/Monitors.csv';
                 console.log(file);
                 res.download(file);
             });
