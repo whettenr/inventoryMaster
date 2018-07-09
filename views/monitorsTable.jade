@@ -35,7 +35,7 @@ block content
                     td= "Home Checkout"
                     td= "Notes"
                 each monitor in monitors
-                    tr(onclick='getMonitorInfo(#{monitor.ICN}, #{monitor.EmployeeID})')
+                    tr
                         td
                             a(href='/monitorsTable?where=ICN=#{monitor.ICN}')
                                 div= monitor.ICN
@@ -64,7 +64,9 @@ block content
             }).done(function (data) {
                 $("#computerInfo").html(data);
                 $("#computerInfo").css('display', 'block');
+                $("#cardDad").css('display', 'block');
                 $("#cardInfo").css('display', 'none');
+                $("#cardDad").addClass("cardDadCss");
 
 
             });
