@@ -287,13 +287,6 @@ html
                             #surplus.button(onclick='surplus();') Surplus
                     .row
                         .col-25
-                            label(for='item') Item:
-                        .col-75
-                            select#item.custom-select.sources(name='item', placeholder='Item')
-                                each itemOption in itemOptions
-                                    option(value=itemOption.Item) #{itemOption.Item}
-                    .row
-                        .col-25
                             label(for='make') Make:
                         .col-75
                             select#make.custom-select.sources(name='make', placeholder='Make' onchange='refreshModelOptions()')
@@ -306,6 +299,13 @@ html
                             select#model.custom-select.sources(name='model', placeholder='Model' onchange='newModel();')
                                 each modelOption in modelOptions
                                     option(value=modelOption.Model) #{modelOption.Model}
+                    .row
+                        .col-25
+                            label(for='item') Item:
+                        .col-75
+                            select#item.custom-select.sources(name='item', placeholder='Item')
+                                each itemOption in itemOptions
+                                    option(value=itemOption.Item) #{itemOption.Item}
                     .row
                         .col-25
                             label(for='notes') Notes:
@@ -387,6 +387,15 @@ html
                     $("#model").append(new Option(model, model));
                     $("#model").val(model);
                 }
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "getItemOptions?model=" + $("#model").val(),
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#item").html(data);
+                });
             }
         }
 

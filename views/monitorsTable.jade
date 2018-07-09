@@ -1,0 +1,73 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='/stylesheets/table.css')
+    #cardDad(style='display: none;')
+        #card
+            #computerInfo
+    if(filters)
+        each filter, i in filters
+            div= filter
+            a.filterButton(href='monitorsTable?remove=' + i) Remove Filter
+            a.filterButton(href='monitorsTable?not=' + i) Inverse Filter
+
+    div= "Count: " + Object.keys(monitors).length
+    div(style='overflow-x:auto;')
+        table#table
+            tbody
+                tr#myHeader
+                    td
+                        a(href='/monitorsTable?sortby=ICN')
+                            div='ICN'
+                    td
+                        a(href='/monitorsTable?sortby=firstname')
+                            div= "First Name"
+                    td
+                        a(href='/monitorsTable?sortby=lastName')
+                            div= "Last Name"
+                    td
+                        a(href='/monitorsTable?sortby=Make')
+                            div= "Make"
+                    td= "Model"
+                    td= "Serial Number"
+                    td= "Date Acquired"
+                    td= "Warranty"
+                    td= "Home Checkout"
+                    td= "Notes"
+                each monitor in monitors
+                    tr(onclick='getMonitorInfo(#{monitor.ICN}, #{monitor.EmployeeID})')
+                        td
+                            a(href='/monitorsTable?where=ICN=#{monitor.ICN}')
+                                div= monitor.ICN
+                                //i(class="material-icons") laptop
+                        td= monitor.FirstName
+                        td= monitor.LastName
+                        td
+                            a(href='/monitorsTable?where=Make=\'#{monitor.Make}\'')
+                                div= monitor.Make
+                        td
+                            a(href='/monitorsTable?where=Model=\'#{monitor.Model}\'')
+                                div= monitor.Model
+                        td= monitor.SerialNumber
+                        td= monitor.DateAcquired
+                        td= monitor.Warranty
+                        td= monitor.HomeCheckout
+                        td= monitor.Notes
+    script.
+
+        function getMonitorInfo(ICN, EmployeeID) {
+            console.log(ICN);
+            $.ajax({
+                type: "GET",
+                url: "monitor?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#computerInfo").html(data);
+                $("#computerInfo").css('display', 'block');
+                $("#cardInfo").css('display', 'none');
+
+
+            });
+        }
+
+

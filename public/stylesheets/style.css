@@ -119,14 +119,13 @@ a:visited{
   display: block;
 }
 
-.filterButton {
+.filterButton, .filterButton:visited{
   text-decoration: none;
   padding: 3px;
   margin: 3px;
   background-color: #0057B8;
   color: white;
 }
-
 
 
 

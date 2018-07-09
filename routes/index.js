@@ -51,6 +51,7 @@ router.use(session({secret: 'keyboard cat', cookie: {maxAge: 3600000}, resave: f
 
 
 let filters = [];
+let monitorFilters = [];
 let employeeFilters = [];
 let finalQuery = "";
 
@@ -219,6 +220,86 @@ router.get('/computerTable', function (req, res, next) {
                 title: 'Computers',
                 computers: computers,
                 filters: filters,
+                name: req.session.user
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+
+});
+
+router.get('/monitorsTable', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas?goTo=/monitorsTable');
+    let connection = mysql.createConnection(config.getConfig());
+    let database = new Database(config.getConfig());
+    let monitors = {};
+
+    let query = 'SELECT * FROM Monitor LEFT JOIN Employee on Monitor.EmployeeID = Employee.employeeId';
+    if (req.query.remove) {
+        let splice = parseInt(req.query.remove);
+        monitorFilters.splice(splice, 1);
+
+    }
+    if (req.query.not) {
+        if (monitorFilters[req.query.not].includes('!='))
+            monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('!=', '=');
+        else
+            monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('=', '!=');
+    }
+    if (req.query.where) {
+        let check = true;
+        for (let i = 0; i < monitorFilters.length; i++) {
+            if (monitorFilters[i] === req.query.where) {
+                check = false;
+            }
+        }
+        if (check) {
+            monitorFilters.push(req.query.where);
+        }
+    }
+    if (monitorFilters.length > 0) {
+        query += " WHERE Monitor.";
+        for (let filter in monitorFilters) {
+            query += monitorFilters[filter];
+            query += ' and Monitor.';
+            console.log(filter);
+        }
+        query = query.substr(0, query.length - 13);
+    }
+
+    if (req.query.sortby === 'ICN') {
+        query += ' Order BY ICN';
+    }
+    else if (req.query.sortby === 'EmployeeID') {
+        query += ' ORDER BY EmployeeID';
+    }
+    else if (req.query.sortby === 'Make') {
+        query += ' ORDER BY Make';
+    }
+    else if (req.query.sortby === 'firstName') {
+        query += ' ORDER BY firstName';
+    }
+    else if (req.query.sortby === 'lastName') {
+        query += ' ORDER BY lastName';
+    }
+    else {
+        query += ' Order BY ICN';
+    }
+    console.log(query);
+
+
+    database.query(query)
+        .then(rows => {
+            monitors = rows;
+        })
+        .then(() => {
+            res.render('monitorsTable', {
+                title: 'Monitors',
+                monitors: monitors,
+                filters: monitorFilters,
                 name: req.session.user
             });
         })
@@ -474,6 +555,29 @@ router.get('/getPeripheralModelOptions', function (req, res, next) {
         })
         .then(() => {
             res.render('getModelOptions', {modelOptions});
+        })
+        .catch(err => {
+            console.log(err);
+        })
+});
+
+router.get('/getItemOptions', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas?goTo=/getItemOptions');
+    let Model = req.query.model;
+    let database = new Database(config.getConfig());
+
+    let itemOptions = {};
+
+    database.query('SELECT DISTINCT Item FROM Peripheral WHERE Model = ? ORDER BY Item', [Model])
+        .then(rows => {
+            itemOptions = rows;
+            itemOptions[itemOptions.length] = {Item: 'Add a New Option'};
+
+            database.close();
+        })
+        .then(() => {
+            res.render('getItemOptions', {itemOptions});
         })
         .catch(err => {
             console.log(err);
@@ -1193,13 +1297,13 @@ router.get('/updateDates', function (req, res, next) {
 
 router.get('/cas', function (req, res, next) {
     let goTo = req.query.goTo;
-    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('http://religion.byu.edu:3000/getTicket?goTo=' + goTo));
+    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('http://localhost:3000/getTicket?goTo=' + goTo));
 });
 
 router.get('/getTicket', function (req, res, next) {
     let ticket = req.query.ticket;
     let goTo = req.query.goTo;
-    let service = 'http://religion.byu.edu:3000/getTicket?goTo=' + goTo;
+    let service = 'http://localhost:3000/getTicket?goTo=' + goTo;
     let username = '';
     cas.validate(ticket, service).then(function success(response) {
         console.log("Ticket valid! Hello, " + response.username);
