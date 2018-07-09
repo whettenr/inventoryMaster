@@ -1075,6 +1075,88 @@ router.get('/download/rotation', function (req, res, next) {
 
 });
 
+router.get('/download/monitors', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas?goTo=/download/monitors');
+    let Rows = {};
+    let query = 'SELECT * FROM Monitor LEFT JOIN Employee on Monitor.EmployeeID = Employee.employeeId';
+    if (req.query.remove) {
+        let splice = parseInt(req.query.remove);
+        monitorFilters.splice(splice, 1);
+
+    }
+    if (req.query.not) {
+        if (monitorFilters[req.query.not].includes('!='))
+            monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('!=', '=');
+        else
+            monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('=', '!=');
+    }
+    if (req.query.where) {
+        let check = true;
+        for (let i = 0; i < monitorFilters.length; i++) {
+            if (monitorFilters[i] === req.query.where) {
+                check = false;
+            }
+        }
+        if (check) {
+            monitorFilters.push(req.query.where);
+        }
+    }
+    if (monitorFilters.length > 0) {
+        query += " WHERE Monitor.";
+        for (let filter in monitorFilters) {
+            query += monitorFilters[filter];
+            query += ' and Monitor.';
+            console.log(filter);
+        }
+        query = query.substr(0, query.length - 13);
+    }
+
+    if (req.query.sortby === 'ICN') {
+        query += ' Order BY ICN';
+    }
+    else if (req.query.sortby === 'EmployeeID') {
+        query += ' ORDER BY EmployeeID';
+    }
+    else if (req.query.sortby === 'Make') {
+        query += ' ORDER BY Make';
+    }
+    else if (req.query.sortby === 'firstName') {
+        query += ' ORDER BY firstName';
+    }
+    else if (req.query.sortby === 'lastName') {
+        query += ' ORDER BY lastName';
+    }
+    else {
+        query += ' Order BY ICN';
+    }
+    let database = new Database(config.getConfig());
+
+    database.query(query)
+        .then(rows => {
+            Rows = rows;
+            return database.close();
+        })
+        .then(() => {
+            let csvStream = csv.createWriteStream({headers: true}),
+                writableStream = fs.createWriteStream("Monitors.csv");
+
+            writableStream.on("finish", function () {
+                console.log("DONE!");
+                let file = __dirname + '/../Monitors.csv';
+                res.download(file);
+            });
+
+            csvStream.pipe(writableStream);
+            for (let i = 0; i < Rows.length; i++) {
+                csvStream.write(Rows[i]);
+            }
+            csvStream.end();
+        })
+
+
+});
+
 router.get('/tables', function (req, res, next) {
     res.render('tables', {title: 'Tables', name: req.session.user})
 });

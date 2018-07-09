@@ -12,6 +12,7 @@ block content
             a.filterButton(href='monitorsTable?not=' + i) Inverse Filter
 
     div= "Count: " + Object.keys(monitors).length
+    a.byu-button.whitenavy(href='/download/monitors') Download
     div(style='overflow-x:auto;')
         table#table
             tbody
