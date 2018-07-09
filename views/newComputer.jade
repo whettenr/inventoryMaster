@@ -93,7 +93,7 @@ html
 
             .categories {
                 overflow: hidden;
-                background-color: navy;
+                background-color: #002E5D;
                 font-family: Arial;
             }
 
@@ -249,14 +249,14 @@ html
     body
         .container
             .info
-                button.button(value='Cancel' onclick='goBack();') Cancel
-                button.button.next#showOtherInfo(value='Next' onclick='showOther();') Next
-                button.button.next#showHardwareInfo(value='Next' onclick='showHardware();' style='display: none;') Next
+                button.byu-button.medgray(value='Cancel' onclick='goBack();') Cancel
+                button.byu-button.green#showOtherInfo(value='Next' onclick='showOther();') Next
+                button.byu-button.green#showHardwareInfo(value='Next' onclick='showHardware();' style='display: none;') Next
             form(action='/newComputer', method='post')
 
 
                 .info
-                    input#submit(type='submit', value='Submit' style='display: none;')
+                    input.byu-button.green#submit(type='submit', value='Submit' style='display: none;')
                     br
                 h2 New Computer
                 h3 #{employee.FirstName} #{employee.LastName}
@@ -419,6 +419,19 @@ html
                     $("#model").val(model);
                 }
             }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "getProcessorOptions?model=" + $("#model").val(),
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#processorType").html(data);
+                    newProcessorType();
+                    newProcessorSpeed();
+                    newMemory();
+                    newHardDrive();
+                });
+            }
         }
         function newProcessorType() {
             if ($("#processorType").val() === "Add a New Option") {
@@ -428,6 +441,15 @@ html
                     $("#processorType").append(new Option(add, add));
                     $("#processorType").val(add);
                 }
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "getProcessorSpeedOptions?processorType=" + $("#processorType").val(),
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#processorSpeed").html(data);
+                });
             }
         }
         function newProcessorSpeed() {
@@ -439,6 +461,15 @@ html
                     $("#processorSpeed").val(add);
                 }
             }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "getMemoryOptions?model=" + $("#model").val(),
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#memory").html(data);
+                });
+            }
         }
         function newMemory() {
             if ($("#memory").val() === "Add a New Option") {
@@ -449,6 +480,15 @@ html
                     $("#memory").val(add);
                 }
             }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "getHardDriveOptions?model=" + $("#model").val(),
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#hardDrive").html(data);
+                });
+            }
         }
         function newHardDrive() {
             if ($("#hardDrive").val() === "Add a New Option") {
@@ -458,6 +498,15 @@ html
                     $("#hardDrive").append(new Option(add, add));
                     $("#hardDrive").val(add);
                 }
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "getGraphicsCardOptions?model=" + $("#model").val(),
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#graphicsCard").html(data);
+                });
             }
         }
         function newGraphicsCard() {

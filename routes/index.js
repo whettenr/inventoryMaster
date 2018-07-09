@@ -235,7 +235,7 @@ router.get('/employees', function (req, res, next) {
     let database = new Database(config.getConfig());
     let employees = {};
 
-    database.query('Select * FROM Employee WHERE EmployeeID < 88 OR (EmployeeID > 199 AND EmployeeID < 300) ORDER BY EmployeeID')
+    database.query('Select * FROM Employee WHERE EmployeeID < 88 OR (EmployeeID > 199 AND EmployeeID < 300) ORDER BY LastName')
         .then(rows => {
             employees = rows;
         })
@@ -336,6 +336,121 @@ router.get('/getModelOptions', function (req, res, next) {
         })
         .then(() => {
             res.render('getModelOptions', {modelOptions});
+        })
+        .catch(err => {
+            console.log(err);
+        })
+});
+
+router.get('/getProcessorOptions', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas?goTo=/getProcessorOptions');
+    let Model = req.query.model;
+    let database = new Database(config.getConfig());
+
+    let processorOptions = {};
+
+    database.query('SELECT DISTINCT ProcessorType FROM Computer LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Model = ?', [Model])
+        .then(rows => {
+            processorOptions = rows;
+            processorOptions[processorOptions.length] = {ProcessorType: 'Add a New Option'};
+
+            database.close();
+        })
+        .then(() => {
+            res.render('getProcessorOptions', {processorOptions});
+        })
+        .catch(err => {
+            console.log(err);
+        })
+});
+
+router.get('/getProcessorSpeedOptions', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas?goTo=/getProcessorSpeedOptions');
+    let ProcessorType = req.query.processorType;
+    let database = new Database(config.getConfig());
+
+    let processorSpeedOptions = {};
+
+    database.query('SELECT DISTINCT ProcessorSpeed FROM Computer LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE ProcessorType = ?', [ProcessorType])
+        .then(rows => {
+            processorSpeedOptions = rows;
+            processorSpeedOptions[processorSpeedOptions.length] = {ProcessorSpeed: 'Add a New Option'};
+
+            database.close();
+        })
+        .then(() => {
+            res.render('getProcessorSpeedOptions', {processorSpeedOptions});
+        })
+        .catch(err => {
+            console.log(err);
+        })
+});
+
+router.get('/getMemoryOptions', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas?goTo=/getMemoryOptions');
+    let Model = req.query.model;
+    let database = new Database(config.getConfig());
+
+    let memoryOptions = {};
+
+    database.query('SELECT DISTINCT Memory FROM Computer LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Model = ?', [Model])
+        .then(rows => {
+            memoryOptions = rows;
+            memoryOptions[memoryOptions.length] = {Memory: 'Add a New Option'};
+
+            database.close();
+        })
+        .then(() => {
+            res.render('getMemoryOptions', {memoryOptions});
+        })
+        .catch(err => {
+            console.log(err);
+        })
+});
+
+router.get('/getHardDriveOptions', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas?goTo=/getHardDriveOptions');
+    let Model = req.query.model;
+    let database = new Database(config.getConfig());
+
+    let hardDriveOptions = {};
+
+    database.query('SELECT DISTINCT HardDrive FROM Computer LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Model = ?', [Model])
+        .then(rows => {
+            hardDriveOptions = rows;
+            hardDriveOptions[hardDriveOptions.length] = {HardDrive: 'Add a New Option'};
+
+            database.close();
+        })
+        .then(() => {
+            res.render('getHardDriveOptions', {hardDriveOptions});
+        })
+        .catch(err => {
+            console.log(err);
+        })
+});
+
+router.get('/getGraphicsCardOptions', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas?goTo=/getGraphicsCardOptions');
+    let Model = req.query.model;
+    let database = new Database(config.getConfig());
+
+    let graphicsCardOptions = {};
+
+    database.query('SELECT DISTINCT VCName FROM Computer LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Model = ?', [Model])
+        .then(rows => {
+            graphicsCardOptions = rows;
+            graphicsCardOptions[graphicsCardOptions.length] = {VCName: 'Add a New Option'};
+
+            database.close();
+        })
+        .then(() => {
+            res.render('getGraphicsCardOptions', {graphicsCardOptions});
         })
         .catch(err => {
             console.log(err);
@@ -1043,6 +1158,7 @@ router.get('/jsbSurplus', function (req, res, next) {
         .then(() => {
             // do something with someRows and otherRows
             res.render('jsbSurplus', {
+                title: 'JSB Storage',
                 employee: employeeRows[0],
                 computers: computerRows,
                 monitors: monitorRows,
