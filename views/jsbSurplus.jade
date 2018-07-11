@@ -1,10 +1,13 @@
 extends layout
 
 block content
-    div(id='cardDad')
+    link(rel='stylesheet', href='/stylesheets/table.css')
+    #cardDad(style='display: none;')
+        #card
+            #computerInfo
     div
         h4.left Computers:
-    table
+    table.table
         tr
             th
                 | ICN
@@ -25,7 +28,7 @@ block content
                 td= computer.DateAcquired
     div
         h4.left Monitors:
-    table
+    table.table
         tr
             th
                 | ICN
@@ -41,7 +44,7 @@ block content
     div
         h4.left Printers:
 
-    table
+    table.table
         tr
             th
                 | ICN
@@ -57,7 +60,7 @@ block content
     div
         h4.left Peripherals:
 
-    table
+    table.table
         tr
             th
                 | ICN
@@ -84,6 +87,8 @@ block content
             }).done(function (data) {
                 $("#computerInfo").html(data);
                 $("#computerInfo").css('display', 'block');
+                $("#cardDad").css('display', 'block');
+                $("#cardDad").addClass("cardDadCss");
                 $("#cardInfo").css('display', 'none');
 
 
@@ -170,3 +175,9 @@ block content
             });
         }
 
+        $(".button .cancel").click(function(){
+            console.log("you have clicked");
+            $("#cardDad").css('display', 'none');
+            $("#cardDad").removeClass("cardDadCss");
+
+        });

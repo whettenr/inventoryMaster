@@ -303,7 +303,7 @@ html
                         .col-25
                             label(for='item') Item:
                         .col-75
-                            select#item.custom-select.sources(name='item', placeholder='Item')
+                            select#item.custom-select.sources(name='item', placeholder='Item' onChange='newItem();')
                                 each itemOption in itemOptions
                                     option(value=itemOption.Item) #{itemOption.Item}
                     .row
@@ -396,6 +396,17 @@ html
                 }).done(function (data) {
                     $("#item").html(data);
                 });
+            }
+        }
+
+        function newModel() {
+            if ($("#item").val() === "Add a New Option") {
+                let item = prompt("New Item:");
+                if (item !== null && item !== "") {
+                    console.log(item);
+                    $("#item").append(new Option(item, item));
+                    $("#item").val(item);
+                }
             }
         }
 
