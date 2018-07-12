@@ -1263,7 +1263,7 @@ router.get(location +'/logout', function (req, res) {
 
 router.get('/', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/');
+        res.redirect('/cas?goTo=/');
     console.log(req.session.user);
     res.render('home', {title: 'Welcome', name: req.session.user})
     // res.redirect('/employeesTable');
