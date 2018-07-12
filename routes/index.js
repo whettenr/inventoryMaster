@@ -1379,12 +1379,12 @@ router.get('/getTicket', function (req, res, next) {
                 res.redirect(goTo);
             }
             else {
-                res.redirect('/login');
+                res.redirect('/inventory/login');
             }
         })
         .catch(function error(e) {
             console.log("Invalid ticket. Error message was: " + e.message);
-            res.redirect('/login');
+            res.redirect('/inventory/login');
         });
 
 
