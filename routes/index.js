@@ -1263,7 +1263,7 @@ router.get(location +'/logout', function (req, res) {
 
 router.get('/', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=/');
+        res.redirect('inventory/cas?goTo=/inventory');
     console.log(req.session.user);
     res.render('home', {title: 'Welcome', name: req.session.user})
     // res.redirect('/employeesTable');
@@ -1362,7 +1362,7 @@ router.get('/cas', function (req, res, next) {
     res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('https://' + URL + '/getTicket?goTo=' + goTo));
 });
 
-router.get(location +'/getTicket', function (req, res, next) {
+router.get('/getTicket', function (req, res, next) {
     let ticket = req.query.ticket;
     let goTo = req.query.goTo;
     console.log("goto2: " + goTo);
