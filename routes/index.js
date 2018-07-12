@@ -1262,9 +1262,9 @@ router.get('/logout', function (req, res) {
 router.get('/', function (req, res, next) {
     if (!req.session.user)
         res.redirect('/cas?goTo=/');
-    // console.log(req.session.user);
-    // res.render('home', {title: 'Welcome', name: req.session.user})
-    res.redirect('/employeesTable');
+    console.log(req.session.user);
+    res.render('home', {title: 'Welcome', name: req.session.user})
+    // res.redirect('/employeesTable');
 });
 
 router.get('/jsbSurplus', function (req, res, next) {
