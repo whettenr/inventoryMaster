@@ -54,12 +54,13 @@ router.use(session({secret: 'keyboard cat', cookie: {maxAge: 3600000}, resave: f
 let filters = [];
 let monitorFilters = [];
 let employeeFilters = [];
+let printerFilters = [];
 let finalQuery = "";
 
 /* GET home page. */
 
 function checkUser(netid) {
-    let possiblities = ['mmcourt', 'bquinlan', 'rbc9'];
+    let possiblities = ['mmcourt', 'bquinlan', 'rbc9', 'mr28'];
     for (let i in possiblities) {
         if (possiblities[i] === netid) {
             return true;
@@ -304,6 +305,89 @@ router.get('/monitorsTable', function (req, res, next) {
                 title: 'Monitors',
                 monitors: monitors,
                 filters: monitorFilters,
+                name: req.session.user
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+
+});
+
+router.get('/printerTable', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas?goTo=/printerTable');
+    let connection = mysql.createConnection(config.getConfig());
+    let database = new Database(config.getConfig());
+    let printers = {};
+
+    let query = 'SELECT * FROM Printer LEFT JOIN Employee on Printer.EmployeeID = Employee.employeeId';
+    if (req.query.remove) {
+        let splice = parseInt(req.query.remove);
+        printerFilters.splice(splice, 1);
+
+    }
+    if (req.query.not) {
+        if (printerFilters[req.query.not].includes('!='))
+            printerFilters[req.query.not] = printerFilters[req.query.not].replace('!=', '=');
+        else
+            printerFilters[req.query.not] = printerFilters[req.query.not].replace('=', '!=');
+    }
+    if (req.query.where) {
+        let check = true;
+        for (let i = 0; i < printerFilters.length; i++) {
+            if (printerFilters[i] === req.query.where) {
+                check = false;
+            }
+        }
+        if (check) {
+            printerFilters.push(req.query.where);
+        }
+    }
+    if (printerFilters.length > 0) {
+        query += " WHERE Monitor.";
+        for (let filter in printerFilters) {
+            query += printerFilters[filter];
+            query += ' and Monitor.';
+            console.log(filter);
+        }
+        query = query.substr(0, query.length - 13);
+    }
+
+    if (req.query.sortby === 'ICN') {
+        query += ' Order BY ICN';
+    }
+    else if (req.query.sortby === 'EmployeeID') {
+        query += ' ORDER BY EmployeeID';
+    }
+    else if (req.query.sortby === 'Make') {
+        query += ' ORDER BY Make';
+    }
+    else if (req.query.sortby === 'Model') {
+        query += ' ORDER BY Model';
+    }
+    else if (req.query.sortby === 'firstName') {
+        query += ' ORDER BY firstName';
+    }
+    else if (req.query.sortby === 'lastName') {
+        query += ' ORDER BY lastName';
+    }
+    else {
+        query += ' Order BY ICN';
+    }
+    console.log(query);
+
+
+    database.query(query)
+        .then(rows => {
+            printers = rows;
+        })
+        .then(() => {
+            res.render('printerTable', {
+                title: 'Printers',
+                printers: printers,
+                filters: printerFilters,
                 name: req.session.user
             });
         })
