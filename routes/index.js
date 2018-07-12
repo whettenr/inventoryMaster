@@ -1356,7 +1356,7 @@ router.get(location +'/updateDates', function (req, res, next) {
     res.render('home', {title: 'Welcome', name: 'McKay'})
 });
 
-router.get(location +'/cas', function (req, res, next) {
+router.get('/cas', function (req, res, next) {
     let goTo = req.query.goTo;
     console.log("goto1: " + goTo);
     res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('https://' + URL + '/getTicket?goTo=' + goTo));
