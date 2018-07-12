@@ -1263,10 +1263,85 @@ router.get('/logout', function (req, res) {
 
 router.get('/', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/inventory/cas?goTo=/inventory');
-    console.log(req.session.user);
-    res.render('home', {title: 'Welcome', name: req.session.user})
-    // res.redirect('/employeesTable');
+        res.redirect('/inventory/cas?goTo=/inventory/');
+    let database = new Database(config.getConfig());
+    if (req.query.clear) {
+        employeeFilters = [];
+    }
+    let query = 'Select * FROM Employee';
+    if (req.query.remove) {
+        let splice = parseInt(req.query.remove);
+        employeeFilters.splice(splice, 1);
+    }
+    if (req.query.not) {
+        if (employeeFilters[req.query.not].includes('!='))
+            employeeFilters[req.query.not] = employeeFilters[req.query.not].replace('!=', '=');
+        else
+            employeeFilters[req.query.not] = employeeFilters[req.query.not].replace('=', '!=');
+    }
+    if (req.query.where) {
+        let check = true;
+        for (let i = 0; i < employeeFilters.length; i++) {
+            if (employeeFilters[i] === req.query.where) {
+                check = false;
+            }
+        }
+        if (check) {
+            employeeFilters.push(req.query.where);
+        }
+    }
+    if (employeeFilters.length > 0) {
+        query += " WHERE ";
+        for (let filter in employeeFilters) {
+            query += employeeFilters[filter];
+            query += ' and ';
+        }
+        query = query.substr(0, query.length - 5);
+    }
+
+
+    if (req.query.sortby === 'employeeId') {
+        query += ' Order BY EmployeeID';
+    }
+    else if (req.query.sortby === 'firstName') {
+        query += ' ORDER BY FirstName';
+    }
+    else if (req.query.sortby === 'lastName') {
+        query += ' ORDER BY LastName';
+    }
+    else if (req.query.sortby === 'rotationGroup') {
+        query += ' ORDER BY RotationGroup';
+    }
+    else if (req.query.sortby === 'dateSwitched') {
+        query += ' ORDER BY DateSwitched';
+    }
+    else {
+        query += ' Order BY EmployeeID';
+    }
+
+    let employees = {};
+
+    finalQuery = query;
+
+    database.query(query)
+        .then(rows => {
+            employees = rows;
+            // for(let i in employees){
+            //     employees[i].DateSwitched = new Date(employees[i].DateSwitched);
+            // }
+            // console.log("test");
+        })
+        .then(() => {
+            res.render('index', {
+                title: 'Welcome to Inventory',
+                employees: employees,
+                filters: employeeFilters,
+                name: req.session.user
+            });
+        })
+        .catch(err => {
+            throw(err);
+        })
 });
 
 router.get('/jsbSurplus', function (req, res, next) {
