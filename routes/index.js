@@ -1357,11 +1357,13 @@ router.get('/updateDates', function (req, res, next) {
 router.get('/cas', function (req, res, next) {
     let goTo = req.query.goTo;
     res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('https://' + URL + ':3000/getTicket?goTo=' + goTo));
+    console.log("goto1: " + goTo);
 });
 
 router.get('/getTicket', function (req, res, next) {
     let ticket = req.query.ticket;
     let goTo = req.query.goTo;
+    console.log("goto2: " + goTo);
     let service = 'https://' + URL + ':3000/getTicket?goTo=' + goTo;
     let username = '';
     cas.validate(ticket, service).then(function success(response) {
