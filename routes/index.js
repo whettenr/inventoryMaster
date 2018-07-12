@@ -39,6 +39,7 @@ class Database {
 }
 
 let config = require('./config');
+let URL = config.getURL();
 
 
 // router.set('trust proxy', 1);
@@ -841,7 +842,7 @@ router.get('/peripheral', function (req, res, next) {
 
 router.get('/newPeripheral', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=/newPeripheral?EmployeeID='+req.query.EmployeeID);
+        res.redirect('/cas?goTo=/newPeripheral?EmployeeID=' + req.query.EmployeeID);
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
     let makeOptions = {};
@@ -852,7 +853,7 @@ router.get('/newPeripheral', function (req, res, next) {
 
     let database = new Database(config.getConfig());
 
-    database.query('SELECT DISTINCT Make FROM Peripheral')
+    database.query('SELECT DISTINCT Make FROM Peripheral ORDER BY Make')
         .then(rows => {
             makeOptions = rows;
             return database.query('Select * FROM Employee ORDER BY LastName');
@@ -867,11 +868,11 @@ router.get('/newPeripheral', function (req, res, next) {
         })
         .then(rows => {
             ICN = rows[0].ICN + 1;
-            return database.query('SELECT DISTINCT Model FROM Peripheral');
+            return database.query('SELECT DISTINCT Model FROM Peripheral ORDER BY Model');
         })
         .then(rows => {
             modelOptions = rows;
-            return database.query('SELECT DISTINCT Item FROM Peripheral')
+            return database.query('SELECT DISTINCT Item FROM Peripheral ORDER BY Item')
         })
         .then(rows => {
             itemOptions = rows;
@@ -896,7 +897,7 @@ router.get('/newPeripheral', function (req, res, next) {
 
 router.get('/newComputer', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=/newComputer?EmployeeID='+req.query.EmployeeID);
+        res.redirect('/cas?goTo=/newComputer?EmployeeID=' + req.query.EmployeeID);
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
     let employee = {};
@@ -998,7 +999,7 @@ router.get('/newComputer', function (req, res, next) {
 
 router.get('/newMonitor', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=/newMonitor?EmployeeID='+req.query.EmployeeID);
+        res.redirect('/cas?goTo=/newMonitor?EmployeeID=' + req.query.EmployeeID);
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
     let makeOptions = {};
@@ -1165,6 +1166,142 @@ router.get('/tables', function (req, res, next) {
     res.render('tables', {title: 'Tables', name: req.session.user})
 });
 
+router.get('/login', function (req, res) {
+    res.render('login');
+});
+
+router.get('/logout', function (req, res) {
+    req.session.user = null;
+    res.render('login');
+});
+
+router.get('/', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas?goTo=/');
+    // console.log(req.session.user);
+    // res.render('home', {title: 'Welcome', name: req.session.user})
+    res.redirect('/employeesTable');
+});
+
+router.get('/jsbSurplus', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas?goTo=/jsbSurplus');
+    let employeeId = 300;
+    let employeeRows = {};
+    let computerRows = {};
+    let monitorRows = {};
+    let printerRows = {};
+    let peripheralRows = {};
+    let employees;
+
+    let database = new Database(config.getConfig());
+
+    database.query('SELECT * FROM Employee WHERE employeeId = ' + employeeId)
+        .then(rows => {
+            employeeRows = rows;
+            return database.query('SELECT * FROM Computer WHERE EmployeeId = ' + employeeId);
+        })
+        .then(rows => {
+            computerRows = rows;
+            return database.query('SELECT * FROM Monitor WHERE EmployeeId = ' + employeeId)
+        })
+        .then(rows => {
+            monitorRows = rows;
+            return database.query('SELECT * FROM Printer WHERE EmployeeId = ' + employeeId)
+        })
+        .then(rows => {
+            printerRows = rows;
+            return database.query('SELECT * FROM Peripheral WHERE EmployeeId = ' + employeeId)
+        })
+        .then(rows => {
+            peripheralRows = rows;
+            return database.close();
+        })
+        .then(() => {
+            // do something with someRows and otherRows
+            res.render('jsbSurplus', {
+                title: 'JSB Storage',
+                employee: employeeRows[0],
+                computers: computerRows,
+                monitors: monitorRows,
+                printers: printerRows,
+                peripherals: peripheralRows,
+                name: req.session.user
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
+router.get('/updateDates', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect('/cas?goTo=/');
+    let database = new Database(config.getConfig());
+    let datesAcquired = {};
+    database.query("SELECT DISTINCT DateAcquired FROM Computer")
+        .then(rows => {
+            datesAcquired = rows;
+            for (let i in datesAcquired) {
+                if (datesAcquired[i].DateAcquired) {
+                    let dateArray = new Date(datesAcquired[i].DateAcquired);
+                    let year = "";
+                    let month = dateArray.getMonth() + 1;
+                    let day = dateArray.getUTCDay();
+
+                    // if (dateArray.getFullYear() === 2)
+                    //     year = "20" + dateArray.getFullYear();
+                    // else
+                    //     year = dateArray.getFullYear();
+                    if (month.toString().length === 1)
+                        month = "0" + month;
+                    if (day.toString().length === 1)
+                        day = "0" + day;
+
+                    let newDate = dateArray.getFullYear() + '-' + month + '-' + day;
+                    console.log("UPDATE Computer SET DateAcquired = '" + newDate + "' WHERE DateAcquired = '" + datesAcquired[i].DateAcquired + "';");
+                }
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+    res.render('home', {title: 'Welcome', name: 'McKay'})
+});
+
+router.get('/cas', function (req, res, next) {
+    let goTo = req.query.goTo;
+    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('http://' + URL + ':3000/getTicket?goTo=' + goTo));
+});
+
+router.get('/getTicket', function (req, res, next) {
+    let ticket = req.query.ticket;
+    let goTo = req.query.goTo;
+    let service = 'http://' + URL + ':3000/getTicket?goTo=' + goTo;
+    let username = '';
+    cas.validate(ticket, service).then(function success(response) {
+        console.log("Ticket valid! Hello, " + response.username);
+        username = response.username;
+        console.dir(response.attributes);
+    })
+        .then(() => {
+            if (checkUser(username)) {
+                req.session.user = username;
+                res.redirect(goTo);
+            }
+            else {
+                res.redirect('/login');
+            }
+        })
+        .catch(function error(e) {
+            console.log("Invalid ticket. Error message was: " + e.message);
+            res.redirect('/login');
+        });
+
+
+});
+
 router.post('/newComputer', function (req, res, next) {
     if (!req.session.user)
         res.redirect('/cas?goTo=/');
@@ -1295,122 +1432,24 @@ router.post('/peripheral', function (req, res, next) {
     // res.render('home', {title: 'Welcome', name: 'McKay'})
 });
 
-router.get('/login', function (req, res) {
-    res.render('login');
-});
-
-router.get('/logout', function (req, res) {
-    req.session.user = null;
-    res.render('login');
-});
-
-router.get('/', function (req, res, next) {
+router.post('/printer', function (req, res, next) {
     if (!req.session.user)
         res.redirect('/cas?goTo=/');
-    console.log(req.session.user);
-    res.render('home', {title: 'Welcome', name: req.session.user})
-});
-
-router.get('/jsbSurplus', function (req, res, next) {
-    if (!req.session.user)
-        res.redirect('/cas?goTo=/jsbSurplus');
-    let employeeId = 300;
-    let employeeRows = {};
-    let computerRows = {};
-    let monitorRows = {};
-    let printerRows = {};
-    let peripheralRows = {};
-    let employees;
-
     let database = new Database(config.getConfig());
-
-    database.query('SELECT * FROM Employee WHERE employeeId = ' + employeeId)
+    database.query("UPDATE Printer SET EmployeeID = ?, LesOlsonID = ?, Make = ?, Model = ?, SerialNumber = ?, DateAcquired = ?, Warranty = ?, Notes = ?, History = ? WHERE ICN = ?",
+        [req.body.employeeId, req.body.lesOlsonId, req.body.make, req.body.model, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.notes, req.body.history, req.body.icn])
         .then(rows => {
-            employeeRows = rows;
-            return database.query('SELECT * FROM Computer WHERE EmployeeId = ' + employeeId);
-        })
-        .then(rows => {
-            computerRows = rows;
-            return database.query('SELECT * FROM Monitor WHERE EmployeeId = ' + employeeId)
-        })
-        .then(rows => {
-            monitorRows = rows;
-            return database.query('SELECT * FROM Printer WHERE EmployeeId = ' + employeeId)
-        })
-        .then(rows => {
-            printerRows = rows;
-            return database.query('SELECT * FROM Peripheral WHERE EmployeeId = ' + employeeId)
-        })
-        .then(rows => {
-            peripheralRows = rows;
             return database.close();
         })
         .then(() => {
-            // do something with someRows and otherRows
-            res.render('jsbSurplus', {
-                title: 'JSB Storage',
-                employee: employeeRows[0],
-                computers: computerRows,
-                monitors: monitorRows,
-                printers: printerRows,
-                peripherals: peripheralRows,
-                name: req.session.user
-            })
+            res.redirect('/employees');
         })
         .catch(err => {
             console.log(err);
         });
+    // res.render('home', {title: 'Welcome', name: 'McKay'})
 });
 
-router.get('/updateDates', function (req, res, next) {
-    if (!req.session.user)
-        res.redirect('/cas?goTo=/');
-    let database = new Database(config.getConfig());
-    let employeeIds = {};
-    database.query("SELECT EmployeeID FROM Employee")
-        .then(rows => {
-            employeeIds = rows;
-            for (let i in employeeIds) {
-                console.log("SELECT DateAcquired FROM Computer WHERE EmployeeID = " + employeeIds[i].EmployeeID + " AND Type = 'On Rotation'");
-            }
-        })
-        .catch(err => {
-            console.log(err);
-        });
 
-    res.render('home', {title: 'Welcome', name: 'McKay'})
-});
-
-router.get('/cas', function (req, res, next) {
-    let goTo = req.query.goTo;
-    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('http://religion.byu.edu:3000/getTicket?goTo=' + goTo));
-});
-
-router.get('/getTicket', function (req, res, next) {
-    let ticket = req.query.ticket;
-    let goTo = req.query.goTo;
-    let service = 'http://religion.byu.edu:3000/getTicket?goTo=' + goTo;
-    let username = '';
-    cas.validate(ticket, service).then(function success(response) {
-        console.log("Ticket valid! Hello, " + response.username);
-        username = response.username;
-        console.dir(response.attributes);
-    })
-        .then(() => {
-            if (checkUser(username)) {
-                req.session.user = username;
-                res.redirect(goTo);
-            }
-            else {
-                res.redirect('/login');
-            }
-        })
-        .catch(function error(e) {
-            console.log("Invalid ticket. Error message was: " + e.message);
-            res.redirect('/login');
-        });
-
-
-});
 
 module.exports = router;
