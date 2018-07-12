@@ -1259,7 +1259,7 @@ router.get('/logout', function (req, res) {
     res.render('login');
 });
 
-router.get('/', function (req, res, next) {
+router.get('/inventory', function (req, res, next) {
     if (!req.session.user)
         res.redirect('/cas?goTo=/');
     console.log(req.session.user);
