@@ -1259,9 +1259,9 @@ router.get('/logout', function (req, res) {
     res.render('login');
 });
 
-router.get('/inventory', function (req, res, next) {
+router.get('/', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=/inventory');
+        res.redirect('/cas?goTo=/');
     console.log(req.session.user);
     res.render('home', {title: 'Welcome', name: req.session.user})
     // res.redirect('/employeesTable');
@@ -1356,8 +1356,8 @@ router.get('/updateDates', function (req, res, next) {
 
 router.get('/cas', function (req, res, next) {
     let goTo = req.query.goTo;
-    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('https://' + URL + '/getTicket?goTo=' + goTo));
     console.log("goto1: " + goTo);
+    res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent('https://' + URL + '/getTicket?goTo=' + goTo));
 });
 
 router.get('/getTicket', function (req, res, next) {
