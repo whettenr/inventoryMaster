@@ -71,9 +71,9 @@ function checkUser(netid) {
     return false;
 }
 
-router.get(location +'/employeesTable', function (req, res, next) {
+router.get('/employeesTable', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/employeesTable');
+        res.redirect('/inventory/cas?goTo=/inventory/employeesTable');
     let database = new Database(config.getConfig());
     if (req.query.clear) {
         employeeFilters = [];
@@ -154,9 +154,9 @@ router.get(location +'/employeesTable', function (req, res, next) {
         })
 });
 
-router.get(location +'/computerTable', function (req, res, next) {
+router.get('/computerTable', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/computerTable');
+        res.redirect('/inventory/cas?goTo=/inventory/computerTable');
     let connection = mysql.createConnection(config.getConfig());
     let database = new Database(config.getConfig());
     let computers = {};
@@ -234,9 +234,9 @@ router.get(location +'/computerTable', function (req, res, next) {
 
 });
 
-router.get(location +'/monitorsTable', function (req, res, next) {
+router.get('/monitorsTable', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/monitorsTable');
+        res.redirect('/inventory/cas?goTo=/inventory/monitorsTable');
     let connection = mysql.createConnection(config.getConfig());
     let database = new Database(config.getConfig());
     let monitors = {};
@@ -317,9 +317,9 @@ router.get(location +'/monitorsTable', function (req, res, next) {
 
 });
 
-router.get(location +'/printerTable', function (req, res, next) {
+router.get('/printerTable', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/printerTable');
+        res.redirect('/inventory/cas?goTo=/inventory/printerTable');
     let connection = mysql.createConnection(config.getConfig());
     let database = new Database(config.getConfig());
     let printers = {};
@@ -400,9 +400,9 @@ router.get(location +'/printerTable', function (req, res, next) {
 
 });
 
-router.get(location +'/employees', function (req, res, next) {
+router.get('/employees', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/employees');
+        res.redirect('/inventory/cas?goTo=/inventory/employees');
     let database = new Database(config.getConfig());
     let employees = {};
 
@@ -419,9 +419,9 @@ router.get(location +'/employees', function (req, res, next) {
         });
 });
 
-router.get(location +'/otherSlots', function (req, res, next) {
+router.get('/otherSlots', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/otherSlots');
+        res.redirect('/inventory/cas?goTo=/inventory/otherSlots');
     let database = new Database(config.getConfig());
     let employees = {};
 
@@ -438,9 +438,9 @@ router.get(location +'/otherSlots', function (req, res, next) {
         });
 });
 
-router.get(location +'/card', function (req, res, next) {
+router.get('/card', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/card?employeeId=' + req.query.employeeId);
+        res.redirect('/inventory/cas?goTo=/inventory/card?employeeId=' + req.query.employeeId);
     let employeeId = req.query.employeeId;
     let employeeRows = {};
     let computerRows = {};
@@ -490,9 +490,9 @@ router.get(location +'/card', function (req, res, next) {
     // res.render('card')
 });
 
-router.get(location +'/getModelOptions', function (req, res, next) {
+router.get('/getModelOptions', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/getModelOptions');
+        res.redirect('/inventory/cas?goTo=/inventory/getModelOptions');
     let Make = req.query.make;
     let database = new Database(config.getConfig());
 
@@ -513,9 +513,9 @@ router.get(location +'/getModelOptions', function (req, res, next) {
         })
 });
 
-router.get(location +'/getProcessorOptions', function (req, res, next) {
+router.get('/getProcessorOptions', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/getProcessorOptions');
+        res.redirect('/inventory/cas?goTo=/inventory/getProcessorOptions');
     let Model = req.query.model;
     let database = new Database(config.getConfig());
 
@@ -536,9 +536,9 @@ router.get(location +'/getProcessorOptions', function (req, res, next) {
         })
 });
 
-router.get(location +'/getProcessorSpeedOptions', function (req, res, next) {
+router.get('/getProcessorSpeedOptions', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/getProcessorSpeedOptions');
+        res.redirect('/inventory/cas?goTo=/inventory/getProcessorSpeedOptions');
     let ProcessorType = req.query.processorType;
     let database = new Database(config.getConfig());
 
@@ -559,9 +559,9 @@ router.get(location +'/getProcessorSpeedOptions', function (req, res, next) {
         })
 });
 
-router.get(location +'/getMemoryOptions', function (req, res, next) {
+router.get('/getMemoryOptions', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/getMemoryOptions');
+        res.redirect('/inventory/cas?goTo=/inventory/getMemoryOptions');
     let Model = req.query.model;
     let database = new Database(config.getConfig());
 
@@ -582,9 +582,9 @@ router.get(location +'/getMemoryOptions', function (req, res, next) {
         })
 });
 
-router.get(location +'/getHardDriveOptions', function (req, res, next) {
+router.get('/getHardDriveOptions', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/getHardDriveOptions');
+        res.redirect('/inventory/cas?goTo=/inventory/getHardDriveOptions');
     let Model = req.query.model;
     let database = new Database(config.getConfig());
 
@@ -605,9 +605,9 @@ router.get(location +'/getHardDriveOptions', function (req, res, next) {
         })
 });
 
-router.get(location +'/getGraphicsCardOptions', function (req, res, next) {
+router.get('/getGraphicsCardOptions', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/getGraphicsCardOptions');
+        res.redirect('/inventory/cas?goTo=/inventory/getGraphicsCardOptions');
     let Model = req.query.model;
     let database = new Database(config.getConfig());
 
@@ -628,9 +628,9 @@ router.get(location +'/getGraphicsCardOptions', function (req, res, next) {
         })
 });
 
-router.get(location +'/getPeripheralModelOptions', function (req, res, next) {
+router.get('/getPeripheralModelOptions', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/getPeripheralModelOptions');
+        res.redirect('/inventory/cas?goTo=/inventory/getPeripheralModelOptions');
     let Make = req.query.make;
     let database = new Database(config.getConfig());
 
@@ -651,9 +651,9 @@ router.get(location +'/getPeripheralModelOptions', function (req, res, next) {
         })
 });
 
-router.get(location +'/getItemOptions', function (req, res, next) {
+router.get('/getItemOptions', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/getItemOptions');
+        res.redirect('/inventory/cas?goTo=/inventory/getItemOptions');
     let Model = req.query.model;
     let database = new Database(config.getConfig());
 
@@ -674,9 +674,9 @@ router.get(location +'/getItemOptions', function (req, res, next) {
         })
 });
 
-router.get(location +'/item', function (req, res, next) {
+router.get('/item', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/item');
+        res.redirect('/inventory/cas?goTo=/inventory/item');
     let ICN = 10540;
     let categories = {};
     let Computer = {};
@@ -706,9 +706,9 @@ router.get(location +'/item', function (req, res, next) {
         });
 });
 
-router.get(location +'/computer', function (req, res, next) {
+router.get('/computer', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/computer?EmployeeID' + req.query.EmployeeID + "&ICN=" + req.query.ICN);
+        res.redirect('/inventory/cas?goTo=/inventory/computer?EmployeeID' + req.query.EmployeeID + "&ICN=" + req.query.ICN);
     let ICN = req.query.ICN;
     let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
@@ -773,9 +773,9 @@ router.get(location +'/computer', function (req, res, next) {
         });
 });
 
-router.get(location +'/monitor', function (req, res, next) {
+router.get('/monitor', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/monitor?EmployeeID=' + req.query.EmployeeID + "&ICN=" + req.query.ICN);
+        res.redirect('/inventory/cas?goTo=/inventory/monitor?EmployeeID=' + req.query.EmployeeID + "&ICN=" + req.query.ICN);
     let ICN = req.query.ICN;
     let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
@@ -822,9 +822,9 @@ router.get(location +'/monitor', function (req, res, next) {
         });
 });
 
-router.get(location +'/printer', function (req, res, next) {
+router.get('/printer', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/printer?EmployeeID=' + req.query.EmployeeID + "&ICN=" + req.query.ICN);
+        res.redirect('/inventory/cas?goTo=/inventory/printer?EmployeeID=' + req.query.EmployeeID + "&ICN=" + req.query.ICN);
     let ICN = req.query.ICN;
     let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
@@ -871,9 +871,9 @@ router.get(location +'/printer', function (req, res, next) {
         });
 });
 
-router.get(location +'/peripheral', function (req, res, next) {
+router.get('/peripheral', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/peripheral?EmployeeID=' + req.query.EmployeeID + "&ICN=" + req.query.ICN);
+        res.redirect('/inventory/cas?goTo=/inventory/peripheral?EmployeeID=' + req.query.EmployeeID + "&ICN=" + req.query.ICN);
     let ICN = req.query.ICN;
     let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
@@ -926,9 +926,9 @@ router.get(location +'/peripheral', function (req, res, next) {
         });
 });
 
-router.get(location +'/newPeripheral', function (req, res, next) {
+router.get('/newPeripheral', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/newPeripheral?EmployeeID=' + req.query.EmployeeID);
+        res.redirect('/inventory/cas?goTo=/inventory/newPeripheral?EmployeeID=' + req.query.EmployeeID);
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
     let makeOptions = {};
@@ -981,9 +981,9 @@ router.get(location +'/newPeripheral', function (req, res, next) {
         });
 });
 
-router.get(location +'/newComputer', function (req, res, next) {
+router.get('/newComputer', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/newComputer?EmployeeID=' + req.query.EmployeeID);
+        res.redirect('/inventory/cas?goTo=/inventory/newComputer?EmployeeID=' + req.query.EmployeeID);
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
     let employee = {};
@@ -1083,9 +1083,9 @@ router.get(location +'/newComputer', function (req, res, next) {
         })
 });
 
-router.get(location +'/newMonitor', function (req, res, next) {
+router.get('/newMonitor', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/newMonitor?EmployeeID=' + req.query.EmployeeID);
+        res.redirect('/inventory/cas?goTo=/inventory/newMonitor?EmployeeID=' + req.query.EmployeeID);
     let ICN = 0;
     let EmployeeID = parseInt(req.query.EmployeeID);
     let makeOptions = {};
@@ -1133,9 +1133,9 @@ router.get(location +'/newMonitor', function (req, res, next) {
         });
 });
 
-router.get(location +'/download/rotation', function (req, res, next) {
+router.get('/download/rotation', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/download/rotation');
+        res.redirect('/inventory/cas?goTo=/inventory/download/rotation');
     let rotation = req.query.rotation;
     let Rows = {};
 
@@ -1165,9 +1165,9 @@ router.get(location +'/download/rotation', function (req, res, next) {
 
 });
 
-router.get(location +'/download/monitors', function (req, res, next) {
+router.get('/download/monitors', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/download/monitors');
+        res.redirect('/inventory/cas?goTo=/inventory/download/monitors');
     let Rows = {};
     let query = 'SELECT * FROM Monitor LEFT JOIN Employee on Monitor.EmployeeID = Employee.employeeId';
     if (req.query.remove) {
@@ -1248,30 +1248,30 @@ router.get(location +'/download/monitors', function (req, res, next) {
 
 });
 
-router.get(location +'/tables', function (req, res, next) {
+router.get('/tables', function (req, res, next) {
     res.render('tables', {title: 'Tables', name: req.session.user})
 });
 
-router.get(location +'/login', function (req, res) {
+router.get('/login', function (req, res) {
     res.render('login');
 });
 
-router.get(location +'/logout', function (req, res) {
+router.get('/logout', function (req, res) {
     req.session.user = null;
     res.render('login');
 });
 
 router.get('/', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('inventory/cas?goTo=/inventory');
+        res.redirect('/inventory/cas?goTo=/inventory');
     console.log(req.session.user);
     res.render('home', {title: 'Welcome', name: req.session.user})
     // res.redirect('/employeesTable');
 });
 
-router.get(location +'/jsbSurplus', function (req, res, next) {
+router.get('/jsbSurplus', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/jsbSurplus');
+        res.redirect('/inventory/cas?goTo=/inventory/jsbSurplus');
     let employeeId = 300;
     let employeeRows = {};
     let computerRows = {};
@@ -1320,9 +1320,9 @@ router.get(location +'/jsbSurplus', function (req, res, next) {
         });
 });
 
-router.get(location +'/updateDates', function (req, res, next) {
+router.get('/updateDates', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/');
+        res.redirect('/inventory/cas?goTo=/inventory/');
     let database = new Database(config.getConfig());
     let datesAcquired = {};
     database.query("SELECT DISTINCT DateAcquired FROM Computer")
@@ -1392,7 +1392,7 @@ router.get('/getTicket', function (req, res, next) {
 
 router.post('/newComputer', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/');
+        res.redirect('/inventory/cas?goTo=/inventory/');
     let database = new Database(config.getConfig());
     let hardwareId = -1;
 
@@ -1426,7 +1426,7 @@ router.post('/newComputer', function (req, res, next) {
 
 router.post('/newMonitor', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/');
+        res.redirect('/inventory/cas?goTo=/inventory/');
     let database = new Database(config.getConfig());
 
     database.query('INSERT INTO Monitor (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout) VALUES (?)', [[req.body.icn, req.body.EmployeeID, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout]])
@@ -1446,7 +1446,7 @@ router.post('/newMonitor', function (req, res, next) {
 
 router.post('/newPeripheral', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/');
+        res.redirect('/inventory/cas?goTo=/inventory/');
     let database = new Database(config.getConfig());
 
     database.query('INSERT INTO Peripheral (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout, History) VALUES (?)', [[req.body.icn, req.body.employeeId, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, ""]])
@@ -1468,7 +1468,7 @@ router.post('/newPeripheral', function (req, res, next) {
 
 router.post('/form', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/');
+        res.redirect('/inventory/cas?goTo=/inventory/');
     let database = new Database(config.getConfig());
     database.query("UPDATE Computer Set EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.icn])
@@ -1486,7 +1486,7 @@ router.post('/form', function (req, res, next) {
 
 router.post('/monitor', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/');
+        res.redirect('/inventory/cas?goTo=/inventory/');
     let database = new Database(config.getConfig());
     database.query("UPDATE Monitor SET EmployeeID = ?, Make = ?, Model = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.make, req.body.model, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
@@ -1504,7 +1504,7 @@ router.post('/monitor', function (req, res, next) {
 
 router.post('/peripheral', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/');
+        res.redirect('/inventory/cas?goTo=/inventory/');
     let database = new Database(config.getConfig());
     database.query("UPDATE Peripheral SET EmployeeID = ?, Item = ?, Make = ?, Model = ?, SerialNumber = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.item, req.body.make, req.body.model, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
@@ -1522,7 +1522,7 @@ router.post('/peripheral', function (req, res, next) {
 
 router.post('/printer', function (req, res, next) {
     if (!req.session.user)
-        res.redirect('/cas?goTo=' + location + '/');
+        res.redirect('/inventory/cas?goTo=/inventory/');
     let database = new Database(config.getConfig());
     database.query("UPDATE Printer SET EmployeeID = ?, LesOlsonID = ?, Make = ?, Model = ?, SerialNumber = ?, DateAcquired = ?, Warranty = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.lesOlsonId, req.body.make, req.body.model, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.notes, req.body.history, req.body.icn])

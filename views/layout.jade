@@ -17,16 +17,16 @@ html
             span(slot="site-title" class="subtitle")= title
             byu-search(slot="search", action="https://www.google.com/#q=$1", method="get", placeholder="Search")
             byu-user-info(slot="user")
-                a(slot="login", href="/cas") Sign In
-                a(slot="logout", href="/logout") Sign Out
+                a(slot="login", href="/inventory/cas") Sign In
+                a(slot="logout", href="/inventory/logout") Sign Out
                 span(slot="user-name") #{name}
             byu-menu(slot="nav", collapsed="")
-                a(href="/") Home
-                a(href="/employees") Employees
-                a(href="/otherSlots") Other Slots
+                a(href="/inventory") Home
+                a(href="/inventory/employees") Employees
+                a(href="/inventory/otherSlots") Other Slots
                 a(href="/") Rotations
-                a(href="/tables") Tables
-                a(href="/jsbSurplus") JSB Storage
+                a(href="/inventory/tables") Tables
+                a(href="/inventory/jsbSurplus") JSB Storage
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
         block content
     script.
