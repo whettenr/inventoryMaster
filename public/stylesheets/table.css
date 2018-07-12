@@ -45,15 +45,15 @@ tr:hover img, tr.hover img {
     border-top: 0;
 }
 
-img {
-    -webkit-transition: height 2s; /* For Safari 3.1 to 6.0 */
-    transition: height 2s;
-    height: 37px;
-}
+/*img {*/
+    /*-webkit-transition: height 2s; !* For Safari 3.1 to 6.0 *!*/
+    /*transition: height 2s;*/
+    /*height: 37px;*/
+/*}*/
 
-img:hover {
-    height: 80px;
-}
+/*img:hover {*/
+    /*height: 80px;*/
+/*}*/
 
 .table {
     font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
