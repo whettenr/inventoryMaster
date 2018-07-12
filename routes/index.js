@@ -1261,7 +1261,7 @@ router.get(location +'/logout', function (req, res) {
     res.render('login');
 });
 
-router.get(location +'/', function (req, res, next) {
+router.get('/', function (req, res, next) {
     if (!req.session.user)
         res.redirect('/cas?goTo=' + location + '/');
     console.log(req.session.user);
