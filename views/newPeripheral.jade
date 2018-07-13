@@ -255,7 +255,7 @@ html
     body
         .container
             .info
-            form(action='/newPeripheral', method='post' id='form')
+            form(action='#{location}/newPeripheral', method='post' id='form')
                 .info
                     #button.button.cancel(onclick='goBack();') Cancel
                     #go(onclick='go();') Submit
@@ -391,7 +391,7 @@ html
             else {
                 $.ajax({
                     type: "GET",
-                    url: "getItemOptions?model=" + $("#model").val(),
+                    url: "#{location}/getItemOptions?model=" + $("#model").val(),
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#item").html(data);
@@ -413,7 +413,7 @@ html
         function refreshModelOptions() {
             $.ajax({
                 type: "GET",
-                url: "getPeripheralModelOptions?make=" + $("#make").val(),
+                url: "#{location}/getPeripheralModelOptions?make=" + $("#make").val(),
                 data: {format: 'html'}
             }).done(function (data) {
                 $("#model").html(data);

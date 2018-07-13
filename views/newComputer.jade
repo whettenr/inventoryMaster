@@ -252,7 +252,7 @@ html
                 button.byu-button.medgray(value='Cancel' onclick='goBack();') Cancel
                 button.byu-button.green#showOtherInfo(value='Next' onclick='showOther();') Next
                 button.byu-button.green#showHardwareInfo(value='Next' onclick='showHardware();' style='display: none;') Next
-            form(action='/newComputer', method='post')
+            form(action='#{location}/newComputer', method='post')
 
 
                 .info
@@ -422,7 +422,7 @@ html
             else {
                 $.ajax({
                     type: "GET",
-                    url: "getProcessorOptions?model=" + $("#model").val(),
+                    url: "#{location}/getProcessorOptions?model=" + $("#model").val(),
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#processorType").html(data);
@@ -445,7 +445,7 @@ html
             else {
                 $.ajax({
                     type: "GET",
-                    url: "getProcessorSpeedOptions?processorType=" + $("#processorType").val(),
+                    url: "#{location}/getProcessorSpeedOptions?processorType=" + $("#processorType").val(),
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#processorSpeed").html(data);
@@ -464,7 +464,7 @@ html
             else {
                 $.ajax({
                     type: "GET",
-                    url: "getMemoryOptions?model=" + $("#model").val(),
+                    url: "#{location}/getMemoryOptions?model=" + $("#model").val(),
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#memory").html(data);
@@ -483,7 +483,7 @@ html
             else {
                 $.ajax({
                     type: "GET",
-                    url: "getHardDriveOptions?model=" + $("#model").val(),
+                    url: "#{location}/getHardDriveOptions?model=" + $("#model").val(),
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#hardDrive").html(data);
@@ -502,7 +502,7 @@ html
             else {
                 $.ajax({
                     type: "GET",
-                    url: "getGraphicsCardOptions?model=" + $("#model").val(),
+                    url: "#{location}/getGraphicsCardOptions?model=" + $("#model").val(),
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#graphicsCard").html(data);
@@ -532,7 +532,7 @@ html
             else{
                 $.ajax({
                     type: "GET",
-                    url: "getModelOptions?make=" + $("#make").val(),
+                    url: "#{location}/getModelOptions?make=" + $("#make").val(),
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#model").html(data);

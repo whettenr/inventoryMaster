@@ -97,7 +97,7 @@
                 console.log(ICN);
                 $.ajax({
                     type: "GET",
-                    url: "computer?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
+                    url: "#{location}/computer?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#computerInfo").html(data);
@@ -111,7 +111,7 @@
                 console.log(ICN);
                 $.ajax({
                     type: "GET",
-                    url: "monitor?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
+                    url: "#{location}/monitor?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#computerInfo").html(data);
@@ -125,7 +125,7 @@
                 console.log(ICN);
                 $.ajax({
                     type: "GET",
-                    url: "printer?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
+                    url: "#{location}/printer?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#computerInfo").html(data);
@@ -139,7 +139,7 @@
                 console.log(ICN);
                 $.ajax({
                     type: "GET",
-                    url: "peripheral?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
+                    url: "#{location}/peripheral?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#computerInfo").html(data);
@@ -152,7 +152,7 @@
             function newComputer(EmployeeID) {
                 $.ajax({
                     type: "GET",
-                    url: "newComputer?EmployeeID=" + EmployeeID,
+                    url: "#{location}/newComputer?EmployeeID=" + EmployeeID,
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#computerInfo").html(data);
@@ -166,7 +166,7 @@
             function newPeripheral(EmployeeID) {
                 $.ajax({
                     type: "GET",
-                    url: "newPeripheral?EmployeeID=" + EmployeeID,
+                    url: "#{location}/newPeripheral?EmployeeID=" + EmployeeID,
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#computerInfo").html(data);
@@ -179,7 +179,7 @@
             function newMonitor(EmployeeID) {
                 $.ajax({
                         type: "GET",
-                        url: "newMonitor?EmployeeID=" + EmployeeID,
+                        url: "#{location}/newMonitor?EmployeeID=" + EmployeeID,
                         data: {format: 'html'}
                 }).done(function (data) {
                     $("#computerInfo").html(data);

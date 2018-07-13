@@ -1,27 +1,27 @@
 extends layout
 
 block content
-    link(rel='stylesheet', href='/inventory/stylesheets/table.css')
+    link(rel='stylesheet', href='#{location}/stylesheets/table.css')
     #tempData(style='display: none;')
     div(id='cardDad')
     #filters
         if(filters)
             each filter, i in filters
                 div= filter
-                    a.filterButton(href='employeesTable?remove=' + i) Remove Filter
-                    a.filterButton(href='employeesTable?not=' + i) Inverse Filter
+                    a.filterButton(href='#{location}/employeesTable?remove=' + i) Remove Filter
+                    a.filterButton(href='#{location}/employeesTable?not=' + i) Inverse Filter
     div(style='overflow-x:auto;')
         table#table
             tbody
                 tr#myHeader
                     th
-                        a(href='/employeesTable?sortby=employeeId')
+                        a(href='#{location}/employeesTable?sortby=employeeId')
                             div='Employee ID'
                     th
-                        a(href='/employeesTable?sortby=firstName')
+                        a(href='#{location}/employeesTable?sortby=firstName')
                             div= "First Name"
                     th
-                        a(href='/employeesTable?sortby=lastName')
+                        a(href='#{location}/employeesTable?sortby=lastName')
                             div= "Last Name"
                     th= "Category"
                     th= "Office Location"
@@ -29,10 +29,10 @@ block content
                     th= "Username"
                     th= "Email"
                     th
-                        a(href='/employeesTable?sortby=rotationGroup')
+                        a(href='#{location}/employeesTable?sortby=rotationGroup')
                             div= "Roation Group"
                     th
-                        a(href='/employeesTable?sortby=dateSwitched')
+                        a(href='#{location}/employeesTable?sortby=dateSwitched')
                             div= "Date Switched"
                     th= "Notes"
                 each employee in employees
@@ -46,10 +46,10 @@ block content
                         td= employee.UserName
                         td= employee.Email
                         td
-                            a(href='/employeesTable?where=rotationGroup=#{employee.RotationGroup}')
+                            a(href='#{location}/employeesTable?where=rotationGroup=#{employee.RotationGroup}')
                                 div= employee.RotationGroup
                         td
-                            a(href='/employeesTable?where=dateSwitched=#{employee.DateSwitched}')
+                            a(href='#{location}/employeesTable?where=dateSwitched=#{employee.DateSwitched}')
                                 div= employee.DateSwitched
                         td= employee.Notes
     script.
@@ -57,7 +57,7 @@ block content
             console.log(employeeID);
             $.ajax({
                 type: "GET",
-                url: "card?employeeId=" + employeeID,
+                url: "#{location}/card?employeeId=" + employeeID,
                 data: {format: 'html'}
             }).done(function (data) {
                 $("#cardDad").addClass("cardDadCss");

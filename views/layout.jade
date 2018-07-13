@@ -2,8 +2,8 @@ doctype html
 html
     head
         title= title
-        link(rel='stylesheet', href='/inventory/stylesheets/card.css')
-        link(rel='stylesheet', href='/inventory/stylesheets/style.css')
+        link(rel='stylesheet', href='#{location}/stylesheets/card.css')
+        link(rel='stylesheet', href='#{location}/stylesheets/style.css')
         link(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
         link(rel='stylesheet', href="https://www.w3schools.com/w3css/4/w3.css")
         link(type="text/css", rel="stylesheet", href="//cloud.typography.com/75214/6517752/css/fonts.css", media="all")
@@ -17,16 +17,16 @@ html
             span(slot="site-title" class="subtitle")= title
             byu-search(slot="search", action="https://www.google.com/#q=$1", method="get", placeholder="Search")
             byu-user-info(slot="user")
-                a(slot="login", href="/inventory/cas") Sign In
-                a(slot="logout", href="/inventory/logout") Sign Out
+                a(slot="login", href="#{location}/cas") Sign In
+                a(slot="logout", href="#{location}/logout") Sign Out
                 span(slot="user-name") #{name}
             byu-menu(slot="nav", collapsed="")
-                a(href="/inventory") Home
-                a(href="/inventory/employees") Employees
-                a(href="/inventory/otherSlots") Other Slots
-                a(href="/") Rotations
-                a(href="/inventory/tables") Tables
-                a(href="/inventory/jsbSurplus") JSB Storage
+                a(href="#{location}/") Home
+                a(href="#{location}/employees") Employees
+                a(href="#{location}/otherSlots") Other Slots
+                a(href="#{location}/") Rotations
+                a(href="#{location}/tables") Tables
+                a(href="#{location}/jsbSurplus") JSB Storage
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
         block content
     script.

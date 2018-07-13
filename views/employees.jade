@@ -19,7 +19,7 @@ block content
             console.log(employeeID);
             $.ajax({
                 type: "GET",
-                url: "card?employeeId=" + employeeID,
+                url: "#{location}/card?employeeId=" + employeeID,
                 data: {format: 'html'}
             }).done(function (data) {
                 $("#cardDad").addClass( "cardDadCss" );
