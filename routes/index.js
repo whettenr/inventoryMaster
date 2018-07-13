@@ -67,8 +67,10 @@ function checkUser(user) {
             console.log(user.memberOf[i]);
             if(user.memberOf[i] === 'RICHARD_CROOKSTON--RBC9'){
                 console.log('let him in');
+                return true;
             }
         }
+        return false;
     }
     else{
         let possiblities = ['mmcourt', 'bquinlan', 'rbc9', 'mr28'];
