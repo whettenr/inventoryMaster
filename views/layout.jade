@@ -19,7 +19,7 @@ html
             byu-user-info(slot="user")
                 a(slot="login", href="#{location}/cas") Sign In
                 a(slot="logout", href="#{location}/logout") Sign Out
-                if(user.name)
+                if(user)
                     span(slot="user-name") #{user.name}
             byu-menu(slot="nav", collapsed="")
                 a(href="#{location}/") Home
