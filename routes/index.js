@@ -61,14 +61,25 @@ let finalQuery = "";
 
 /* GET home page. */
 
-function checkUser(netid) {
-    let possiblities = ['mmcourt', 'bquinlan', 'rbc9', 'mr28'];
-    for (let i in possiblities) {
-        if (possiblities[i] === netid) {
-            return true;
+function checkUser(user) {
+    if(location === '/inventory'){
+        for(let i in user.memberOf){
+            console.log(user.memberOf[i]);
+            if(user.memberOf[i] === 'RICHARD_CROOKSTON--RBC9'){
+                console.log('let him in');
+            }
         }
     }
-    return false;
+    else{
+        let possiblities = ['mmcourt', 'bquinlan', 'rbc9', 'mr28'];
+        for (let i in possiblities) {
+            if (possiblities[i] === user.netId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 
 router.get('/employeesTable', function (req, res, next) {
@@ -146,7 +157,7 @@ router.get('/employeesTable', function (req, res, next) {
                 title: 'Employees',
                 employees: employees,
                 filters: employeeFilters,
-                name: req.session.user,
+                user: req.session.user,
                 location
             });
         })
@@ -225,7 +236,7 @@ router.get('/computerTable', function (req, res, next) {
                 title: 'Computers',
                 computers: computers,
                 filters: filters,
-                name: req.session.user,
+                user: req.session.user,
                 location
             });
         })
@@ -309,7 +320,7 @@ router.get('/monitorsTable', function (req, res, next) {
                 title: 'Monitors',
                 monitors: monitors,
                 filters: monitorFilters,
-                name: req.session.user,
+                user: req.session.user,
                 location
             });
         })
@@ -393,7 +404,7 @@ router.get('/printerTable', function (req, res, next) {
                 title: 'Printers',
                 printers: printers,
                 filters: printerFilters,
-                name: req.session.user,
+                user: req.session.user,
                 location
             });
         })
@@ -415,7 +426,7 @@ router.get('/employees', function (req, res, next) {
             employees = rows;
         })
         .then(() => {
-            res.render('employees', {title: 'Employees', employees: employees, name: req.session.user, location});
+            res.render('employees', {title: 'Employees', employees: employees, user: req.session.user, location});
 
         })
         .catch(err => {
@@ -434,7 +445,7 @@ router.get('/otherSlots', function (req, res, next) {
             employees = rows;
         })
         .then(() => {
-            res.render('index', {title: 'Other Slots', employees: employees, name: req.session.user, location});
+            res.render('index', {title: 'Other Slots', employees: employees, user: req.session.user, location});
 
         })
         .catch(err => {
@@ -703,7 +714,7 @@ router.get('/item', function (req, res, next) {
                 title: 'Welcome',
                 categories: categories,
                 computer: computer[0],
-                name: req.session.user,
+                user: req.session.user,
                 location
             })
         })
@@ -821,7 +832,7 @@ router.get('/monitor', function (req, res, next) {
                 employees,
                 monitor,
                 employee,
-                name: req.session.user,
+                user: req.session.user,
                 location
             })
         })
@@ -871,7 +882,7 @@ router.get('/printer', function (req, res, next) {
                 employees,
                 printer,
                 employee,
-                name: req.session.user,
+                user: req.session.user,
                 location
             })
         })
@@ -927,7 +938,7 @@ router.get('/peripheral', function (req, res, next) {
                 employees,
                 peripheral,
                 employee,
-                name: req.session.user,
+                user: req.session.user,
                 location
             })
         })
@@ -983,7 +994,7 @@ router.get('/newPeripheral', function (req, res, next) {
                 itemOptions,
                 employees,
                 employee,
-                name: req.session.user,
+                user: req.session.user,
                 location
             })
         })
@@ -1086,7 +1097,7 @@ router.get('/newComputer', function (req, res, next) {
                 memoryOptions,
                 hardDriveOptions,
                 graphicsCardOptions,
-                name: req.session.user,
+                user: req.session.user,
                 location
             })
         })
@@ -1137,7 +1148,7 @@ router.get('/newMonitor', function (req, res, next) {
                 employees,
                 employee,
                 EmployeeID,
-                name: req.session.user,
+                user: req.session.user,
                 location
             })
         })
@@ -1262,7 +1273,7 @@ router.get('/download/monitors', function (req, res, next) {
 });
 
 router.get('/tables', function (req, res, next) {
-    res.render('tables', {title: 'Tables', name: req.session.user, location})
+    res.render('tables', {title: 'Tables', user: req.session.user, location})
 });
 
 router.get('/login', function (req, res) {
@@ -1353,7 +1364,7 @@ router.get('/', function (req, res, next) {
                 title: 'Welcome to Inventory',
                 employees: employees,
                 filters: employeeFilters,
-                name: req.session.user,
+                user: req.session.user,
                 location
             });
         })
@@ -1405,7 +1416,7 @@ router.get('/jsbSurplus', function (req, res, next) {
                 monitors: monitorRows,
                 printers: printerRows,
                 peripherals: peripheralRows,
-                name: req.session.user,
+                user: req.session.user,
                 location
             })
         })
@@ -1447,7 +1458,7 @@ router.get('/updateDates', function (req, res, next) {
             console.log(err);
         });
 
-    res.render('home', {title: 'Welcome', name: 'McKay'})
+    res.render('home', {title: 'Welcome', user: 'McKay'})
 });
 
 router.get('/cas', function (req, res, next) {
@@ -1461,15 +1472,15 @@ router.get('/getTicket', function (req, res, next) {
     let goTo = req.query.goTo;
     console.log("goto2: " + goTo);
     let service = URL + '/getTicket?goTo=' + goTo;
-    let username = '';
+    let user = '';
     cas.validate(ticket, service).then(function success(response) {
         console.log("Ticket valid! Hello, " + response.username);
-        username = response.username;
+        user = response.attributes;
         console.dir(response.attributes);
     })
         .then(() => {
-            if (checkUser(username)) {
-                req.session.user = username;
+            if (checkUser(user)) {
+                req.session.user = user;
                 res.redirect(goTo);
             }
             else {
@@ -1575,7 +1586,7 @@ router.post('/form', function (req, res, next) {
         .catch(err => {
             console.log(err);
         });
-    // res.render('home', {title: 'Welcome', name: 'McKay'})
+    // res.render('home', {title: 'Welcome', user: 'McKay'})
 });
 
 router.post('/monitor', function (req, res, next) {
@@ -1593,7 +1604,7 @@ router.post('/monitor', function (req, res, next) {
         .catch(err => {
             console.log(err);
         });
-    // res.render('home', {title: 'Welcome', name: 'McKay'})
+    // res.render('home', {title: 'Welcome', user: 'McKay'})
 });
 
 router.post('/peripheral', function (req, res, next) {
@@ -1611,7 +1622,7 @@ router.post('/peripheral', function (req, res, next) {
         .catch(err => {
             console.log(err);
         });
-    // res.render('home', {title: 'Welcome', name: 'McKay'})
+    // res.render('home', {title: 'Welcome', user: 'McKay'})
 });
 
 router.post('/printer', function (req, res, next) {
@@ -1629,7 +1640,7 @@ router.post('/printer', function (req, res, next) {
         .catch(err => {
             console.log(err);
         });
-    // res.render('home', {title: 'Welcome', name: 'McKay'})
+    // res.render('home', {title: 'Welcome', user: 'McKay'})
 });
 
 
