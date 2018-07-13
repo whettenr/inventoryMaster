@@ -64,9 +64,7 @@ let finalQuery = "";
 function checkUser(user) {
     if(location === '/inventory'){
         for(let i in user.memberOf){
-            console.log(user.memberOf[i]);
             if(user.memberOf[i] === 'RICHARD_CROOKSTON--RBC9'){
-                console.log('let him in');
                 return true;
             }
         }
@@ -1478,7 +1476,7 @@ router.get('/getTicket', function (req, res, next) {
     cas.validate(ticket, service).then(function success(response) {
         console.log("Ticket valid! Hello, " + response.username);
         user = response.attributes;
-        console.dir(response.attributes);
+        // console.dir(response.attributes);
     })
         .then(() => {
             if (checkUser(user)) {
