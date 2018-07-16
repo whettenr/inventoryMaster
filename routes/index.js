@@ -1594,12 +1594,14 @@ router.post('/form', function (req, res, next) {
 });
 
 router.post('/monitor', function (req, res, next) {
+    console.log(req.session.user);
     if (!req.session.user)
         res.redirect(location + '/cas?goTo=' + location + '/');
     let database = new Database(config.getConfig());
     database.query("UPDATE Monitor SET EmployeeID = ?, Make = ?, Model = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.make, req.body.model, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
         .then(rows => {
+            console.log(rows);
             return database.close();
         })
         .then(() => {
