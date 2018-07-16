@@ -1,7 +1,7 @@
-doctype html
-html
-    head
-        style.
+extends layout
+
+block content
+    style.
             * {
                 box-sizing: border-box;
             }
@@ -257,7 +257,7 @@ html
             .info
             form(action='#{location}/monitor', method='post' id='form')
                 .info
-                    #button.button.cancel(onclick='goBack();') Cancel
+                    a#button.button.cancel(href='#{location}/card?employeeId=#{employee.EmployeeID}') Back
                     #go(onclick='go();') Submit
                     br
                 h2 Monitor
@@ -378,7 +378,7 @@ html
         function refreshModelOptions() {
             $.ajax({
                 type: "GET",
-                url: "#{location}/getModelOptions?make=" + $("#make").val(),
+                url: "#{location}/getModelOptions?type=Monitor&make=" + $("#make").val(),
                 data: {format: 'html'}
             }).done(function (data) {
                 $("#model").html(data);

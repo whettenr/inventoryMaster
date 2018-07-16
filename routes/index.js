@@ -473,15 +473,15 @@ router.get('/card', function (req, res, next) {
         })
         .then(rows => {
             computerRows = rows;
-            return database.query('SELECT * FROM Monitor WHERE EmployeeId = ' + employeeId)
+            return database.query('SELECT * FROM Monitor WHERE EmployeeId = ' + employeeId);
         })
         .then(rows => {
             monitorRows = rows;
-            return database.query('SELECT * FROM Printer WHERE EmployeeId = ' + employeeId)
+            return database.query('SELECT * FROM Printer WHERE EmployeeId = ' + employeeId);
         })
         .then(rows => {
             printerRows = rows;
-            return database.query('SELECT * FROM Peripheral WHERE EmployeeId = ' + employeeId)
+            return database.query('SELECT * FROM Peripheral WHERE EmployeeId = ' + employeeId);
         })
         .then(rows => {
             peripheralRows = rows;
@@ -495,7 +495,9 @@ router.get('/card', function (req, res, next) {
                 monitors: monitorRows,
                 printers: printerRows,
                 peripherals: peripheralRows,
-                location
+                location,
+                user: req.session.user,
+                title: employeeRows[0].FirstName + ' ' + employeeRows[0].LastName + "'s Stuff"
             })
         })
         .catch(err => {
@@ -509,12 +511,13 @@ router.get('/card', function (req, res, next) {
 router.get('/getModelOptions', function (req, res, next) {
     if (!req.session.user)
         res.redirect(location + '/cas?goTo=' + location + '/getModelOptions');
+    let Type = req.query.type;
     let Make = req.query.make;
     let database = new Database(config.getConfig());
 
     let modelOptions = {};
 
-    database.query('SELECT DISTINCT Model FROM Computer WHERE Make = ? ORDER BY Model', [Make])
+    database.query('SELECT DISTINCT Model FROM ? WHERE Make = ? ORDER BY Model', [Type, Make])
         .then(rows => {
             modelOptions = rows;
             modelOptions[modelOptions.length] = {Model: 'Add a New Option'};
@@ -746,7 +749,7 @@ router.get('/computer', function (req, res, next) {
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID)
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + EmployeeID)
         })
         .then(rows => {
             employee = rows[0];
@@ -774,7 +777,7 @@ router.get('/computer', function (req, res, next) {
         })
         .then(() => {
             res.render('form', {
-                title: 'Welcome',
+                title: employee.FirstName + " " + employee.LastName + "'s Computer",
                 makeOptions,
                 modelOptions,
                 employees,
@@ -827,6 +830,7 @@ router.get('/monitor', function (req, res, next) {
         })
         .then(() => {
             res.render('monitor', {
+                title: employee.FirstName + " " + employee.LastName + "'s Monitor",
                 makeOptions,
                 modelOptions,
                 employees,
@@ -1023,7 +1027,7 @@ router.get('/newComputer', function (req, res, next) {
     database.query('SELECT * FROM Computer ORDER BY ICN DESC LIMIT 1')
         .then(rows => {
             ICN = rows[0].ICN + 1;
-            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID);
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + EmployeeID);
         })
         .then(rows => {
             employee = rows[0];

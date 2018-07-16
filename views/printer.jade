@@ -1,7 +1,7 @@
-doctype html
-html
-    head
-        style.
+extends layout
+
+block content
+    style.
             * {
                 box-sizing: border-box;
             }
@@ -257,7 +257,7 @@ html
             .info
             form(action='#{location}/printer', method='post' id='form')
                 .info
-                    #button.button.cancel(onclick='goBack();') Cancel
+                    a#button.button.cancel(href='#{location}/card?employeeId=#{employee.EmployeeID}') Back
                     #go(onclick='go();') Submit
                     br
                 h2 Printer
@@ -268,7 +268,8 @@ html
                     #historyInfoButton(onclick='showHistory();') History
 
                 br
-                #mainInfo
+                h3 Main Info
+                div
                     .row
                         .col-25
                             label(for='icn') ICN:
@@ -312,7 +313,8 @@ html
                         .col-75
                             textarea#notes(name='notes', placeholder='Write something..', style='height:200px')
                                 | #{printer.Notes}
-                #otherInfo(style='display: none;')
+                h3 Other Info
+                div
                     .row
                         .col-25
                             label(for='serialNumber') Serial Number:
@@ -333,7 +335,6 @@ html
                             label(for='lesOlsonId') Les Olson ID:
                         .col-75
                             input#lesOlsonId(type='text', name='lesOlsonId', placeholder='Les Olson ID' value='#{printer.LesOlsonID}')
-                #historyInfo(style='display: none;')
                     .row
                         .col-25
                             label(for='history') History:

@@ -4,6 +4,7 @@ html
         title= title
         link(rel='stylesheet', href='#{location}/stylesheets/card.css')
         link(rel='stylesheet', href='#{location}/stylesheets/style.css')
+        link(rel='stylesheet', href='#{location}/stylesheets/table.css')
         link(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
         link(rel='stylesheet', href="https://www.w3schools.com/w3css/4/w3.css")
         link(type="text/css", rel="stylesheet", href="//cloud.typography.com/75214/6517752/css/fonts.css", media="all")
@@ -15,12 +16,15 @@ html
         byu-header(full-width="")
             span(slot="site-title") Religious Education Inventory
             span(slot="site-title" class="subtitle")= title
-            byu-search(slot="search", action="https://www.google.com/#q=$1", method="get", placeholder="Search")
+            byu-search(slot="search", action="https://www.google.com/#q=$1", method="get", placeholder="#{user}")
             byu-user-info(slot="user")
                 a(slot="login", href="#{location}/cas") Sign In
                 a(slot="logout", href="#{location}/logout") Sign Out
                 if(user)
-                    span(slot="user-name") #{user.name}
+                    if(user.name)
+                        span(slot="user-name") #{user.name}
+                    else if (user.netId)
+                        span(slot="user-name") #{user.netId}
             byu-menu(slot="nav", collapsed="")
                 a(href="#{location}/") Home
                 a(href="#{location}/employees") Employees

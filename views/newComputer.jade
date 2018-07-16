@@ -1,7 +1,7 @@
-doctype html
-html
-    head
-        style.
+extends layout
+
+block content
+    style.
 
             @import url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css);
 
@@ -249,7 +249,7 @@ html
     body
         .container
             .info
-                button.byu-button.medgray(value='Cancel' onclick='goBack();') Cancel
+                a.byu-button.medgray(href='#{location}/card?EmployeeID=#{employee.EmployeeID}') Back
                 button.byu-button.green#showOtherInfo(value='Next' onclick='showOther();') Next
                 button.byu-button.green#showHardwareInfo(value='Next' onclick='showHardware();' style='display: none;') Next
             form(action='#{location}/newComputer', method='post')
@@ -532,7 +532,7 @@ html
             else{
                 $.ajax({
                     type: "GET",
-                    url: "#{location}/getModelOptions?make=" + $("#make").val(),
+                    url: "#{location}/getModelOptions?type=Computer&make=" + $("#make").val(),
                     data: {format: 'html'}
                 }).done(function (data) {
                     $("#model").html(data);

@@ -1,7 +1,7 @@
-doctype html
-html
-    head
-        style.
+extends layout
+
+block content
+    style.
             * {
                 box-sizing: border-box;
             }
@@ -257,18 +257,19 @@ html
             .info
             form(action='#{location}/monitor', method='post' id='form')
                 .info
-                    #button.button.cancel(onclick='goBack();') Cancel
+                    a#button.button.cancel(href='#{location}/card?employeeId=#{employee.EmployeeID}') Back
                     #go(onclick='go();') Submit
                     br
                 h2 Monitor
                 h3 #{employee.FirstName} #{employee.LastName}
-                div(class='categories')
+                //div(class='categories')
                     #mainInfoButton(onclick='showMain();') Main Info
                     #otherInfoButton(onclick='showOther();') Other Info
                     #historyInfoButton(onclick='showHistory();') History
 
                 br
-                #mainInfo
+                h3 Main Info
+                div
                     .row
                         .col-25
                             label(for='icn') ICN:
@@ -312,7 +313,8 @@ html
                         .col-75
                             textarea#notes(name='notes', placeholder='Write something..', style='height:200px')
                                 | #{monitor.Notes}
-                #otherInfo(style='display: none;')
+                h3 Other Info
+                div
                     .row
                         .col-25
                             label(for='serialNumber') Serial Number:
@@ -333,7 +335,8 @@ html
                             label(for='homeCheckout') Home Checkout:
                         .col-75
                             input#homeCheckout(type='text', name='homeCheckout', placeholder='Home Checkout' value='#{monitor.HomeCheckout}')
-                #historyInfo(style='display: none;')
+                h3 History Info
+                div
                     .row
                         .col-25
                             label(for='history') History:
@@ -386,7 +389,7 @@ html
         function refreshModelOptions() {
             $.ajax({
                 type: "GET",
-                url: "#{location}/getModelOptions?make=" + $("#make").val(),
+                url: "#{location}/getModelOptions?type=Monitor&make=" + $("#make").val(),
                 data: {format: 'html'}
             }).done(function (data) {
                 $("#model").html(data);

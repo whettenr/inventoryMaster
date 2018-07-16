@@ -79,6 +79,7 @@ block content
     br
     script.
         function getComputerInfo(ICN, EmployeeID) {
+            window.location.href = '#{location}/computer?EmployeeID=' + EmployeeID + '&ICN=' + ICN;
             console.log(ICN);
             $.ajax({
                 type: "GET",
@@ -87,14 +88,13 @@ block content
             }).done(function (data) {
                 $("#computerInfo").html(data);
                 $("#computerInfo").css('display', 'block');
-                $("#cardDad").css('display', 'block');
-                $("#cardDad").addClass("cardDadCss");
                 $("#cardInfo").css('display', 'none');
 
 
             });
         }
         function getMonitorInfo(ICN, EmployeeID) {
+            window.location.href = "#{location}/monitor?ICN=" + ICN + '&EmployeeID=' + EmployeeID;
             console.log(ICN);
             $.ajax({
                 type: "GET",
@@ -109,6 +109,7 @@ block content
             });
         }
         function getPrinterInfo(ICN, EmployeeID) {
+            window.location.href = "#{location}/printer?ICN=" + ICN + '&EmployeeID=' + EmployeeID;
             console.log(ICN);
             $.ajax({
                 type: "GET",
@@ -123,6 +124,7 @@ block content
             });
         }
         function getPeripheralInfo(ICN, EmployeeID) {
+            window.location.href = "#{location}/peripheral?ICN=" + ICN + '&EmployeeID=' + EmployeeID;
             console.log(ICN);
             $.ajax({
                 type: "GET",
@@ -137,6 +139,7 @@ block content
             });
         }
         function newComputer(EmployeeID) {
+            window.location.href = "#{location}/newComputer?EmployeeID=" + EmployeeID;
             $.ajax({
                 type: "GET",
                 url: "#{location}/newComputer?EmployeeID=" + EmployeeID,
@@ -151,6 +154,7 @@ block content
         }
 
         function newPeripheral(EmployeeID) {
+            window.location.href = "#{location}/newPeripheral?EmployeeID=" + EmployeeID;
             $.ajax({
                 type: "GET",
                 url: "#{location}/newPeripheral?EmployeeID=" + EmployeeID,
@@ -164,6 +168,7 @@ block content
             });
         }
         function newMonitor(EmployeeID) {
+            window.location.href = "#{location}/newMonitor?EmployeeID=" + EmployeeID;
             $.ajax({
                 type: "GET",
                 url: "#{location}/newMonitor?EmployeeID=" + EmployeeID,
@@ -174,10 +179,3 @@ block content
                 $("#cardInfo").css('display', 'none');
             });
         }
-
-        $(".button .cancel").click(function(){
-            console.log("you have clicked");
-            $("#cardDad").css('display', 'none');
-            $("#cardDad").removeClass("cardDadCss");
-
-        });
