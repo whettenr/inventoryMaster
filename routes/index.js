@@ -517,7 +517,7 @@ router.get('/getModelOptions', function (req, res, next) {
 
     let modelOptions = {};
 
-    database.query('SELECT DISTINCT Model FROM ? WHERE Make = ? ORDER BY Model', [Type, Make])
+    database.query('SELECT DISTINCT Model FROM ?? WHERE Make = ? ORDER BY Model', [Type, Make])
         .then(rows => {
             modelOptions = rows;
             modelOptions[modelOptions.length] = {Model: 'Add a New Option'};
