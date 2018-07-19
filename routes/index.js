@@ -1538,7 +1538,7 @@ router.post('/newMonitor', function (req, res, next) {
         res.redirect(location + '/cas?goTo=' + location + '/');
     let database = new Database(config.getConfig());
 
-    database.query('INSERT INTO Monitor (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout) VALUES (?)', [[req.body.icn, req.body.EmployeeID, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout]])
+    database.query('INSERT INTO Monitor (ICN, EmployeeID, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout) VALUES (?)', [[req.body.icn, req.body.employeeId, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout]])
         .then(rows => {
             if (rows)
                 console.log(rows);
