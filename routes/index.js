@@ -814,7 +814,7 @@ router.get('/monitor', function (req, res, next) {
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID)
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + EmployeeID)
         })
         .then(rows => {
             employee = rows[0];
@@ -865,7 +865,7 @@ router.get('/printer', function (req, res, next) {
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID)
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + EmployeeID)
         })
         .then(rows => {
             employee = rows[0];
@@ -916,7 +916,7 @@ router.get('/peripheral', function (req, res, next) {
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID)
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + EmployeeID)
         })
         .then(rows => {
             employee = rows[0];
@@ -971,7 +971,7 @@ router.get('/newPeripheral', function (req, res, next) {
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID)
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + EmployeeID)
         })
         .then(rows => {
             employee = rows[0];
@@ -1130,7 +1130,7 @@ router.get('/newMonitor', function (req, res, next) {
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select FirstName, LastName FROM Employee WHERE EmployeeID = ' + EmployeeID)
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + EmployeeID)
         })
         .then(rows => {
             employee = rows[0];
