@@ -967,6 +967,8 @@ router.get('/newPeripheral', function (req, res, next) {
     database.query('SELECT DISTINCT Make FROM Peripheral ORDER BY Make')
         .then(rows => {
             makeOptions = rows;
+            makeOptions[makeOptions.length] = {Make: 'None'};
+            makeOptions[makeOptions.length] = {Make: 'Add a New Option'};
             return database.query('Select * FROM Employee ORDER BY LastName');
         })
         .then(rows => {
@@ -1469,6 +1471,11 @@ router.get('/cas', function (req, res, next) {
     let goTo = req.query.goTo;
     console.log("goto1: " + goTo);
     res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent(URL + '/getTicket?goTo=' + goTo));
+});
+
+router.get('/search', function (req, res, next) {
+    console.log(req.query);
+    res.redirect('/');
 });
 
 router.get('/getTicket', function (req, res, next) {
