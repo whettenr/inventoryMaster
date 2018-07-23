@@ -520,6 +520,7 @@ router.get('/getModelOptions', function (req, res, next) {
     database.query('SELECT DISTINCT Model FROM ?? WHERE Make = ? ORDER BY Model', [Type, Make])
         .then(rows => {
             modelOptions = rows;
+            modelOptions[modelOptions.length] = {Model: 'None'};
             modelOptions[modelOptions.length] = {Model: 'Add a New Option'};
 
             database.close();
@@ -681,6 +682,7 @@ router.get('/getItemOptions', function (req, res, next) {
     database.query('SELECT DISTINCT Item FROM Peripheral WHERE Model = ? ORDER BY Item', [Model])
         .then(rows => {
             itemOptions = rows;
+            itemOptions[itemOptions.length] = {Item: 'None'};
             itemOptions[itemOptions.length] = {Item: 'Add a New Option'};
 
             database.close();

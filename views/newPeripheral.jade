@@ -386,15 +386,16 @@ block content
                     console.log(model);
                     $("#model").append(new Option(model, model));
                     $("#model").val(model);
+                    newItem();
                 }
             }
             else {
                 $.ajax({
                     type: "GET",
-                    url: "#{location}/getItemOptions?model=" + $("#model").val(),
+                    url: "#{location}/getModelOptions?type=Peripheral&make=" + $("#make").val(),
                     data: {format: 'html'}
                 }).done(function (data) {
-                    $("#item").html(data);
+                    $("#model").html(data);
                 });
             }
         }
@@ -408,16 +409,36 @@ block content
                     $("#item").val(item);
                 }
             }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "#{location}/getItemOptions?model=" + $("#make").val(),
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#item").html(data);
+                });
+            }
         }
 
         function refreshModelOptions() {
-            $.ajax({
-                type: "GET",
-                url: "#{location}/getPeripheralModelOptions?make=" + $("#make").val(),
-                data: {format: 'html'}
-            }).done(function (data) {
-                $("#model").html(data);
-            });
+            if ($("#make").val() === "Add a New Option") {
+                let make = prompt("New Make:");
+                if (make !== null && make !== "") {
+                    console.log(make);
+                    $("#make").append(new Option(make, make));
+                    $("#make").val(make);
+                    newModel();
+                }
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "#{location}/getPeripheralModelOptions?make=" + $("#make").val(),
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#model").html(data);
+                });
+            }
         }
         function changeEmployee(){
             console.log('changeEMployee');
