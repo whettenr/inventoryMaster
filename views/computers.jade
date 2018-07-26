@@ -64,21 +64,7 @@ block content
     script.
 
         function getComputerInfo(ICN, EmployeeID) {
-            console.log(ICN);
-            $.ajax({
-                type: "GET",
-                url: "#{location}/computer?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
-                data: {format: 'html'}
-            }).done(function (data) {
-                $("#computerInfo").html(data);
-                $("#cardDad").css('display', 'block');
-                $("#cardInfo").css('display', 'none');
-                document.getElementById("button").onclick = function () {
-                    console.log('clicked');
-                    $("#cardDad").css('display', 'none');
-                    $("#cardDad").addClass("cardDadCss");
-                };
-            });
+            window.location.href = '#{location}/computer?EmployeeID=' + EmployeeID + '&ICN=' + ICN;
         }
 
 

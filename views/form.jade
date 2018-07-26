@@ -441,7 +441,7 @@ block content
         function refreshModelOptions() {
             $.ajax({
                 type: "GET",
-                url: "#{location}/getModelOptions?type=Computermake=" + $("#make").val(),
+                url: "#{location}/getModelOptions?type=Computer&make=" + $("#make").val(),
                 data: {format: 'html'}
             }).done(function (data) {
                 $("#model").html(data);
