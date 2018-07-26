@@ -1534,7 +1534,7 @@ router.post('/newComputer', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/employees');
+            res.redirect(location + '/card?employeeId='+req.body.employeeId);
 
         })
         .catch(err => {
@@ -1554,7 +1554,7 @@ router.post('/newMonitor', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/employees');
+            res.redirect(location + '/card?employeeId='+req.body.employeeId);
 
         })
         .catch(err => {
@@ -1576,7 +1576,7 @@ router.post('/newPeripheral', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/employees');
+            res.redirect(location + '/card?employeeId='+req.body.employeeId);
 
         })
         .catch(err => {
@@ -1594,7 +1594,7 @@ router.post('/form', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/employees');
+            res.redirect(location + '/card?employeeId='+req.body.employeeId);
         })
         .catch(err => {
             console.log(err);
@@ -1614,7 +1614,7 @@ router.post('/monitor', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/employees');
+            res.redirect(location + '/card?employeeId='+req.body.employeeId);
         })
         .catch(err => {
             console.log(err);
@@ -1632,7 +1632,7 @@ router.post('/peripheral', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/employees');
+            res.redirect(location + '/card?employeeId='+req.body.employeeId);
         })
         .catch(err => {
             console.log(err);
@@ -1650,7 +1650,7 @@ router.post('/printer', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/employees');
+            res.redirect(location + '/card?employeeId='+req.body.employeeId);
         })
         .catch(err => {
             console.log(err);
