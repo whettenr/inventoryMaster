@@ -59,20 +59,7 @@ block content
     script.
 
         function getMonitorInfo(ICN, EmployeeID) {
-            console.log(ICN);
-            $.ajax({
-                type: "GET",
-                url: "#{location}/monitor?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
-                data: {format: 'html'}
-            }).done(function (data) {
-                $("#computerInfo").html(data);
-                $("#computerInfo").css('display', 'block');
-                $("#cardDad").css('display', 'block');
-                $("#cardInfo").css('display', 'none');
-                $("#cardDad").addClass("cardDadCss");
-
-
-            });
+            window.location.href = "#{location}/monitor?ICN=" + ICN + '&EmployeeID=' + EmployeeID;
         }
 
 
