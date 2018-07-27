@@ -1484,7 +1484,7 @@ router.get('/search', function (req, res, next) {
     let monitorRows = {};
     let printerRows = {};
     let peripheralRows = {};
-    database.query("SELECT * FROM Employee WHERE FirstName LIKE ? OR LastName LIKE ?", [searchTerms, searchTerms])
+    database.query("SELECT * FROM Employee WHERE FirstName LIKE ? OR LastName LIKE ? OR Notes LIKE ?", [searchTerms, searchTerms, searchTerms])
         .then(rows => {
             employeeRows = rows;
             console.log(rows);
