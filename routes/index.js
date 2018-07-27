@@ -1511,7 +1511,7 @@ router.get('/search', function (req, res, next) {
         })
         .then(() =>{
             if(employeeRows.length === 1){
-                res.redirect(location + 'card?employeeId=' + employeeRows[0].EmployeeID);
+                res.redirect(location + '/card?employeeId=' + employeeRows[0].EmployeeID);
             }
             if(computerRows.length === 1){
                 res.redirect(location + '/computer?ICN=' + computerRows[0].ICN + "&EmployeeID=" + computerRows[0].EmployeeID);
