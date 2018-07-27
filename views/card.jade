@@ -2,7 +2,8 @@ extends layout
 
 block content
     if(employee)
-        img.pic(src='#{employee.PictureURL}' onerror='javascript:this.src="images/default.png"')
+        if(employee.PictureURL)
+            img.pic(src='#{employee.PictureURL}' onerror='javascript:this.src="images/default.png"')
         //h1.center #{employee.FirstName} #{employee.LastName}
         h3.left Office: #{employee.Office} #{employee.Building}
         h3.left Category: #{employee.Category}

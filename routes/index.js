@@ -1382,6 +1382,10 @@ router.get('/', function (req, res, next) {
         })
 });
 
+// router.get('/undefined', function (req, res, next) {
+//     res.redirect(location + '/');
+// });
+
 router.get('/jsbSurplus', function (req, res, next) {
     if (!req.session.user)
         res.redirect(location + '/cas?goTo=' + location + '/jsbSurplus');
@@ -1552,11 +1556,12 @@ router.get('/getTicket', function (req, res, next) {
     console.log("goto2: " + goTo);
     let service = URL + '/getTicket?goTo=' + goTo;
     let user = '';
-    cas.validate(ticket, service).then(function success(response) {
+    cas.validate(ticket, service)
+        .then(function success(response) {
         console.log("Ticket valid! Hello, " + response.username);
         user = response.attributes;
         // console.dir(response.attributes);
-    })
+        })
         .then(() => {
             if (checkUser(user)) {
                 req.session.user = user;

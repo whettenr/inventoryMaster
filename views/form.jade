@@ -400,6 +400,12 @@ block content
         let model = "#{computer.Model}";
         let type = "#{computer.Type}";
         let notes = "#{computer.Notes}";
+        let user = '#{user.name}';
+        if(user === '') {
+            user = '#{user.netId}';
+        }
+
+
         let date = new Date();
         function goBack() {
             $("#cardInfo").css('display', 'block');
