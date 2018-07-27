@@ -16,6 +16,49 @@ block content
                     div(href='/computerTable') New Printer
                     div(onclick='newPeripheral(#{employee.EmployeeID})') New Peripheral
         br
+    else
+        h4.left Employees:
+        table.table
+            tr#myHeader
+                th
+                    a(href='#{location}/employeesTable?sortby=employeeId')
+                        div='Employee ID'
+                th
+                    a(href='#{location}/employeesTable?sortby=firstName')
+                        div= "First Name"
+                th
+                    a(href='#{location}/employeesTable?sortby=lastName')
+                        div= "Last Name"
+                th= "Category"
+                th= "Office Location"
+                th= "Building"
+                th= "Username"
+                th= "Email"
+                th
+                    a(href='#{location}/employeesTable?sortby=rotationGroup')
+                        div= "Roation Group"
+                th
+                    a(href='#{location}/employeesTable?sortby=dateSwitched')
+                        div= "Date Switched"
+                th= "Notes"
+            each employee in employees
+                tr(onclick='getCard(#{employee.EmployeeID})')
+                    td= employee.EmployeeID
+                    td= employee.FirstName
+                    td= employee.LastName
+                    td= employee.Category
+                    td= employee.Office
+                    td= employee.Building
+                    td= employee.UserName
+                    td= employee.Email
+                    td
+                        a(href='#{location}/employeesTable?where=rotationGroup=#{employee.RotationGroup}')
+                            div= employee.RotationGroup
+                    td
+                        a(href='#{location}/employeesTable?where=dateSwitched=#{employee.DateSwitched}')
+                            div= employee.DateSwitched
+                    td= employee.Notes
+
     h4.left Computers:
     if(!employee)
         h3.left= Object.keys(computers).length
@@ -193,5 +236,18 @@ block content
                 $("#computerInfo").html(data);
                 $("#computerInfo").css('display', 'block');
                 $("#cardInfo").css('display', 'none');
+            });
+        }
+        function getCard(employeeID) {
+            window.location.href = '#{location}/card?employeeId=' + employeeID;
+            console.log(employeeID);
+            $.ajax({
+                type: "GET",
+                url: "#{location}/card?employeeId=" + employeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#cardDad").addClass("cardDadCss");
+                $("#cardDad").html(data);
+                $("#cardDad").css('display', 'block');
             });
         }

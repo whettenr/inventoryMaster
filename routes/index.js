@@ -1513,21 +1513,22 @@ router.get('/search', function (req, res, next) {
             if(employeeRows.length === 1){
                 res.redirect(location + '/card?employeeId=' + employeeRows[0].EmployeeID);
             }
-            if(computerRows.length === 1){
+            else if(computerRows.length === 1 && employeeRows.length === 0){
                 res.redirect(location + '/computer?ICN=' + computerRows[0].ICN + "&EmployeeID=" + computerRows[0].EmployeeID);
             }
-            if(monitorRows.length === 1){
+            else if(monitorRows.length === 1 && employeeRows.length === 0){
                 res.redirect(location + '/monitor?ICN=' + monitorRows[0].ICN + "&EmployeeID=" + monitorRows[0].EmployeeID);
             }
-            if(printerRows.length === 1){
+            else if(printerRows.length === 1 && employeeRows.length === 0){
                 res.redirect(location + '/printer?ICN=' + printerRows[0].ICN + "&EmployeeID=" + printerRows[0].EmployeeID);
             }
-            if(peripheralRows.length === 1){
+            else if(peripheralRows.length === 1 && employeeRows.length === 0){
                 res.redirect(location + '/peripheral?ICN=' + peripheralRows[0].ICN + "&EmployeeID=" + peripheralRows[0].EmployeeID);
             }
         })
         .then(() => {
             res.render('card', {
+                employees: employeeRows,
                 computers: computerRows,
                 monitors: monitorRows,
                 printers: printerRows,
