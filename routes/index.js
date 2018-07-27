@@ -1649,7 +1649,7 @@ router.post('/newPeripheral', function (req, res, next) {
             console.log(err);
         });
 });
-
+FORM
 router.post('/form', function (req, res, next) {
     if (!req.session.user)
         res.redirect(location + '/cas?goTo=' + location + '/');

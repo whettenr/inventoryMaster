@@ -392,6 +392,7 @@ block content
                             label(for='history') History:
                         .col-75
                             textarea#history(name='history' style='height:200px' readonly='readonly')
+                                #{computer.History}
     script.
         let icn = "#{computer.ICN}";
         let employee = "#{employee.FirstName} #{employee.LastName}";
