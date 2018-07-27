@@ -788,6 +788,7 @@ router.get('/computer', function (req, res, next) {
                 hardware,
                 employee,
                 processorTypeOptions,
+                user: req.session.user,
                 location
             })
         })
