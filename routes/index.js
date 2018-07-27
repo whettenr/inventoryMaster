@@ -1488,7 +1488,7 @@ router.get('/search', function (req, res, next) {
         .then(rows => {
             employeeRows = rows;
             console.log(rows);
-            return database.query("SELECT * FROM Computer WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Type LIKE ? OR NOTES LIKE ?", [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            return database.query("SELECT * FROM Computer JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Computer.ICN LIKE ? OR Computer.SerialNumber LIKE ? OR Computer.Make LIKE ? OR Computer.Model LIKE ? OR Computer.Type LIKE ? OR Computer.NOTES LIKE ? OR Hardware.ProcessorType LIKE ? OR Hardware.ProcessorSpeed LIKE ? OR Hardware.HardDrive LIKE ? OR Hardware.VCName LIKE ?", [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             console.log(rows);
