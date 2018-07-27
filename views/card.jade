@@ -1,26 +1,24 @@
 extends layout
 
 block content
-    img.pic(src='#{employee.PictureURL}' onerror='javascript:this.src="images/default.png"')
-    //h1.center #{employee.FirstName} #{employee.LastName}
-    h3.left Office: #{employee.Office} #{employee.Building}
-    h3.left Category: #{employee.Category}
-    h3.left Rotation Group: #{employee.RotationGroup}
-    div.right
-        div(class='dropdown')
-            div(class='dropbtn') Add Item
-            div(class='dropdown-content')
-                div(onclick='newComputer(#{employee.EmployeeID})') New Computer
-                div(onclick='newMonitor(#{employee.EmployeeID})') New Monitor
-                div(href='/computerTable') New Printer
-                div(onclick='newPeripheral(#{employee.EmployeeID})') New Peripheral
-    br
+    if(employee)
+        img.pic(src='#{employee.PictureURL}' onerror='javascript:this.src="images/default.png"')
+        //h1.center #{employee.FirstName} #{employee.LastName}
+        h3.left Office: #{employee.Office} #{employee.Building}
+        h3.left Category: #{employee.Category}
+        h3.left Rotation Group: #{employee.RotationGroup}
+        div.right
+            div(class='dropdown')
+                div(class='dropbtn') Add Item
+                div(class='dropdown-content')
+                    div(onclick='newComputer(#{employee.EmployeeID})') New Computer
+                    div(onclick='newMonitor(#{employee.EmployeeID})') New Monitor
+                    div(href='/computerTable') New Printer
+                    div(onclick='newPeripheral(#{employee.EmployeeID})') New Peripheral
+        br
     h4.left Computers:
-    #mySidebar.sidebar.w3-bar-block.w3-card.w3-animate-right(style='display:none')
-        .w3-bar-item.w3-button.drop(ondragover='allowDrop(event)', ondragleave='dragLeave(event);', ondrop='drop(event)') 303
-        .w3-bar-item.w3-button(ondragover='allowDrop(event)', ondragleave='dragLeave(event);', ondrop='drop(event)') Reassign
-        .w3-bar-item.w3-button(ondragover='allowDrop(event)', ondragleave='dragLeave(event);', ondrop='drop(event)') Surplus
-
+    if(!employee)
+        h3.left= Object.keys(computers).length
     table.table
         tr
             th
@@ -34,7 +32,7 @@ block content
             th
                 | Date Acquired
         each computer in computers
-            tr(ondragstart="dragStart(event)" ondragend="stop(event)" draggable="true" ondrag="dragging(event)" onclick="getComputerInfo(#{computer.ICN}, #{employee.EmployeeID})")
+            tr(ondragstart="dragStart(event)" ondragend="stop(event)" draggable="true" ondrag="dragging(event)" onclick="getComputerInfo(#{computer.ICN}, #{computer.EmployeeID})")
                 td= computer.ICN
                 td= computer.Make
                 td= computer.Model
@@ -42,6 +40,8 @@ block content
                 td= computer.DateAcquired
     div
         h4.left Monitors:
+        if(!employee)
+            h3.left= Object.keys(monitors).length
     table.table
         tr
             th
@@ -51,13 +51,14 @@ block content
             th
                 | Model
         each monitor in monitors
-            tr(ondragstart="dragStart(event)" ondragend="stop(event)" draggable="true" ondrag="dragging(event)" onclick="getMonitorInfo(#{monitor.ICN}, #{employee.EmployeeID})")
+            tr(ondragstart="dragStart(event)" ondragend="stop(event)" draggable="true" ondrag="dragging(event)" onclick="getMonitorInfo(#{monitor.ICN}, #{monitor.EmployeeID})")
                 td= monitor.ICN
                 td= monitor.Make
                 td= monitor.Model
     div
         h4.left Printers:
-
+        if(!employee)
+            h3.left= Object.keys(printers).length
     table.table
         tr
             th
@@ -73,7 +74,8 @@ block content
                 td= printer.Model
     div
         h4.left Peripherals:
-
+        if(!employee)
+            h3.left= Object.keys(peripherals).length
     table.table
         tr
             th

@@ -1476,8 +1476,72 @@ router.get('/cas', function (req, res, next) {
 });
 
 router.get('/search', function (req, res, next) {
-    console.log(req.query);
-    res.redirect('/');
+    console.log(req.query.searchTerms);
+    let searchTerms = "%" + req.query.searchTerms + "%";
+    let database = new Database(config.getConfig());
+    let employeeRows = {};
+    let computerRows = {};
+    let monitorRows = {};
+    let printerRows = {};
+    let peripheralRows = {};
+    database.query("SELECT * FROM Employee WHERE FirstName LIKE ? OR LastName LIKE ?", [searchTerms, searchTerms])
+        .then(rows => {
+            employeeRows = rows;
+            console.log(rows);
+            return database.query("SELECT * FROM Computer WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Type LIKE ? OR NOTES LIKE ?", [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+        })
+        .then(rows => {
+            console.log(rows);
+            computerRows = rows;
+            return database.query('SELECT * FROM Monitor WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+        })
+        .then(rows => {
+            monitorRows = rows;
+            console.log(rows);
+            return database.query('SELECT * FROM Printer WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+        })
+        .then(rows => {
+            printerRows = rows;
+            console.log(rows);
+            return database.query('SELECT * FROM Peripheral WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+        })
+        .then(rows => {
+            peripheralRows = rows;
+            return database.close();
+        })
+        .then(() =>{
+            if(employeeRows.length === 1){
+                res.redirect(location + 'card?employeeId=' + employeeRows[0].EmployeeID);
+            }
+            if(computerRows.length === 1){
+                res.redirect(location + '/computer?ICN=' + computerRows[0].ICN + "&EmployeeID=" + computerRows[0].EmployeeID);
+            }
+            if(monitorRows.length === 1){
+                res.redirect(location + '/monitor?ICN=' + monitorRows[0].ICN + "&EmployeeID=" + monitorRows[0].EmployeeID);
+            }
+            if(printerRows.length === 1){
+                res.redirect(location + '/printer?ICN=' + printerRows[0].ICN + "&EmployeeID=" + printerRows[0].EmployeeID);
+            }
+            if(peripheralRows.length === 1){
+                res.redirect(location + '/peripheral?ICN=' + peripheralRows[0].ICN + "&EmployeeID=" + peripheralRows[0].EmployeeID);
+            }
+        })
+        .then(() => {
+            res.render('card', {
+                computers: computerRows,
+                monitors: monitorRows,
+                printers: printerRows,
+                peripherals: peripheralRows,
+                location,
+                user: req.session.user,
+                title: "Search: " + req.query.searchTerms
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+
 });
 
 router.get('/getTicket', function (req, res, next) {
