@@ -227,6 +227,13 @@ router.get('/computerTable', function (req, res, next) {
     else {
         query += ' Order BY ICN';
     }
+
+    if(req.query.order === 'asc'){
+        query += ' ASC';
+    }
+    else if(req.query.order === 'dsc'){
+        query += ' DESC';
+    }
     console.log(query);
 
 
@@ -237,6 +244,7 @@ router.get('/computerTable', function (req, res, next) {
         .then(() => {
             res.render('computers', {
                 title: 'Computers',
+                order: req.query.order,
                 computers: computers,
                 filters: filters,
                 user: req.session.user,

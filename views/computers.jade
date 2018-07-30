@@ -34,8 +34,12 @@ block content
                     td= "Express Service Code"
                     td= "Type"
                     td
-                        a(href='#{location}/computerTable?sortby=dateAcquired')
-                            div= "Date Acquired"
+                        if(order === 'asc')
+                            a(href='#{location}/computerTable?sortby=dateAcquired&order=dsc')
+                                div= "Date Acquired"
+                        else
+                            a(href='#{location}/computerTable?sortby=dateAcquired&order=asc')
+                                div= "Date Acquired"
                     td= "Warranty"
                     td= "Home Checkout"
                     td= "Notes"
