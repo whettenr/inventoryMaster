@@ -1605,7 +1605,7 @@ router.post('/newComputer', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId='+req.body.employeeId);
+            res.redirect(location + '/card?employeeId='+req.body.EmployeeID);
 
         })
         .catch(err => {

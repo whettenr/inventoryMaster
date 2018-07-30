@@ -302,7 +302,7 @@ block content
                         .col-25
                             label(for='model') Model:
                         .col-75
-                            select#model.custom-select.sources(name='model', placeholder='Model')
+                            select#model.custom-select.sources(name='model', placeholder='Model' onchange='changeModel()')
                                 each modelOption in modelOptions
                                     if(modelOption.Model === computer.Model)
                                         option(value=modelOption.Model selected) #{modelOption.Model}
@@ -446,6 +446,7 @@ block content
         }
 
         function refreshModelOptions() {
+            changeMake();
             $.ajax({
                 type: "GET",
                 url: "#{location}/getModelOptions?type=Computer&make=" + $("#make").val(),
@@ -456,11 +457,15 @@ block content
         }
         function changeEmployee(){
             let history = $("#history").val();
-            $("#history").val(history + date.toDateString() + ' Reassigned from ' + employee + ' to ' + $("#employee option:selected").attr('name') + ' by McKay Court \n');
+            $("#history").val(history + date.toDateString() + ' Reassigned from ' + employee + ' to ' + $("#employee option:selected").attr('name') + ' by ' + user + ' \n');
         }
         function changeMake(){
             let history = $("#history").val();
-            $("#history").val(history + date.toDateString() + ' Changed from ')
+            $("#history").val(history + date.toDateString() + ' Make changed from ' + make + ' to ' + $("#make").val() + ' by ' + user + ' \n');
+        }
+        function changeModel() {
+            let history = $("#history").val();
+            $("#history").val(history + date.toDateString() + ' Model changed from ' + model + ' to ' + $("#model").val() + ' by ' + user + ' \n');
         }
         function go(){
             if(employee !== $("#employee option:selected").attr('name')){
