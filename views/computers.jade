@@ -33,7 +33,9 @@ block content
                     td= "Service Tag"
                     td= "Express Service Code"
                     td= "Type"
-                    td= "Date Acquired"
+                    td
+                        a(href='#{location}/computerTable?sortby=dateAcquired')
+                            div= "Date Acquired"
                     td= "Warranty"
                     td= "Home Checkout"
                     td= "Notes"

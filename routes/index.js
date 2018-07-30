@@ -221,6 +221,9 @@ router.get('/computerTable', function (req, res, next) {
     else if (req.query.sortby === 'lastName') {
         query += ' ORDER BY lastName';
     }
+    else if (req.query.sortby === 'dateAcquired') {
+        query += ' ORDER BY DateAcquired';
+    }
     else {
         query += ' Order BY ICN';
     }
