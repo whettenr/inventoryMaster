@@ -386,16 +386,15 @@ block content
                     console.log(model);
                     $("#model").append(new Option(model, model));
                     $("#model").val(model);
-                    newItem();
                 }
             }
             else {
                 $.ajax({
                     type: "GET",
-                    url: "#{location}/getModelOptions?type=Peripheral&make=" + $("#make").val(),
+                    url: "#{location}/getItemOptions?model=" + $("#model").val(),
                     data: {format: 'html'}
                 }).done(function (data) {
-                    $("#model").html(data);
+                    $("#item").html(data);
                 });
             }
         }
@@ -408,15 +407,6 @@ block content
                     $("#item").append(new Option(item, item));
                     $("#item").val(item);
                 }
-            }
-            else {
-                $.ajax({
-                    type: "GET",
-                    url: "#{location}/getItemOptions?model=" + $("#make").val(),
-                    data: {format: 'html'}
-                }).done(function (data) {
-                    $("#item").html(data);
-                });
             }
         }
 

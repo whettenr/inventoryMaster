@@ -659,6 +659,7 @@ router.get('/getPeripheralModelOptions', function (req, res, next) {
     database.query('SELECT DISTINCT Model FROM Peripheral WHERE Make = ? ORDER BY Model', [Make])
         .then(rows => {
             modelOptions = rows;
+            modelOptions[modelOptions.length] = {Model: 'None'};
             modelOptions[modelOptions.length] = {Model: 'Add a New Option'};
 
             database.close();
