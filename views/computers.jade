@@ -45,7 +45,13 @@ block content
                         else
                             a(href='#{location}/computerTable?sortby=Make&order=asc')
                                 div= "Make"
-                    td= "Model"
+                    td
+                        if(order === 'asc')
+                            a(href='#{location}/computerTable?sorby=Model&order=dsc')
+                                div= "Model"
+                        else
+                            a(href='#{location}/computerTable?sorby=Model&order=asc')
+                                div= "Model"
                     td= "Serial Number"
                     td= "Service Tag"
                     td= "Express Service Code"

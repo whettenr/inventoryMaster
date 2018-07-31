@@ -54,7 +54,7 @@ block content
                         td= employee.Notes
     script.
         function getCard(employeeID) {
-            window.location.href = '#{location}/card?employeeId=' + employeeID;
+            window.location.href = '#{location}/card?EmployeeID=' + employeeID;
             console.log(employeeID);
             $.ajax({
                 type: "GET",

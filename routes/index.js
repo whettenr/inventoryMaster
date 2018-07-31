@@ -215,6 +215,9 @@ router.get('/computerTable', function (req, res, next) {
     else if (req.query.sortby === 'Make') {
         query += ' ORDER BY Make';
     }
+    else if (req.query.sortby === 'Model') {
+        query += ' ORDER BY Model';
+    }
     else if (req.query.sortby === 'firstname') {
         query += ' ORDER BY FirstName';
     }
@@ -466,8 +469,8 @@ router.get('/otherSlots', function (req, res, next) {
 
 router.get('/card', function (req, res, next) {
     if (!req.session.user)
-        res.redirect(location + '/cas?goTo=' + location + '/card?employeeId=' + req.query.employeeId);
-    let employeeId = req.query.employeeId;
+        res.redirect(location + '/cas?goTo=' + location + '/card?employeeId=' + req.query.EmployeeID);
+    let employeeId = req.query.EmployeeID;
     let employeeRows = {};
     let computerRows = {};
     let monitorRows = {};
@@ -477,22 +480,22 @@ router.get('/card', function (req, res, next) {
 
     let database = new Database(config.getConfig());
 
-    database.query('SELECT * FROM Employee WHERE employeeId = ' + employeeId)
+    database.query('SELECT * FROM Employee WHERE EmployeeID = ' + employeeId)
         .then(rows => {
             employeeRows = rows;
-            return database.query('SELECT * FROM Computer WHERE EmployeeId = ' + employeeId);
+            return database.query('SELECT * FROM Computer WHERE EmployeeID = ' + employeeId);
         })
         .then(rows => {
             computerRows = rows;
-            return database.query('SELECT * FROM Monitor WHERE EmployeeId = ' + employeeId);
+            return database.query('SELECT * FROM Monitor WHERE EmployeeID = ' + employeeId);
         })
         .then(rows => {
             monitorRows = rows;
-            return database.query('SELECT * FROM Printer WHERE EmployeeId = ' + employeeId);
+            return database.query('SELECT * FROM Printer WHERE EmployeeID = ' + employeeId);
         })
         .then(rows => {
             printerRows = rows;
-            return database.query('SELECT * FROM Peripheral WHERE EmployeeId = ' + employeeId);
+            return database.query('SELECT * FROM Peripheral WHERE EmployeeID = ' + employeeId);
         })
         .then(rows => {
             peripheralRows = rows;
