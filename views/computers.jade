@@ -12,7 +12,7 @@ block content
                 a.filterButton(href='#{location}/computerTable?not=' + i) Inverse Filter
 
     div= "Count: " + Object.keys(computers).length
-    a.byu-button.whitenavy(href='/download/computers') Download
+    a.byu-button.whitenavy(href='#{location}/download/computers') Download
     div(style='overflow-x:auto;')
         table#table
             tbody
