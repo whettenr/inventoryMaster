@@ -12,22 +12,39 @@ block content
                 a.filterButton(href='#{location}/computerTable?not=' + i) Inverse Filter
 
     div= "Count: " + Object.keys(computers).length
+    a.byu-button.whitenavy(href='/download/computers') Download
     div(style='overflow-x:auto;')
         table#table
             tbody
                 tr#myHeader
                     td
-                        a(href='#{location}/computerTable?sortby=ICN')
-                            div='ICN'
+                        if(order === 'asc')
+                            a(href='#{location}/computerTable?sortby=ICN&order=dsc')
+                                div='ICN'
+                        else
+                            a(href='#{location}/computerTable?sortby=ICN&order=asc')
+                                div='ICN'
                     td
-                        a(href='#{location}/computerTable?sortby=firstname')
-                            div= "First Name"
+                        if(order === 'asc')
+                            a(href='#{location}/computerTable?sortby=firstname&order=dsc')
+                                div= "First Name"
+                        else
+                            a(href='#{location}/computerTable?sortby=firstname&order=asc')
+                                div= "First Name"
                     td
-                        a(href='#{location}/computerTable?sortby=lastName')
-                            div= "Last Name"
+                        if(order === 'asc')
+                            a(href='#{location}/computerTable?sortby=lastname&order=dsc')
+                                div= "Last Name"
+                        else
+                            a(href='#{location}/computerTable?sortby=lastname&order=asc')
+                                div= "Last Name"
                     td
-                        a(href='#{location}/computerTable?sortby=Make')
-                            div= "Make"
+                        if(order === 'asc')
+                            a(href='#{location}/computerTable?sortby=Make&order=dsc')
+                                div= "Make"
+                        else
+                            a(href='#{location}/computerTable?sortby=Make&order=asc')
+                                div= "Make"
                     td= "Model"
                     td= "Serial Number"
                     td= "Service Tag"
@@ -42,15 +59,19 @@ block content
                                 div= "Date Acquired"
                     td= "Warranty"
                     td= "Home Checkout"
+                    td= "Rotation"
                     td= "Notes"
                 each computer in computers
-                    tr(onclick='getComputerInfo(#{computer.ICN}, #{computer.EmployeeID})')
+                    tr
                         td
-                            a(href='#{location}/computerTable?where=ICN=#{computer.ICN}')
-                                div= computer.ICN
+                            .divButton(onclick='getComputerInfo(#{computer.ICN}, #{computer.EmployeeID})')= computer.ICN
                                 //i(class="material-icons") laptop
-                        td= computer.FirstName
-                        td= computer.LastName
+                        td
+                            a(href='#{location}/computerTable?where=EmployeeID=\'#{computer.EmployeeID}\'')
+                                div= computer.FirstName
+                        td
+                            a(href='#{location}/computerTable?where=EmployeeID=\'#{computer.EmployeeID}\'')
+                                div= computer.LastName
                         td
                             a(href='#{location}/computerTable?where=Make=\'#{computer.Make}\'')
                                 div= computer.Make
@@ -66,11 +87,12 @@ block content
                         td= computer.DateAcquired
                         td= computer.Warranty
                         td= computer.HomeCheckout
+                        td
+                            a(href='#{location}/computerTable?where=RotationGroup=\'#{computer.RotationGroup}\'')
+                                div= computer.RotationGroup
                         td= computer.Notes
     script.
 
         function getComputerInfo(ICN, EmployeeID) {
             window.location.href = '#{location}/computer?EmployeeID=' + EmployeeID + '&ICN=' + ICN;
         }
-
-
