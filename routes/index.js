@@ -1761,12 +1761,12 @@ router.post('/form', function (req, res, next) {
         res.redirect(location + '/cas?goTo=' + location + '/');
     let database = new Database(config.getConfig());
     database.query("UPDATE Computer Set EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
-        [req.body.employeeId, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
+        [req.body.EmployeeID, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
         .then(rows => {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId=' + req.body.employeeId);
+            res.redirect(location + '/card?employeeId=' + req.body.EmployeeID);
         })
         .catch(err => {
             console.log(err);
