@@ -33,7 +33,7 @@ block content
                             div= "Roation Group"
                     th
                         a(href='#{location}/employeesTable?sortby=dateSwitched')
-                            div= "Date Switched"
+                            div= "Date Acquired"
                     th= "Notes"
                 each employee in employees
                     tr
@@ -49,9 +49,7 @@ block content
                         td
                             a(href='#{location}/employeesTable?where=rotationGroup=#{employee.RotationGroup}')
                                 div= employee.RotationGroup
-                        td
-                            a(href='#{location}/employeesTable?where=dateSwitched=#{employee.DateSwitched}')
-                                div= employee.DateSwitched
+                        td=employee.DateAcquired
                         td= employee.Notes
     script.
         function getCard(employeeID) {

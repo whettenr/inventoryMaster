@@ -8,53 +8,61 @@ block content
     if(filters)
         each filter, i in filters
             div= filter
-            a.filterButton(href='monitorsTable?remove=' + i) Remove Filter
-            a.filterButton(href='monitorsTable?not=' + i) Inverse Filter
+            a.filterButton(href='#{location}/monitorsTable?remove=' + i) Remove Filter
+            a.filterButton(href='#{location}/monitorsTable?not=' + i) Inverse Filter
 
     div= "Count: " + Object.keys(monitors).length
-    a.byu-button.whitenavy(href='/download/monitors') Download
+    a.byu-button.whitenavy(href='#{location}/download/monitors') Download
     div(style='overflow-x:auto;')
         table#table
             tbody
                 tr#myHeader
                     td
-                        a(href='/monitorsTable?sortby=ICN')
+                        a(href='#{location}/monitorsTable?sortby=ICN')
                             div='ICN'
                     td
-                        a(href='/monitorsTable?sortby=firstname')
+                        a(href='#{location}/monitorsTable?sortby=firstname')
                             div= "First Name"
                     td
-                        a(href='/monitorsTable?sortby=lastName')
+                        a(href='#{location}/monitorsTable?sortby=lastName')
                             div= "Last Name"
                     td
-                        a(href='/monitorsTable?sortby=Make')
+                        a(href='#{location}/monitorsTable?sortby=Make')
                             div= "Make"
                     td
-                        a(href='monitorsTable?sortby=Model')
+                        a(href='#{location}/monitorsTable?sortby=Model')
                             div= "Model"
                     td= "Serial Number"
-                    td= "Date Acquired"
+                    td
+                        a(href='#{location}/monitorsTable?sortby=DateAcquired')
+                            div= "Date Acquired"
                     td= "Warranty"
                     td= "Home Checkout"
                     td= "Notes"
                 each monitor in monitors
                     tr
                         td
-                            a(href='/monitorsTable?where=ICN=#{monitor.ICN}')
+                            a(href='#{location}/monitor?ICN=' + monitor.ICN + '&EmployeeID=' + monitor.EmployeeID)
                                 div= monitor.ICN
                                 //i(class="material-icons") laptop
-                        td= monitor.FirstName
-                        td= monitor.LastName
                         td
-                            a(href='/monitorsTable?where=Make=\'#{monitor.Make}\'')
+                            a(href='#{location}/monitorsTable?where=EmployeeID=#{monitor.EmployeeID}')
+                                div= monitor.FirstName
+                        td
+                            a(href='#{location}/monitorsTable?where=EmployeeID=#{monitor.EmployeeID}')
+                                div= monitor.LastName
+                        td
+                            a(href='#{location}/monitorsTable?where=Make=\'#{monitor.Make}\'')
                                 div= monitor.Make
                         td
-                            a(href='/monitorsTable?where=Model=\'#{monitor.Model}\'')
+                            a(href='#{location}/monitorsTable?where=Model=\'#{monitor.Model}\'')
                                 div= monitor.Model
                         td= monitor.SerialNumber
                         td= monitor.DateAcquired
                         td= monitor.Warranty
-                        td= monitor.HomeCheckout
+                        td
+                            a(href='#{location}/monitorsTable?where=HomeCheckout=\'#{monitor.HomeCheckout}\'')
+                                div= monitor.HomeCheckout
                         td= monitor.Notes
     script.
 

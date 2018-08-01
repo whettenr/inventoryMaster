@@ -62,17 +62,15 @@ let finalQuery = "";
 /* GET home page. */
 
 function checkUser(user) {
-    console.log(user);
-    console.log(location);
-    if(location === '/inventory'){
-        for(let i in user.memberOf){
-            if(user.memberOf[i] === 'RICHARD_CROOKSTON--RBC9'){
+    if (location === '/inventory') {
+        for (let i in user.memberOf) {
+            if (user.memberOf[i] === 'RICHARD_CROOKSTON--RBC9') {
                 return true;
             }
         }
         return false;
     }
-    else{
+    else {
         let possiblities = ['mmcourt', 'bquinlan', 'rbc9', 'mr28'];
         for (let i in possiblities) {
             if (possiblities[i] === user.netId) {
@@ -233,10 +231,10 @@ router.get('/computerTable', function (req, res, next) {
         query += ' Order BY ICN';
     }
 
-    if(req.query.order === 'asc'){
+    if (req.query.order === 'asc') {
         query += ' ASC';
     }
-    else if(req.query.order === 'dsc'){
+    else if (req.query.order === 'dsc') {
         query += ' DESC';
     }
     console.log(query);
@@ -317,6 +315,9 @@ router.get('/monitorsTable', function (req, res, next) {
     }
     else if (req.query.sortby === 'firstName') {
         query += ' ORDER BY firstName';
+    }
+    else if (req.query.sortby === 'DateAcquired') {
+        query += ' ORDER BY DateAcquired';
     }
     else if (req.query.sortby === 'lastName') {
         query += ' ORDER BY lastName';
@@ -1405,7 +1406,7 @@ router.get('/', function (req, res, next) {
     if (req.query.clear) {
         employeeFilters = [];
     }
-    let query = 'Select * FROM Employee';
+    let query = 'Select * FROM Employee LEFT JOIN Computer ON Employee.EmployeeID = Computer.EmployeeID';
     if (req.query.remove) {
         let splice = parseInt(req.query.remove);
         employeeFilters.splice(splice, 1);
@@ -1427,8 +1428,8 @@ router.get('/', function (req, res, next) {
             employeeFilters.push(req.query.where);
         }
     }
+    query += " WHERE Type = 'On Rotation'";
     if (employeeFilters.length > 0) {
-        query += " WHERE ";
         for (let filter in employeeFilters) {
             query += employeeFilters[filter];
             query += ' and ';
@@ -1438,22 +1439,22 @@ router.get('/', function (req, res, next) {
 
 
     if (req.query.sortby === 'employeeId') {
-        query += ' Order BY EmployeeID';
+        query += ' Order BY Employee.EmployeeID';
     }
     else if (req.query.sortby === 'firstName') {
-        query += ' ORDER BY FirstName';
+        query += ' ORDER BY Employee.FirstName';
     }
     else if (req.query.sortby === 'lastName') {
-        query += ' ORDER BY LastName';
+        query += ' ORDER BY Employee.LastName';
     }
     else if (req.query.sortby === 'rotationGroup') {
-        query += ' ORDER BY RotationGroup';
+        query += ' ORDER BY Employee.RotationGroup';
     }
     else if (req.query.sortby === 'dateSwitched') {
-        query += ' ORDER BY DateSwitched';
+        query += ' ORDER BY Employee.DateSwitched';
     }
     else {
-        query += ' Order BY EmployeeID';
+        query += ' Order BY Employee.EmployeeID';
     }
 
     let employees = {};
@@ -1614,20 +1615,20 @@ router.get('/search', function (req, res, next) {
             peripheralRows = rows;
             return database.close();
         })
-        .then(() =>{
-            if(employeeRows.length === 1){
+        .then(() => {
+            if (employeeRows.length === 1) {
                 res.redirect(location + '/card?employeeId=' + employeeRows[0].EmployeeID);
             }
-            else if(computerRows.length === 1 && !employeeRows.length && !monitorRows.length && !printerRows.length && !peripheralRows.length){
+            else if (computerRows.length === 1 && !employeeRows.length && !monitorRows.length && !printerRows.length && !peripheralRows.length) {
                 res.redirect(location + '/computer?ICN=' + computerRows[0].ICN + "&EmployeeID=" + computerRows[0].EmployeeID);
             }
-            else if(monitorRows.length === 1 && !employeeRows.length && !computerRows.length && !printerRows.length && !peripheralRows.length){
+            else if (monitorRows.length === 1 && !employeeRows.length && !computerRows.length && !printerRows.length && !peripheralRows.length) {
                 res.redirect(location + '/monitor?ICN=' + monitorRows[0].ICN + "&EmployeeID=" + monitorRows[0].EmployeeID);
             }
-            else if(printerRows.length === 1 && !employeeRows.length && !computerRows.length && !monitorRows.length && !peripheralRows.length){
+            else if (printerRows.length === 1 && !employeeRows.length && !computerRows.length && !monitorRows.length && !peripheralRows.length) {
                 res.redirect(location + '/printer?ICN=' + printerRows[0].ICN + "&EmployeeID=" + printerRows[0].EmployeeID);
             }
-            else if(peripheralRows.length === 1 && !employeeRows.length && !computerRows.length && !monitorRows.length && !printerRows.length){
+            else if (peripheralRows.length === 1 && !employeeRows.length && !computerRows.length && !monitorRows.length && !printerRows.length) {
                 res.redirect(location + '/peripheral?ICN=' + peripheralRows[0].ICN + "&EmployeeID=" + peripheralRows[0].EmployeeID);
             }
         })
@@ -1658,9 +1659,9 @@ router.get('/getTicket', function (req, res, next) {
     let user = '';
     cas.validate(ticket, service)
         .then(function success(response) {
-        console.log("Ticket valid! Hello, " + response.username);
-        user = response.attributes;
-        // console.dir(response.attributes);
+            console.log("Ticket valid! Hello, " + response.username);
+            user = response.attributes;
+            // console.dir(response.attributes);
         })
         .then(() => {
             if (checkUser(user)) {
@@ -1705,7 +1706,7 @@ router.post('/newComputer', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId='+req.body.EmployeeID);
+            res.redirect(location + '/card?employeeId=' + req.body.EmployeeID);
 
         })
         .catch(err => {
@@ -1725,7 +1726,7 @@ router.post('/newMonitor', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId='+req.body.employeeId);
+            res.redirect(location + '/card?employeeId=' + req.body.employeeId);
 
         })
         .catch(err => {
@@ -1747,7 +1748,7 @@ router.post('/newPeripheral', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId='+req.body.employeeId);
+            res.redirect(location + '/card?employeeId=' + req.body.employeeId);
 
         })
         .catch(err => {
@@ -1765,7 +1766,7 @@ router.post('/form', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId='+req.body.employeeId);
+            res.redirect(location + '/card?employeeId=' + req.body.employeeId);
         })
         .catch(err => {
             console.log(err);
@@ -1785,7 +1786,7 @@ router.post('/monitor', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId='+req.body.employeeId);
+            res.redirect(location + '/card?employeeId=' + req.body.employeeId);
         })
         .catch(err => {
             console.log(err);
@@ -1803,7 +1804,7 @@ router.post('/peripheral', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId='+req.body.employeeId);
+            res.redirect(location + '/card?employeeId=' + req.body.employeeId);
         })
         .catch(err => {
             console.log(err);
@@ -1821,7 +1822,7 @@ router.post('/printer', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId='+req.body.employeeId);
+            res.redirect(location + '/card?employeeId=' + req.body.employeeId);
         })
         .catch(err => {
             console.log(err);
