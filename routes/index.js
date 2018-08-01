@@ -1406,7 +1406,7 @@ router.get('/', function (req, res, next) {
     if (req.query.clear) {
         employeeFilters = [];
     }
-    let query = 'Select * FROM Employee LEFT JOIN Computer ON Employee.EmployeeID = Computer.EmployeeID';
+    let query = 'Select Employee.EmployeeID, Employee.FirstName, Employee.LastName, Employee.Category, Employee.Office, Employee.Building, Employee.UserName, Employee.Email, Employee.RotationGroup, Employee.Notes, Computer.DateAcquired FROM Employee LEFT JOIN Computer ON Employee.EmployeeID = Computer.EmployeeID';
     if (req.query.remove) {
         let splice = parseInt(req.query.remove);
         employeeFilters.splice(splice, 1);
