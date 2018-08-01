@@ -1,21 +1,24 @@
 extends layout
 
 block content
+
     if(employee)
-        if(employee.PictureURL)
-            img.pic(src='#{employee.PictureURL}' onerror='javascript:this.src="images/default.png"')
-        //h1.center #{employee.FirstName} #{employee.LastName}
-        h3.left Office: #{employee.Office} #{employee.Building}
-        h3.left Category: #{employee.Category}
-        h3.left Rotation Group: #{employee.RotationGroup}
-        div.right
-            div(class='dropdown')
-                div(class='dropbtn') Add Item
-                div(class='dropdown-content')
-                    div(onclick='newComputer(#{employee.EmployeeID})') New Computer
-                    div(onclick='newMonitor(#{employee.EmployeeID})') New Monitor
-                    div(href='/computerTable') New Printer
-                    div(onclick='newPeripheral(#{employee.EmployeeID})') New Peripheral
+        .titles
+            if(employee.PictureURL)
+                img.pic(src='#{employee.PictureURL}' onerror='javascript:this.src="images/default.png"')
+            //h1.center #{employee.FirstName} #{employee.LastName}
+            h3.left Office: #{employee.Office} #{employee.Building}
+            h3.left Category: #{employee.Category}
+            h3.left Rotation Group: #{employee.RotationGroup}
+            .add
+                div(class='dropdown')
+                    div(class='dropbtn') Add Item
+                    div(class='dropdown-content')
+                        div(onclick='newComputer(#{employee.EmployeeID})') New Computer
+                        div(onclick='newMonitor(#{employee.EmployeeID})') New Monitor
+                        div(href='/computerTable') New Printer
+                        div(onclick='newPeripheral(#{employee.EmployeeID})') New Peripheral
+            br
         br
     else
         h4.left Employees:
@@ -59,8 +62,8 @@ block content
                         a(href='#{location}/employeesTable?where=dateSwitched=#{employee.DateSwitched}')
                             div= employee.DateSwitched
                     td= employee.Notes
-
-    h4.left Computers:
+    .titles
+        h4 Computers:
     if(!employee)
         h3.left= Object.keys(computers).length
     table.table
@@ -76,14 +79,15 @@ block content
             th
                 | Date Acquired
         each computer in computers
-            tr(ondragstart="dragStart(event)" ondragend="stop(event)" draggable="true" ondrag="dragging(event)" onclick="getComputerInfo(#{computer.ICN}, #{computer.EmployeeID})")
-                td= computer.ICN
+            tr
+                td
+                    a(href='#{location}/computer?EmployeeID=' + computer.EmployeeID + '&ICN=' + computer.ICN)= computer.ICN
                 td= computer.Make
                 td= computer.Model
                 td= computer.Type
                 td= computer.DateAcquired
-    div
-        h4.left Monitors:
+    .titles
+        h4 Monitors:
         if(!employee)
             h3.left= Object.keys(monitors).length
     table.table
@@ -94,13 +98,17 @@ block content
                 | Make
             th
                 | Model
+            th
+                | Date Acquired
         each monitor in monitors
-            tr(ondragstart="dragStart(event)" ondragend="stop(event)" draggable="true" ondrag="dragging(event)" onclick="getMonitorInfo(#{monitor.ICN}, #{monitor.EmployeeID})")
-                td= monitor.ICN
+            tr
+                td
+                    a(href="#{location}/monitor?ICN=" + monitor.ICN + '&EmployeeID=' + monitor.EmployeeID)= monitor.ICN
                 td= monitor.Make
                 td= monitor.Model
-    div
-        h4.left Printers:
+                td= monitor.DateAcquired
+    .titles
+        h4 Printers:
         if(!employee)
             h3.left= Object.keys(printers).length
     table.table
@@ -111,13 +119,17 @@ block content
                 | Make
             th
                 | Model
+            th
+                | Date Acquired
         each printer in printers
-            tr(ondragstart="dragStart(event)" ondragend="stop(event)" draggable="true" ondrag="dragging(event)" onclick="getPrinterInfo(#{printer.ICN}, #{printer.EmployeeID})")
-                td= printer.ICN
+            tr
+                td
+                    a(href="#{location}/printer?ICN=" + printer.ICN + '&EmployeeID=' + printer.EmployeeID)= printer.ICN
                 td= printer.Make
                 td= printer.Model
-    div
-        h4.left Peripherals:
+                td= printer.DateAcquired
+    .titles
+        h4 Peripherals:
         if(!employee)
             h3.left= Object.keys(peripherals).length
     table.table
@@ -130,12 +142,16 @@ block content
                 | Make
             th
                 | Model
+            th
+                | Date Acquired
         each peripheral in peripherals
-            tr(ondragstart="dragStart(event)" ondragend="stop(event)" draggable="true" ondrag="dragging(event)" onclick="getPeripheralInfo(#{peripheral.ICN}, #{peripheral.EmployeeID})")
-                td= peripheral.ICN
+            tr
+                td
+                    a(href="#{location}/peripheral?ICN=" + peripheral.ICN + '&EmployeeID=' + peripheral.EmployeeID)= peripheral.ICN
                 td= peripheral.Item
                 td= peripheral.Make
                 td= peripheral.Model
+                td= peripheral.DateAcquired
     br
     script.
         function getComputerInfo(ICN, EmployeeID) {

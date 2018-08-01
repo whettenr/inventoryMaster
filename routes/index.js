@@ -1617,7 +1617,7 @@ router.get('/search', function (req, res, next) {
         })
         .then(() => {
             if (employeeRows.length === 1) {
-                res.redirect(location + '/card?employeeId=' + employeeRows[0].EmployeeID);
+                res.redirect(location + '/card?EmployeeID=' + employeeRows[0].EmployeeID);
             }
             else if (computerRows.length === 1 && !employeeRows.length && !monitorRows.length && !printerRows.length && !peripheralRows.length) {
                 res.redirect(location + '/computer?ICN=' + computerRows[0].ICN + "&EmployeeID=" + computerRows[0].EmployeeID);
@@ -1706,7 +1706,7 @@ router.post('/newComputer', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId=' + req.body.EmployeeID);
+            res.redirect(location + '/card?EmployeeID=' + req.body.EmployeeID);
 
         })
         .catch(err => {
@@ -1726,7 +1726,7 @@ router.post('/newMonitor', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId=' + req.body.employeeId);
+            res.redirect(location + '/card?EmployeeID=' + req.body.employeeId);
 
         })
         .catch(err => {
@@ -1748,7 +1748,7 @@ router.post('/newPeripheral', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId=' + req.body.employeeId);
+            res.redirect(location + '/card?EmployeeID=' + req.body.employeeId);
 
         })
         .catch(err => {
@@ -1786,7 +1786,7 @@ router.post('/monitor', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId=' + req.body.employeeId);
+            res.redirect(location + '/card?EmployeeID=' + req.body.employeeId);
         })
         .catch(err => {
             console.log(err);
@@ -1804,7 +1804,7 @@ router.post('/peripheral', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId=' + req.body.employeeId);
+            res.redirect(location + '/card?EmployeeID=' + req.body.employeeId);
         })
         .catch(err => {
             console.log(err);
@@ -1822,7 +1822,7 @@ router.post('/printer', function (req, res, next) {
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?employeeId=' + req.body.employeeId);
+            res.redirect(location + '/card?EmployeeID=' + req.body.employeeId);
         })
         .catch(err => {
             console.log(err);

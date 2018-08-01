@@ -21,14 +21,15 @@
     background-color: white; /* Fallback color */
     /*background-color: rgba(0,0,0,0.4); !* Black w/ opacity *!*/
 }
-.right {
-    float: right;
-    text-align: right;
+.add {
+    /*float: right;*/
+    /*text-align: right;*/
     margin-right: 25px;
-    background-color: #4CAF50;
+    background-color: #0057B8;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    width: 125px;
 }
 .pic {
     float: right;
@@ -36,7 +37,7 @@
     padding-top: 25px;
 }
 .left {
-    padding-left: 25px;
+    /*padding-left: 25px;*/
 }
 /*table {*/
     /*width: 100%;*/
@@ -76,4 +77,9 @@
 
 .center {
     text-align: center;
+}
+
+.titles{
+    margin: auto;
+    width: 50%;
 }
