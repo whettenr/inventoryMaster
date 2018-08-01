@@ -21,7 +21,8 @@ block content
             br
         br
     else
-        h4.left Employees:
+        .titles
+            h4.left Employees:
         table.table
             tr#myHeader
                 th
@@ -46,8 +47,9 @@ block content
                         div= "Date Switched"
                 th= "Notes"
             each employee in employees
-                tr(onclick='getCard(#{employee.EmployeeID})')
-                    td= employee.EmployeeID
+                tr
+                    td
+                        a(href='#{location}/card?EmployeeID=' + employee.EmployeeID)= employee.EmployeeID
                     td= employee.FirstName
                     td= employee.LastName
                     td= employee.Category
@@ -64,8 +66,8 @@ block content
                     td= employee.Notes
     .titles
         h4 Computers:
-    if(!employee)
-        h3.left= Object.keys(computers).length
+        if(!employee)
+            h3.left= Object.keys(computers).length
     table.table
         tr
             th
@@ -256,7 +258,7 @@ block content
             });
         }
         function getCard(employeeID) {
-            window.location.href = '#{location}/card?employeeId=' + employeeID;
+            window.location.href = '#{location}/card?EmployeeID=' + employeeID;
             console.log(employeeID);
             $.ajax({
                 type: "GET",
