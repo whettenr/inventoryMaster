@@ -92,7 +92,9 @@ block content
                                 div= computer.Type
                         td= computer.DateAcquired
                         td= computer.Warranty
-                        td= computer.HomeCheckout
+                        td
+                            a(href='#{location}/computerTable?where=HomeCheckout=\'#{computer.HomeCheckout}\'')
+                                div= computer.HomeCheckout
                         td
                             a(href='#{location}/computerTable?where=RotationGroup=\'#{computer.RotationGroup}\'')
                                 div= computer.RotationGroup

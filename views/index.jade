@@ -36,8 +36,9 @@ block content
                             div= "Date Switched"
                     th= "Notes"
                 each employee in employees
-                    tr(onclick='getCard(#{employee.EmployeeID})')
-                        td= employee.EmployeeID
+                    tr
+                        td
+                            .divButton(onclick='getCard(#{employee.EmployeeID})')= employee.EmployeeID
                         td= employee.FirstName
                         td= employee.LastName
                         td= employee.Category

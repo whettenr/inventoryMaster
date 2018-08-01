@@ -62,6 +62,8 @@ let finalQuery = "";
 /* GET home page. */
 
 function checkUser(user) {
+    console.log(user);
+    console.log(location);
     if(location === '/inventory'){
         for(let i in user.memberOf){
             if(user.memberOf[i] === 'RICHARD_CROOKSTON--RBC9'){
