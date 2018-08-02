@@ -57,6 +57,7 @@ let filters = [];
 let monitorFilters = [];
 let employeeFilters = [];
 let printerFilters = [];
+let peripheralFilters = [];
 let finalQuery = "";
 
 /* GET home page. */
@@ -337,6 +338,93 @@ router.get('/monitorsTable', function (req, res, next) {
                 title: 'Monitors',
                 monitors: monitors,
                 filters: monitorFilters,
+                user: req.session.user,
+                location
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+
+});
+
+router.get('/peripheralTable', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect(location + '/cas?goTo=' + location + '/peripheralTable');
+    let connection = mysql.createConnection(config.getConfig());
+    let database = new Database(config.getConfig());
+    let peripherals = {};
+
+    let query = 'SELECT * FROM Peripheral LEFT JOIN Employee on Peripheral.EmployeeID = Employee.EmployeeID';
+    if (req.query.remove) {
+        let splice = parseInt(req.query.remove);
+        peripheralFilters.splice(splice, 1);
+
+    }
+    if (req.query.not) {
+        if (peripheralFilters[req.query.not].includes('!='))
+            peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('!=', '=');
+        else
+            peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('=', '!=');
+    }
+    if (req.query.where) {
+        let check = true;
+        for (let i = 0; i < peripheralFilters.length; i++) {
+            if (peripheralFilters[i] === req.query.where) {
+                check = false;
+            }
+        }
+        if (check) {
+            peripheralFilters.push(req.query.where);
+        }
+    }
+    if (peripheralFilters.length > 0) {
+        query += " WHERE Peripheral.";
+        for (let filter in peripheralFilters) {
+            query += peripheralFilters[filter];
+            query += ' and Peripheral.';
+            console.log(filter);
+        }
+        query = query.substr(0, query.length - 16);
+    }
+
+    if (req.query.sortby === 'ICN') {
+        query += ' Order BY ICN';
+    }
+    else if (req.query.sortby === 'EmployeeID') {
+        query += ' ORDER BY EmployeeID';
+    }
+    else if (req.query.sortby === 'Make') {
+        query += ' ORDER BY Make';
+    }
+    else if (req.query.sortby === 'Model') {
+        query += ' ORDER BY Model';
+    }
+    else if (req.query.sortby === 'firstName') {
+        query += ' ORDER BY firstName';
+    }
+    else if (req.query.sortby === 'DateAcquired') {
+        query += ' ORDER BY DateAcquired';
+    }
+    else if (req.query.sortby === 'lastName') {
+        query += ' ORDER BY lastName';
+    }
+    else {
+        query += ' Order BY ICN';
+    }
+    console.log(query);
+
+
+    database.query(query)
+        .then(rows => {
+            peripherals = rows;
+        })
+        .then(() => {
+            res.render('peripheralTable', {
+                title: 'Peripherals',
+                peripherals: peripherals,
+                peripheralFilters: peripheralFilters,
                 user: req.session.user,
                 location
             });
@@ -1216,6 +1304,89 @@ router.get('/download/rotation', function (req, res, next) {
 
 });
 
+router.get('/download/peripherals', function (req, res, next) {
+    if (!req.session.user)
+        res.redirect(location + '/cas?goTo=' + location + '/download/monitors');
+    let Rows = {};
+    let query = 'SELECT * FROM Peripheral LEFT JOIN Employee on Peripheral.EmployeeID = Employee.employeeId';
+    if (req.query.remove) {
+        let splice = parseInt(req.query.remove);
+        monitorFilters.splice(splice, 1);
+
+    }
+    if (req.query.not) {
+        if (monitorFilters[req.query.not].includes('!='))
+            monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('!=', '=');
+        else
+            monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('=', '!=');
+    }
+    if (req.query.where) {
+        let check = true;
+        for (let i = 0; i < monitorFilters.length; i++) {
+            if (monitorFilters[i] === req.query.where) {
+                check = false;
+            }
+        }
+        if (check) {
+            monitorFilters.push(req.query.where);
+        }
+    }
+    if (monitorFilters.length > 0) {
+        query += " WHERE Monitor.";
+        for (let filter in monitorFilters) {
+            query += monitorFilters[filter];
+            query += ' and Monitor.';
+            console.log(filter);
+        }
+        query = query.substr(0, query.length - 13);
+    }
+
+    if (req.query.sortby === 'ICN') {
+        query += ' Order BY ICN';
+    }
+    else if (req.query.sortby === 'EmployeeID') {
+        query += ' ORDER BY EmployeeID';
+    }
+    else if (req.query.sortby === 'Make') {
+        query += ' ORDER BY Make';
+    }
+    else if (req.query.sortby === 'firstName') {
+        query += ' ORDER BY firstName';
+    }
+    else if (req.query.sortby === 'lastName') {
+        query += ' ORDER BY lastName';
+    }
+    else {
+        query += ' Order BY ICN';
+    }
+    let database = new Database(config.getConfig());
+
+    database.query(query)
+        .then(rows => {
+            Rows = rows;
+            return database.close();
+        })
+        .then(() => {
+            let csvStream = csv.createWriteStream({headers: true}),
+                writableStream = fs.createWriteStream("Monitors.csv");
+
+            writableStream.on("finish", function () {
+                console.log("DONE!");
+                let file = __dirname + '/../bin/Monitors.csv';
+                console.log(file);
+                res.download(file);
+            });
+
+            csvStream.pipe(writableStream);
+            for (let i = 0; i < Rows.length; i++) {
+                csvStream.write(Rows[i]);
+            }
+            csvStream.end();
+        })
+
+
+});
+
 router.get('/download/monitors', function (req, res, next) {
     if (!req.session.user)
         res.redirect(location + '/cas?goTo=' + location + '/download/monitors');
@@ -1609,7 +1780,7 @@ router.get('/search', function (req, res, next) {
         .then(rows => {
             printerRows = rows;
             console.log(rows);
-            return database.query('SELECT * FROM Peripheral WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            return database.query('SELECT * FROM Peripheral WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR ITEM LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             peripheralRows = rows;

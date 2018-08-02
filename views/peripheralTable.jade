@@ -1,0 +1,80 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='#{location}/stylesheets/table.css')
+    #cardDad(style='display: none;')
+        #card
+            #computerInfo
+    if(peripheralFilters)
+        each filter, i in peripheralFilters
+            div= filter
+            a.filterButton(href='#{location}/peripheralTable?remove=' + i) Remove Filter
+            a.filterButton(href='#{location}/peripheralTable?not=' + i) Inverse Filter
+
+    div= "Count: " + Object.keys(peripherals).length
+    a.byu-button.whitenavy(href='/download/peripherals') Download
+    div(style='overflow-x:auto;')
+        table#table
+            tbody
+                tr#myHeader
+                    td
+                        a(href='#{location}/peripheralTable?sortby=ICN')
+                            div='ICN'
+                    td
+                        a(href='#{location}/peripheralTable?sortby=firstname')
+                            div= "First Name"
+                    td
+                        a(href='#{location}/peripheralTable?sortby=lastName')
+                            div= "Last Name"
+                    td
+                        a(href='#{location}/peripheralTable?sortby=Make')
+                            div= "Make"
+                    td
+                        a(href='#{location}/peripheralTable?sortby=Model')
+                            div= "Model"
+                    td= "Item"
+                    td= "Serial Number"
+                    td= "Date Acquired"
+                    td= "Warranty"
+                    td= "Home Checkout"
+                    td= "Notes"
+                each peripheral in peripherals
+                    tr
+                        td
+                            a(href='#{location}/peripheralTable?where=ICN=#{peripheral.ICN}')
+                                div= peripheral.ICN
+                                //i(class="material-icons") laptop
+                        td= peripheral.FirstName
+                        td= peripheral.LastName
+                        td
+                            a(href='#{location}/peripheralTable?where=Make=\'#{peripheral.Make}\'')
+                                div= peripheral.Make
+                        td
+                            a(href='#{location}/peripheralTable?where=Model=\'#{peripheral.Model}\'')
+                                div= peripheral.Model
+                        td= peripheral.Item
+                        td= peripheral.SerialNumber
+                        td= peripheral.DateAcquired
+                        td= peripheral.Warranty
+                        td= peripheral.HomeCheckout
+                        td= peripheral.Notes
+    script.
+
+        function getMonitorInfo(ICN, EmployeeID) {
+            console.log(ICN);
+            $.ajax({
+                type: "GET",
+                url: "#{location}/monitor?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#computerInfo").html(data);
+                $("#computerInfo").css('display', 'block');
+                $("#cardDad").css('display', 'block');
+                $("#cardInfo").css('display', 'none');
+                $("#cardDad").addClass("cardDadCss");
+
+
+            });
+        }
+
+
