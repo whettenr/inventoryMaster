@@ -1331,7 +1331,7 @@ router.get('/download/peripherals', function (req, res, next) {
             peripheralFilters.push(req.query.where);
         }
     }
-    if (monitorFilters.length > 0) {
+    if (peripheralFilters.length > 0) {
         query += " WHERE Peripheral.";
         for (let filter in peripheralFilters) {
             query += peripheralFilters[filter];
