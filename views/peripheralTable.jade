@@ -12,7 +12,7 @@ block content
             a.filterButton(href='#{location}/peripheralTable?not=' + i) Inverse Filter
 
     div= "Count: " + Object.keys(peripherals).length
-    a.byu-button.whitenavy(href='/download/peripherals') Download
+    a.byu-button.whitenavy(href='#{location}/download/peripherals') Download
     div(style='overflow-x:auto;')
         table#table
             tbody
