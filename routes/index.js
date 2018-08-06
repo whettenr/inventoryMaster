@@ -1746,11 +1746,11 @@ router.get('/jsbSurplus', function (req, res, next) {
 
 router.get('/updateDates', function (req, res, next) {
     if (!req.session.user)
-        res.redirect(location + '/cas?goTo=' + location + '/');
+        res.redirect(location + '/cas?goTo=' + location + '/updateDates');
     let database = new Database(config.getConfig());
     let datesAcquired = {};
     let stuff = '';
-    database.query("SELECT DISTINCT DateAcquired FROM Peripheral")
+    database.query("SELECT DISTINCT DateAcquired FROM Printer")
         .then(rows => {
             datesAcquired = rows;
             for (let i in datesAcquired) {
@@ -1770,7 +1770,7 @@ router.get('/updateDates', function (req, res, next) {
                         day = "0" + day;
 
                     let newDate = dateArray.getFullYear() + '-' + month + '-' + day;
-                    stuff += "UPDATE Peripheral SET DateAcquired = '";
+                    stuff += "UPDATE Printer SET DateAcquired = '";
                     stuff += newDate;
                     stuff += "' WHERE DateAcquired = '";
                     stuff += datesAcquired[i].DateAcquired;
