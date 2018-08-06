@@ -1749,12 +1749,12 @@ router.get('/updateDates', function (req, res, next) {
         res.redirect(location + '/cas?goTo=' + location + '/');
     let database = new Database(config.getConfig());
     let datesAcquired = {};
-    database.query("SELECT DISTINCT DateAcquired FROM Monitor")
+    database.query("SELECT DISTINCT DateAcquired FROM Peripheral")
         .then(rows => {
             datesAcquired = rows;
             for (let i in datesAcquired) {
-                if (datesAcquired[i].DateAcquired) {
-                    let dateArray = new Date(datesAcquired[i].DateAcquired);
+                if (datesAcquired[i].Peripheral) {
+                    let dateArray = new Date(datesAcquired[i].Peripheral);
                     let year = "";
                     let month = dateArray.getMonth() + 1;
                     let day = dateArray.getUTCDay();
@@ -1769,7 +1769,7 @@ router.get('/updateDates', function (req, res, next) {
                         day = "0" + day;
 
                     let newDate = dateArray.getFullYear() + '-' + month + '-' + day;
-                    console.log("UPDATE Monitor SET DateAcquired = '" + newDate + "' WHERE DateAcquired = '" + datesAcquired[i].DateAcquired + "';");
+                    console.log("UPDATE Peripheral SET DateAcquired = '" + newDate + "' WHERE DateAcquired = '" + datesAcquired[i].DateAcquired + "';");
                 }
             }
         })
