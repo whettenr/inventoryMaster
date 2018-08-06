@@ -1749,12 +1749,12 @@ router.get('/updateDates', function (req, res, next) {
         res.redirect(location + '/cas?goTo=' + location + '/');
     let database = new Database(config.getConfig());
     let datesAcquired = {};
-    database.query("SELECT DISTINCT Warranty FROM Computer")
+    database.query("SELECT DISTINCT DateAcquired FROM Monitor")
         .then(rows => {
             datesAcquired = rows;
             for (let i in datesAcquired) {
-                if (datesAcquired[i].Warranty) {
-                    let dateArray = new Date(datesAcquired[i].Warranty);
+                if (datesAcquired[i].DateAcquired) {
+                    let dateArray = new Date(datesAcquired[i].DateAcquired);
                     let year = "";
                     let month = dateArray.getMonth() + 1;
                     let day = dateArray.getUTCDay();
@@ -1769,7 +1769,7 @@ router.get('/updateDates', function (req, res, next) {
                         day = "0" + day;
 
                     let newDate = dateArray.getFullYear() + '-' + month + '-' + day;
-                    console.log("UPDATE Computer SET Warranty = '" + newDate + "' WHERE Warranty = '" + datesAcquired[i].Warranty + "';");
+                    console.log("UPDATE Monitor SET DateAcquired = '" + newDate + "' WHERE DateAcquired = '" + datesAcquired[i].DateAcquired + "';");
                 }
             }
         })
