@@ -5,6 +5,9 @@ block content
     #cardDad(style='display: none;')
         #card
             #computerInfo
+    if(sortby)
+        div
+            | Sort By: #{sortby} #{order}
     if(filters)
         each filter, i in filters
             div= filter

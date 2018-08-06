@@ -288,6 +288,7 @@ router.get('/computerTable', function (req, res, next) {
                 computers: computers,
                 filters: filters,
                 user: req.session.user,
+                sortby: req.query.sortby,
                 hardware,
                 location
             });
@@ -1691,10 +1692,6 @@ router.get('/', function (req, res, next) {
         })
 });
 
-// router.get('/undefined', function (req, res, next) {
-//     res.redirect(location + '/');
-// });
-
 router.get('/jsbSurplus', function (req, res, next) {
     if (!req.session.user)
         res.redirect(location + '/cas?goTo=' + location + '/jsbSurplus');
@@ -1752,12 +1749,12 @@ router.get('/updateDates', function (req, res, next) {
         res.redirect(location + '/cas?goTo=' + location + '/');
     let database = new Database(config.getConfig());
     let datesAcquired = {};
-    database.query("SELECT DISTINCT DateAcquired FROM Computer")
+    database.query("SELECT DISTINCT Warranty FROM Computer")
         .then(rows => {
             datesAcquired = rows;
             for (let i in datesAcquired) {
-                if (datesAcquired[i].DateAcquired) {
-                    let dateArray = new Date(datesAcquired[i].DateAcquired);
+                if (datesAcquired[i].Warranty) {
+                    let dateArray = new Date(datesAcquired[i].Warranty);
                     let year = "";
                     let month = dateArray.getMonth() + 1;
                     let day = dateArray.getUTCDay();
@@ -1772,7 +1769,7 @@ router.get('/updateDates', function (req, res, next) {
                         day = "0" + day;
 
                     let newDate = dateArray.getFullYear() + '-' + month + '-' + day;
-                    console.log("UPDATE Computer SET DateAcquired = '" + newDate + "' WHERE DateAcquired = '" + datesAcquired[i].DateAcquired + "';");
+                    console.log("UPDATE Computer SET Warranty = '" + newDate + "' WHERE Warranty = '" + datesAcquired[i].Warranty + "';");
                 }
             }
         })

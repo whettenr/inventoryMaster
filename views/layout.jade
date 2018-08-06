@@ -28,12 +28,12 @@ html
                     else if (user.netId)
                         span(slot="user-name") #{user.netId}
             byu-menu(slot="nav", collapsed="")
-                a(href="#{location}/") Home
-                a(href="#{location}/otherSlots") Other Slots
-                a(href="#{location}/") Rotations
-                a(href="#{location}/tables") Tables
+                a(href="#{location}/") Employees
+                a(href="#{location}/computerTable") Computers
+                a(href="#{location}/monitorsTable") Monitors
+                a(href="#{location}/printerTable") Printers
+                a(href="#{location}/peripheralTable") Peripherals
                 a(href="#{location}/jsbSurplus") JSB Storage
-                a(href="https://religion.byu.edu/phpmyadmin") PHP My Admin
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
         block content
     script.
