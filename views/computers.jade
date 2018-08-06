@@ -12,6 +12,10 @@ block content
                 a.filterButton(href='#{location}/computerTable?not=' + i) Inverse Filter
 
     div= "Count: " + Object.keys(computers).length
+    if(hardware)
+        a.byu-button.whitenavy(href='#{location}/computerTable?hardware=false') Hide Hardware
+    else
+        a.byu-button.whitenavy(href='#{location}/computerTable?hardware=true') View Hardware
     a.byu-button.whitenavy(href='#{location}/download/computers') Download
     div(style='overflow-x:auto;')
         table#table
@@ -67,6 +71,22 @@ block content
                     td= "Home Checkout"
                     td= "Rotation"
                     td= "Notes"
+                    if(hardware)
+                        td
+                            a(href='#{location}/computerTable?sortby=processorType&hardware=true&order=asc')
+                                div= "Processor Type"
+                        td
+                            a(href='#{location}/computerTable?sortby=processorSpeed&hardware=true&order=asc')
+                                div= "Processor Speed"
+                        td
+                            a(href='#{location}/computerTable?sortby=memory&hardware=true&order=asc')
+                                div= "Memory"
+                        td
+                            a(href='#{location}/computerTable?sortby=hardDrive&hardware=true&order=asc')
+                                div= "Hard Drive"
+                        td
+                            a(href='#{location}/computerTable?sortby=vcName&hardware=true&order=asc')
+                                div= "Graphics Card"
                 each computer in computers
                     tr
                         td
@@ -99,6 +119,22 @@ block content
                             a(href='#{location}/computerTable?where=RotationGroup=\'#{computer.RotationGroup}\'')
                                 div= computer.RotationGroup
                         td= computer.Notes
+                        if(hardware)
+                            td
+                                a(href='#{location}/computerTable?where=ProcessorType=\'#{computer.ProcessorType}\'')
+                                    div= computer.ProcessorType
+                            td
+                                a(href='#{location}/computerTable?where=ProcessorSpeed=\'#{computer.ProcessorSpeed}\'')
+                                    div= computer.ProcessorSpeed
+                            td
+                                a(href='#{location}/computerTable?where=Memory=\'#{computer.Memory}\'')
+                                    div= computer.Memory
+                            td
+                                a(href='#{location}/computerTable?where=HardDrive=\'#{computer.HardDrive}\'')
+                                    div= computer.HardDrive
+                            td
+                                a(href='#{location}/computerTable?where=VCName=\'#{computer.VCName}\'')
+                                    div= computer.VCName
     script.
 
         function getComputerInfo(ICN, EmployeeID) {

@@ -59,6 +59,8 @@ let employeeFilters = [];
 let printerFilters = [];
 let peripheralFilters = [];
 let finalQuery = "";
+let hardware = false;
+
 
 /* GET home page. */
 
@@ -177,7 +179,7 @@ router.get('/computerTable', function (req, res, next) {
     let database = new Database(config.getConfig());
     let computers = {};
 
-    let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.EmployeeID';
+    let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.EmployeeID LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID ';
     if (req.query.remove) {
         let splice = parseInt(req.query.remove);
         filters.splice(splice, 1);
@@ -203,8 +205,11 @@ router.get('/computerTable', function (req, res, next) {
     if (filters.length > 0) {
         query += " WHERE ";
         for (let filter in filters) {
-            if(filters[filter].includes('EmployeeID')){
+            if(filters[filter].includes('EmployeeID') || filters[filter].includes('RotationGroup')){
                 query += 'Employee.'
+            }
+            else if(filters[filter].includes('Processor') || filters[filter].includes('Memory') || filters[filter].includes('HardDrive') || filters[filter].includes('VCName')){
+                query += 'Hardware.'
             }
             else {
                 query += 'Computer.'
@@ -237,6 +242,21 @@ router.get('/computerTable', function (req, res, next) {
     else if (req.query.sortby === 'dateAcquired') {
         query += ' ORDER BY DateAcquired';
     }
+    else if(req.query.sortby === 'processorType'){
+        query += ' ORDER BY ProcessorType';
+    }
+    else if(req.query.sortby === 'processorSpeed'){
+        query += ' ORDER BY ProcessorSpeed';
+    }
+    else if(req.query.sortby === 'memory'){
+        query += ' ORDER BY Memory';
+    }
+    else if(req.query.sortby === 'hardDrive'){
+        query += ' ORDER BY HardDrive';
+    }
+    else if(req.query.sortby === 'vcName'){
+        query += ' ORDER BY VCName';
+    }
     else {
         query += ' Order BY ICN';
     }
@@ -248,6 +268,13 @@ router.get('/computerTable', function (req, res, next) {
         query += ' DESC';
     }
     console.log(query);
+
+    if(req.query.hardware === 'true'){
+        hardware = true;
+    }
+    else if (req.query.hardware === 'false'){
+        hardware = false;
+    }
 
 
     database.query(query)
@@ -261,6 +288,7 @@ router.get('/computerTable', function (req, res, next) {
                 computers: computers,
                 filters: filters,
                 user: req.session.user,
+                hardware,
                 location
             });
         })
