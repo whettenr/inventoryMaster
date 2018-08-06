@@ -137,6 +137,9 @@ router.get('/employeesTable', function (req, res, next) {
     else if (req.query.sortby === 'dateSwitched') {
         query += ' ORDER BY DateSwitched';
     }
+    else if (req.query.sortby === 'office') {
+        query += ' ORDER BY Office';
+    }
     else {
         query += ' Order BY EmployeeID';
     }
@@ -174,7 +177,7 @@ router.get('/computerTable', function (req, res, next) {
     let database = new Database(config.getConfig());
     let computers = {};
 
-    let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.employeeId';
+    let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.EmployeeID';
     if (req.query.remove) {
         let splice = parseInt(req.query.remove);
         filters.splice(splice, 1);
@@ -200,6 +203,12 @@ router.get('/computerTable', function (req, res, next) {
     if (filters.length > 0) {
         query += " WHERE ";
         for (let filter in filters) {
+            if(filters[filter].includes('EmployeeID')){
+                query += 'Employee.'
+            }
+            else {
+                query += 'Computer.'
+            }
             query += filters[filter];
             query += ' and ';
             console.log(filter);
@@ -1671,7 +1680,7 @@ router.get('/jsbSurplus', function (req, res, next) {
 
     let database = new Database(config.getConfig());
 
-    database.query('SELECT * FROM Employee WHERE employeeId = ' + employeeId)
+    database.query('SELECT * FROM Employee WHERE EmployeeID = ' + employeeId)
         .then(rows => {
             employeeRows = rows;
             return database.query('SELECT * FROM Computer WHERE EmployeeId = ' + employeeId);

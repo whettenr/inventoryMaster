@@ -24,7 +24,9 @@ block content
                         a(href='#{location}/employeesTable?sortby=lastName')
                             div= "Last Name"
                     th= "Category"
-                    th= "Office Location"
+                    th
+                        a(href='#{location}/employeesTable?sortby=office')
+                            div= "Office Location"
                     th= "Building"
                     th= "Username"
                     th= "Email"
