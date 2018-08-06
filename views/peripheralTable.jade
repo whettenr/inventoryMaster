@@ -41,7 +41,7 @@ block content
                 each peripheral in peripherals
                     tr
                         td
-                            a(href='#{location}/peripheralTable?where=ICN=#{peripheral.ICN}')
+                            a(href='#{location}/peripheral?ICN=' + peripheral.ICN + '&EmployeeID=' + peripheral.EmployeeID)
                                 div= peripheral.ICN
                                 //i(class="material-icons") laptop
                         td= peripheral.FirstName
@@ -58,23 +58,3 @@ block content
                         td= peripheral.Warranty
                         td= peripheral.HomeCheckout
                         td= peripheral.Notes
-    script.
-
-        function getMonitorInfo(ICN, EmployeeID) {
-            console.log(ICN);
-            $.ajax({
-                type: "GET",
-                url: "#{location}/monitor?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
-                data: {format: 'html'}
-            }).done(function (data) {
-                $("#computerInfo").html(data);
-                $("#computerInfo").css('display', 'block');
-                $("#cardDad").css('display', 'block');
-                $("#cardInfo").css('display', 'none');
-                $("#cardDad").addClass("cardDadCss");
-
-
-            });
-        }
-
-
