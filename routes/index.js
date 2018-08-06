@@ -1750,7 +1750,7 @@ router.get('/updateDates', function (req, res, next) {
     let database = new Database(config.getConfig());
     let datesAcquired = {};
     let stuff = '';
-    database.query("SELECT DISTINCT Warranty FROM Monitor")
+    database.query("SELECT DISTINCT Warranty FROM Printer")
         .then(rows => {
             datesAcquired = rows;
             for (let i in datesAcquired) {
@@ -1770,7 +1770,7 @@ router.get('/updateDates', function (req, res, next) {
                         day = "0" + day;
 
                     let newDate = dateArray.getFullYear() + '-' + month + '-' + day;
-                    stuff += "UPDATE Monitor SET Warranty = '";
+                    stuff += "UPDATE Printer SET Warranty = '";
                     stuff += newDate;
                     stuff += "' WHERE Warranty = '";
                     stuff += datesAcquired[i].Warranty;
