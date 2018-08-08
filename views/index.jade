@@ -52,7 +52,7 @@ block content
                             a(href='#{location}/employeesTable?where=rotationGroup=#{employee.RotationGroup}')
                                 div= employee.RotationGroup
                         td=employee.DateAcquired
-                        td= employee.Notes
+                        td= employee['Employee Notes']
     script.
         function getCard(employeeID) {
             window.location.href = '#{location}/card?EmployeeID=' + employeeID;

@@ -481,7 +481,7 @@ router.get('/printerTable', function (req, res, next) {
     let database = new Database(config.getConfig());
     let printers = {};
 
-    let query = 'SELECT * FROM Printer LEFT JOIN Employee on Printer.EmployeeID = Employee.employeeId';
+    let query = 'SELECT * FROM Printer JOIN Employee on Printer.EmployeeID = Employee.employeeId';
     if (req.query.remove) {
         let splice = parseInt(req.query.remove);
         printerFilters.splice(splice, 1);
@@ -531,6 +531,9 @@ router.get('/printerTable', function (req, res, next) {
     }
     else if (req.query.sortby === 'lastName') {
         query += ' ORDER BY lastName';
+    }
+    else if (req.query.sortby === 'dateAcquired') {
+        query += ' ORDER BY DateAcquired';
     }
     else {
         query += ' Order BY ICN';
@@ -1615,7 +1618,7 @@ router.get('/', function (req, res, next) {
     if (req.query.clear) {
         employeeFilters = [];
     }
-    let query = 'Select Employee.EmployeeID, Employee.FirstName, Employee.LastName, Employee.Category, Employee.Office, Employee.Building, Employee.UserName, Employee.Email, Employee.RotationGroup, Employee.Notes, Computer.DateAcquired FROM Employee LEFT JOIN Computer ON Employee.EmployeeID = Computer.EmployeeID';
+    let query = 'Select Employee.EmployeeID, Employee.FirstName, Employee.LastName, Employee.Category, Employee.Office, Employee.Building, Employee.UserName, Employee.Email, Employee.RotationGroup, Employee.`Employee Notes`, Computer.DateAcquired FROM Employee LEFT JOIN Computer ON Employee.EmployeeID = Computer.EmployeeID';
     if (req.query.remove) {
         let splice = parseInt(req.query.remove);
         employeeFilters.splice(splice, 1);
