@@ -44,8 +44,12 @@ block content
                             a(href='#{location}/peripheral?ICN=' + peripheral.ICN + '&EmployeeID=' + peripheral.EmployeeID)
                                 div= peripheral.ICN
                                 //i(class="material-icons") laptop
-                        td= peripheral.FirstName
-                        td= peripheral.LastName
+                        td
+                            a(href='#{location}/peripheralTable?where=EmployeeID=\'#{peripheral.EmployeeID}\'')
+                                div= peripheral.FirstName
+                        td
+                            a(href='#{location}/peripheralTable?where=EmployeeID=\'#{peripheral.EmployeeID}\'')
+                                div= peripheral.LastName
                         td
                             a(href='#{location}/peripheralTable?where=Make=\'#{peripheral.Make}\'')
                                 div= peripheral.Make

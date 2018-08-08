@@ -505,10 +505,10 @@ router.get('/printerTable', function (req, res, next) {
         }
     }
     if (printerFilters.length > 0) {
-        query += " WHERE Monitor.";
+        query += " WHERE Printer.";
         for (let filter in printerFilters) {
             query += printerFilters[filter];
-            query += ' and Monitor.';
+            query += ' and Printer.';
             console.log(filter);
         }
         query = query.substr(0, query.length - 13);
@@ -1804,26 +1804,21 @@ router.get('/search', function (req, res, next) {
     database.query("SELECT * FROM Employee WHERE FirstName LIKE ? OR LastName LIKE ? OR Notes LIKE ?", [searchTerms, searchTerms, searchTerms])
         .then(rows => {
             employeeRows = rows;
-            console.log(rows);
             return database.query("SELECT * FROM Computer JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Computer.ICN LIKE ? OR Computer.SerialNumber LIKE ? OR Computer.Make LIKE ? OR Computer.Model LIKE ? OR Computer.Type LIKE ? OR Computer.NOTES LIKE ? OR Hardware.ProcessorType LIKE ? OR Hardware.ProcessorSpeed LIKE ? OR Hardware.HardDrive LIKE ? OR Hardware.VCName LIKE ?", [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             console.log(rows);
-            computerRows = rows;
             return database.query('SELECT * FROM Monitor WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             monitorRows = rows;
-            console.log(rows);
             return database.query('SELECT * FROM Printer WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             printerRows = rows;
-            console.log(rows);
             return database.query('SELECT * FROM Peripheral WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR ITEM LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
-            peripheralRows = rows;
             return database.close();
         })
         .then(() => {

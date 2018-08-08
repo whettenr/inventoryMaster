@@ -1,0 +1,82 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='#{location}/stylesheets/table.css')
+    #cardDad(style='display: none;')
+        #card
+            #computerInfo
+    if(filters)
+        each filter, i in filters
+            div= filter
+            a.filterButton(href='#{location}/printerTable?remove=' + i) Remove Filter
+            a.filterButton(href='#{location}/printerTable?not=' + i) Inverse Filter
+
+    div= "Count: " + Object.keys(printers).length
+    a.byu-button.whitenavy(href='/download/printers') Download
+    div(style='overflow-x:auto;')
+        table#table
+            tbody
+                tr#myHeader
+                    td
+                        a(href='#{location}/printerTable?sortby=ICN')
+                            div='ICN'
+                    td
+                        a(href='#{location}/printerTable?sortby=firstname')
+                            div= "First Name"
+                    td
+                        a(href='#{location}/printerTable?sortby=lastName')
+                            div= "Last Name"
+                    td
+                        a(href='#{location}/printerTable?sortby=Make')
+                            div= "Make"
+                    td
+                        a(href='#{location}/printerTable?sortby=Model')
+                            div= "Model"
+                    td= "Serial Number"
+                    td= "Date Acquired"
+                    td= "Warranty"
+                    td= "Home Checkout"
+                    td= "Notes"
+                each printer in printers
+                    tr
+                        td
+                            a(href='#{location}/printer?ICN=' + printer.ICN + '&EmployeeID=' + printer.EmployeeID)
+                                div= printer.ICN
+                                //i(class="material-icons") laptop
+                        td
+                            a(href='#{location}/printerTable?where=EmployeeID=\'#{printer.EmployeeID}\'')
+                                div= printer.FirstName
+                        td
+                            a(href='#{location}/printerTable?where=EmployeeID=\'#{printer.EmployeeID}\'')
+                                div= printer.LastName
+                        td
+                            a(href='#{location}/printerTable?where=Make=\'#{printer.Make}\'')
+                                div= printer.Make
+                        td
+                            a(href='#{location}/printerTable?where=Model=\'#{printer.Model}\'')
+                                div= printer.Model
+                        td= printer.SerialNumber
+                        td= printer.DateAcquired
+                        td= printer.Warranty
+                        td= printer.HomeCheckout
+                        td= printer.Notes
+    script.
+
+        function getPrinterInfo(ICN, EmployeeID) {
+            console.log(ICN);
+            $.ajax({
+                type: "GET",
+                url: "#{location}/printer?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#computerInfo").html(data);
+                $("#computerInfo").css('display', 'block');
+                $("#cardDad").css('display', 'block');
+                $("#cardInfo").css('display', 'none');
+                $("#cardDad").addClass("cardDadCss");
+
+
+            });
+        }
+
+

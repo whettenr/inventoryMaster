@@ -356,6 +356,10 @@ block content
         let model = "#{peripheral.Model}";
         let notes = "#{peripheral.Notes}";
         let date = new Date();
+        let user = '#{user.name}';
+        if (user === '') {
+            user = '#{user.netId}';
+        }
         function goBack() {
             $("#cardInfo").css('display', 'block');
             $("#computerInfo").css('display', 'none');
@@ -416,7 +420,7 @@ block content
         function changeEmployee(){
             console.log('changeEMployee');
             let history = $("#history").val();
-            $("#history").val(history + date.toDateString() + ' Reassigned from ' + employee + ' to ' + $("#employee option:selected").attr('name') + ' by McKay Court \n');
+            $("#history").val(history + date.toDateString() + ' Reassigned from ' + employee + ' to ' + $("#employee option:selected").attr('name') + ' by ' + user + ' \n');
         }
         function changeMake(){
             let history = $("#history").val();
