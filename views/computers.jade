@@ -5,21 +5,36 @@ block content
     #cardDad(style='display: none;')
         #card
             #computerInfo
-    if(sortby)
-        div
-            | Sort By: #{sortby} #{order}
-    if(filters)
-        each filter, i in filters
-            div= filter
-                a.filterButton(href='#{location}/computerTable?remove=' + i) Remove Filter
-                a.filterButton(href='#{location}/computerTable?not=' + i) Inverse Filter
+    .sidebar
+        if(sortby)
+            div
+                | Sort By: #{sortby} #{order}
+        if(filters)
+            each filter, i in filters
+                div= filter
+                    a.filterButton(href='#{location}/computerTable?remove=' + i) Remove Filter
+                    a.filterButton(href='#{location}/computerTable?not=' + i) Inverse Filter
 
-    div= "Count: " + Object.keys(computers).length
-    if(hardware)
-        a.byu-button.whitenavy(href='#{location}/computerTable?hardware=false') Hide Hardware
-    else
-        a.byu-button.whitenavy(href='#{location}/computerTable?hardware=true') View Hardware
-    a.byu-button.whitenavy(href='#{location}/download/computers') Download
+        div= "Count: " + Object.keys(computers).length
+        a.byu-button.navy(href='#') ICN
+        a.byu-button.whitenavy(href='#') First Name
+        a.byu-button.whitenavy(href='#') Last Name
+        a.byu-button.whitenavy(href='#') Make
+        a.byu-button.whitenavy(href='#') Model
+        a.byu-button.whitenavy(href='#') Serial Number
+        a.byu-button.whitenavy(href='#') Service Tag
+        a.byu-button.whitenavy(href='#') Express Service Code
+        a.byu-button.whitenavy(href='#') Type
+        a.byu-button.whitenavy(href='#') Date Acquired
+        a.byu-button.whitenavy(href='#') Warranty
+        a.byu-button.whitenavy(href='#') Home Checkout
+        a.byu-button.whitenavy(href='#') Rotation
+        a.byu-button.whitenavy(href='#') Notes
+        if(hardware)
+            a.byu-button.whitenavy(href='#{location}/computerTable?hardware=false') Hide Hardware
+        else
+            a.byu-button.whitenavy(href='#{location}/computerTable?hardware=true') View Hardware
+        a.byu-button.whitenavy(href='#{location}/download/computers') Download
     div(style='overflow-x:auto;')
         table#table
             tbody
