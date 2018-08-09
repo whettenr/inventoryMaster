@@ -40,7 +40,7 @@ block content
                 each employee in employees
                     tr
                         td
-                            .divButton(onclick='getCard(#{employee.EmployeeID})')= employee.EmployeeID
+                            a(href='#{location}/card?EmployeeID=' + employee.EmployeeID)= employee.EmployeeID
                         td= employee.FirstName
                         td= employee.LastName
                         td= employee.Category
@@ -53,32 +53,3 @@ block content
                                 div= employee.RotationGroup
                         td=employee.DateAcquired
                         td= employee['Employee Notes']
-    script.
-        function getCard(employeeID) {
-            window.location.href = '#{location}/card?EmployeeID=' + employeeID;
-            console.log(employeeID);
-            $.ajax({
-                type: "GET",
-                url: "#{location}/card?employeeId=" + employeeID,
-                data: {format: 'html'}
-            }).done(function (data) {
-                $("#cardDad").addClass("cardDadCss");
-                $("#cardDad").html(data);
-                $("#cardDad").css('display', 'block');
-            });
-        }
-
-        window.onscroll = function () {
-            myFunction()
-        };
-
-        var header = document.getElementById("myHeader");
-        var sticky = header.offsetTop;
-
-        function myFunction() {
-            if (window.pageYOffset >= sticky) {
-                header.classList.add("sticky");
-            } else {
-                header.classList.remove("sticky");
-            }
-        }

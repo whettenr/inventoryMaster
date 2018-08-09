@@ -64,96 +64,100 @@ block content
                         a(href='#{location}/employeesTable?where=dateSwitched=#{employee.DateSwitched}')
                             div= employee.DateSwitched
                     td= employee.Notes
-    .titles
-        h4 Computers:
-        if(!employee)
-            h3.left= Object.keys(computers).length
-    table.table
-        tr
-            th
-                | ICN
-            th
-                | Make
-            th
-                | Model
-            th
-                | Type
-            th
-                | Date Acquired
-        each computer in computers
+    if(Object.keys(computers).length)
+        .titles
+            h4 Computers:
+            if(!employee)
+                h3.left= Object.keys(computers).length
+        table.table
             tr
-                td
-                    a(href='#{location}/computer?EmployeeID=' + computer.EmployeeID + '&ICN=' + computer.ICN)= computer.ICN
-                td= computer.Make
-                td= computer.Model
-                td= computer.Type
-                td= computer.DateAcquired
-    .titles
-        h4 Monitors:
-        if(!employee)
-            h3.left= Object.keys(monitors).length
-    table.table
-        tr
-            th
-                | ICN
-            th
-                | Make
-            th
-                | Model
-            th
-                | Date Acquired
-        each monitor in monitors
+                th
+                    | ICN
+                th
+                    | Make
+                th
+                    | Model
+                th
+                    | Type
+                th
+                    | Date Acquired
+            each computer in computers
+                tr
+                    td
+                        a(href='#{location}/computer?EmployeeID=' + computer.EmployeeID + '&ICN=' + computer.ICN)= computer.ICN
+                    td= computer.Make
+                    td= computer.Model
+                    td= computer.Type
+                    td= computer.DateAcquired
+    if(Object.keys(monitors).length)
+        .titles
+            h4 Monitors:
+            if(!employee)
+                h3.left= Object.keys(monitors).length
+        table.table
             tr
-                td
-                    a(href="#{location}/monitor?ICN=" + monitor.ICN + '&EmployeeID=' + monitor.EmployeeID)= monitor.ICN
-                td= monitor.Make
-                td= monitor.Model
-                td= monitor.DateAcquired
-    .titles
-        h4 Printers:
-        if(!employee)
-            h3.left= Object.keys(printers).length
-    table.table
-        tr
-            th
-                | ICN
-            th
-                | Make
-            th
-                | Model
-            th
-                | Date Acquired
-        each printer in printers
+                th
+                    | ICN
+                th
+                    | Make
+                th
+                    | Model
+                th
+                    | Date Acquired
+            each monitor in monitors
+                tr
+                    td
+                        a(href="#{location}/monitor?ICN=" + monitor.ICN + '&EmployeeID=' + monitor.EmployeeID)= monitor.ICN
+                    td= monitor.Make
+                    td= monitor.Model
+                    td= monitor.DateAcquired
+    if(Object.keys(printers).length)
+        .titles
+            h4 Printers:
+            if(!employee)
+                h3.left= Object.keys(printers).length
+        table.table
             tr
-                td
-                    a(href="#{location}/printer?ICN=" + printer.ICN + '&EmployeeID=' + printer.EmployeeID)= printer.ICN
-                td= printer.Make
-                td= printer.Model
-                td= printer.DateAcquired
-    .titles
-        h4 Peripherals:
-        if(!employee)
-            h3.left= Object.keys(peripherals).length
-    table.table
-        tr
-            th
-                | ICN
-            th
-                | Item
-            th
-                | Make
-            th
-                | Model
-            th
-                | Date Acquired
-        each peripheral in peripherals
+                th
+                    | ICN
+                th
+                    | Make
+                th
+                    | Model
+                th
+                    | Date Acquired
+            each printer in printers
+                tr
+                    td
+                        a(href="#{location}/printer?ICN=" + printer.ICN + '&EmployeeID=' + printer.EmployeeID)= printer.ICN
+                    td= printer.Make
+                    td= printer.Model
+                    td= printer.DateAcquired
+    if(Object.keys(peripherals).length)
+        .titles
+            h4 Peripherals:
+            if(!employee)
+                h3.left= Object.keys(peripherals).length
+        table.table
             tr
-                td
-                    a(href="#{location}/peripheral?ICN=" + peripheral.ICN + '&EmployeeID=' + peripheral.EmployeeID)= peripheral.ICN
-                td= peripheral.Item
-                td= peripheral.Make
-                td= peripheral.Model
-                td= peripheral.DateAcquired
+                th
+                    | ICN
+                th
+                    | Item
+                th
+                    | Make
+                th
+                    | Model
+                th
+                    | Date Acquired
+            each peripheral in peripherals
+                tr
+                    td
+                        a(href="#{location}/peripheral?ICN=" + peripheral.ICN + '&EmployeeID=' + peripheral.EmployeeID)= peripheral.ICN
+                    td= peripheral.Item
+                    td= peripheral.Make
+                    td= peripheral.Model
+                    td= peripheral.DateAcquired
     br
     script.
         function getComputerInfo(ICN, EmployeeID) {
