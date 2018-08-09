@@ -262,13 +262,7 @@ block content
                     br
                 h2 Peripheral
                 h3 #{employee.FirstName} #{employee.LastName}
-                div(class='categories')
-                    #mainInfoButton(onclick='showMain();') Main Info
-                    #otherInfoButton(onclick='showOther();') Other Info
-                    #historyInfoButton(onclick='showHistory();') History
 
-                br
-                h3 Main Info
                 div
                     .row
                         .col-25
@@ -316,13 +310,7 @@ block content
                                         option(value=modelOption.Model selected) #{modelOption.Model}
                                     else
                                         option(value=modelOption.Model) #{modelOption.Model}
-                    .row
-                        .col-25
-                            label(for='notes') Notes:
-                        .col-75
-                            textarea#notes(name='notes', placeholder='Write something..', style='height:200px')
-                                | #{peripheral.Notes}
-                h3 Other Info
+
                 div
                     .row
                         .col-25
@@ -344,6 +332,12 @@ block content
                             label(for='homeCheckout') Home Checkout:
                         .col-75
                             input#homeCheckout(type='text', name='homeCheckout', placeholder='Home Checkout' value='#{peripheral.HomeCheckout}')
+                    .row
+                        .col-25
+                            label(for='notes') Notes:
+                        .col-75
+                            textarea#notes(name='notes', placeholder='Write something..', style='height:200px')
+                                | #{peripheral.Notes}
                     .row
                         .col-25
                             label(for='history') History:

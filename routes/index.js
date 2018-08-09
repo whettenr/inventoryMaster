@@ -1791,7 +1791,7 @@ router.get('/updateDates', function (req, res, next) {
 
 router.get('/cas', function (req, res, next) {
     let goTo = req.query.goTo;
-    console.log("goto1: " + goTo);
+    // console.log("goto1: " + goTo);
     res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent(URL + '/getTicket?goTo=' + goTo));
 });
 
@@ -1863,7 +1863,7 @@ router.get('/search', function (req, res, next) {
 router.get('/getTicket', function (req, res, next) {
     let ticket = req.query.ticket;
     let goTo = req.query.goTo;
-    console.log("goto2: " + goTo);
+    // console.log("goto2: " + goTo);
     let service = URL + '/getTicket?goTo=' + goTo;
     let user = '';
     cas.validate(ticket, service)
@@ -1885,8 +1885,6 @@ router.get('/getTicket', function (req, res, next) {
             console.log("Invalid ticket. Error message was: " + e.message);
             res.redirect(location + '/login');
         });
-
-
 });
 
 router.post('/newComputer', function (req, res, next) {

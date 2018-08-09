@@ -262,13 +262,8 @@ block content
                     br
                 h2 Printer
                 h3 #{employee.FirstName} #{employee.LastName}
-                div(class='categories')
-                    #mainInfoButton(onclick='showMain();') Main Info
-                    #otherInfoButton(onclick='showOther();') Other Info
-                    #historyInfoButton(onclick='showHistory();') History
 
                 br
-                h3 Main Info
                 div
                     .row
                         .col-25
@@ -313,7 +308,6 @@ block content
                         .col-75
                             textarea#notes(name='notes', placeholder='Write something..', style='height:200px')
                                 | #{printer.Notes}
-                h3 Other Info
                 div
                     .row
                         .col-25
