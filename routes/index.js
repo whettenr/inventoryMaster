@@ -601,7 +601,7 @@ router.get('/otherSlots', function (req, res, next) {
 
 router.get('/card', function (req, res, next) {
     if (!req.session.user)
-        res.redirect(location + '/cas?goTo=' + location + '/card?employeeId=' + req.query.EmployeeID);
+        res.redirect(location + '/cas?goTo=' + location + '/card?EmployeeID=' + req.query.EmployeeID);
     let employeeId = req.query.EmployeeID;
     let employeeRows = {};
     let computerRows = {};
