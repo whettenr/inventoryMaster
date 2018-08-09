@@ -39,7 +39,7 @@ module.exports = function (req, res, next) {
             .then(() => {
                 if (checkUser(user)) {
                     req.session.user = user;
-                    res.redirect(goTo);
+                    res.redirect(location + goTo);
                 }
                 else {
                     res.redirect(location + '/login');
