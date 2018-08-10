@@ -31,6 +31,16 @@ module.exports = function (req, res, next) {
         // console.log("goto2: " + goTo);
         let service = URL + '/getTicket?goTo=' + goTo;
         let user = '';
+        let query = req.query;
+        // let count = 0;
+        // for (let i in query) {
+        //     if(count !== 0 && i !== 'ticket') {
+        //         console.log(i);
+        //         console.log(query[i]);
+        //         service += '?' + i + '=' + query[i];
+        //     }
+        //     count++;
+        // }
         cas.validate(ticket, service)
             .then(function success(response) {
                 console.log("Ticket valid! Hello, " + response.username);
@@ -52,7 +62,14 @@ module.exports = function (req, res, next) {
     }
     else {
         if (!req.session || !req.session.user) {
-            res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent(URL + '/getTicket?goTo=' + req.originalUrl));
+            let parameters = '';
+            let query = req.query;
+            for (let i in query) {
+                console.log(i);
+                console.log(query[i]);
+                parameters += '?' + i + '=' + query[i];
+            }
+            res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent(URL + '/getTicket?goTo=/'));
         }
         else {
             next();
