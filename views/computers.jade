@@ -2,34 +2,21 @@ extends layout
 
 block content
     link(rel='stylesheet', href='#{location}/stylesheets/table.css')
-    #cardDad(style='display: none;')
-        #card
-            #computerInfo
-    .sidebar
-        if(sortby)
-            div
-                | Sort By: #{sortby} #{order}
-        if(filters)
-            each filter, i in filters
-                div= filter
-                    a.filterButton(href='#{location}/computerTable?remove=' + i) Remove Filter
-                    a.filterButton(href='#{location}/computerTable?not=' + i) Inverse Filter
-
+    if(sortby)
+        div
+            | Sort By: #{sortby} #{order}
+    if(filters)
+        each filter, i in filters
+            div= filter
+            a.byu-button.medgray(href='#{location}/computerTable?remove=' + i) Remove Filter
+            a.byu-button.navy(href='#{location}/computerTable?not=' + i) Inverse Filter
+    br
+    #sidebarToggle.byu-button.navy(onclick='toggleSidebar()')
+        | Toggle Sidebar
+    br
+    #sidebar(style='width: 200px; display: none;')
         div= "Count: " + Object.keys(computers).length
-        a.byu-button.navy(href='#') ICN
-        a.byu-button.whitenavy(href='#') First Name
-        a.byu-button.whitenavy(href='#') Last Name
-        a.byu-button.whitenavy(href='#') Make
-        a.byu-button.whitenavy(href='#') Model
-        a.byu-button.whitenavy(href='#') Serial Number
-        a.byu-button.whitenavy(href='#') Service Tag
-        a.byu-button.whitenavy(href='#') Express Service Code
-        a.byu-button.whitenavy(href='#') Type
-        a.byu-button.whitenavy(href='#') Date Acquired
-        a.byu-button.whitenavy(href='#') Warranty
-        a.byu-button.whitenavy(href='#') Home Checkout
-        a.byu-button.whitenavy(href='#') Rotation
-        a.byu-button.whitenavy(href='#') Notes
+        include showOptions
         if(hardware)
             a.byu-button.whitenavy(href='#{location}/computerTable?hardware=false') Hide Hardware
         else
@@ -46,49 +33,64 @@ block content
                         else
                             a(href='#{location}/computerTable?sortby=ICN&order=asc')
                                 div='ICN'
-                    td
-                        if(order === 'asc')
-                            a(href='#{location}/computerTable?sortby=firstname&order=dsc')
-                                div= "First Name"
-                        else
-                            a(href='#{location}/computerTable?sortby=firstname&order=asc')
-                                div= "First Name"
-                    td
-                        if(order === 'asc')
-                            a(href='#{location}/computerTable?sortby=lastname&order=dsc')
-                                div= "Last Name"
-                        else
-                            a(href='#{location}/computerTable?sortby=lastname&order=asc')
-                                div= "Last Name"
-                    td
-                        if(order === 'asc')
-                            a(href='#{location}/computerTable?sortby=Make&order=dsc')
-                                div= "Make"
-                        else
-                            a(href='#{location}/computerTable?sortby=Make&order=asc')
-                                div= "Make"
-                    td
-                        if(order === 'asc')
-                            a(href='#{location}/computerTable?sortby=Model&order=dsc')
-                                div= "Model"
-                        else
-                            a(href='#{location}/computerTable?sortby=Model&order=asc')
-                                div= "Model"
-                    td= "Serial Number"
-                    td= "Service Tag"
-                    td= "Express Service Code"
-                    td= "Type"
-                    td
-                        if(order === 'asc')
-                            a(href='#{location}/computerTable?sortby=dateAcquired&order=dsc')
-                                div= "Date Acquired"
-                        else
-                            a(href='#{location}/computerTable?sortby=dateAcquired&order=asc')
-                                div= "Date Acquired"
-                    td= "Warranty"
-                    td= "Home Checkout"
-                    td= "Rotation"
-                    td= "Notes"
+                    if(showOptions.FirstName)
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=firstname&order=dsc')
+                                    div= "First Name"
+                            else
+                                a(href='#{location}/computerTable?sortby=firstname&order=asc')
+                                    div= "First Name"
+                    if(showOptions.LastName)
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=lastname&order=dsc')
+                                    div= "Last Name"
+                            else
+                                a(href='#{location}/computerTable?sortby=lastname&order=asc')
+                                    div= "Last Name"
+                    if(showOptions.Make)
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=Make&order=dsc')
+                                    div= "Make"
+                            else
+                                a(href='#{location}/computerTable?sortby=Make&order=asc')
+                                    div= "Make"
+                    if(showOptions.Model)
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=Model&order=dsc')
+                                    div= "Model"
+                            else
+                                a(href='#{location}/computerTable?sortby=Model&order=asc')
+                                    div= "Model"
+                    if(showOptions.SerialNumber)
+                        td= "Serial Number"
+                    if(showOptions.ServiceTag)
+                        td= "Service Tag"
+                    if(showOptions.ExpressServiceCode)
+                        td= "Express Service Code"
+                    if(showOptions.Type)
+                        td= "Type"
+                    if(showOptions.DateAcquired)
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=dateAcquired&order=dsc')
+                                    div= "Date Acquired"
+                            else
+                                a(href='#{location}/computerTable?sortby=dateAcquired&order=asc')
+                                    div= "Date Acquired"
+                    if(showOptions.Warranty)
+                        td= "Warranty"
+                    if(showOptions.HomeCheckout)
+                        td= "Home Checkout"
+                    if(showOptions.Rotation)
+                        td= "Rotation"
+                    if(showOptions.Notes)
+                        td= "Notes"
+                    if(showOptions.History)
+                        td= "History"
                     if(hardware)
                         td
                             a(href='#{location}/computerTable?sortby=processorType&hardware=true&order=asc')
@@ -110,33 +112,48 @@ block content
                         td
                             .divButton(onclick='getComputerInfo(#{computer.ICN}, #{computer.EmployeeID})')= computer.ICN
                                 //i(class="material-icons") laptop
-                        td
-                            a(href='#{location}/computerTable?where=EmployeeID=\'#{computer.EmployeeID}\'')
-                                div= computer.FirstName
-                        td
-                            a(href='#{location}/computerTable?where=EmployeeID=\'#{computer.EmployeeID}\'')
-                                div= computer.LastName
-                        td
-                            a(href='#{location}/computerTable?where=Make=\'#{computer.Make}\'')
-                                div= computer.Make
-                        td
-                            a(href='#{location}/computerTable?where=Model=\'#{computer.Model}\'')
-                                div= computer.Model
-                        td= computer.SerialNumber
-                        td= computer.ServiceTag
-                        td= computer.ExpressServiceCode
-                        td
-                            a(href='#{location}/computerTable?where=Type=\'#{computer.Type}\'')
-                                div= computer.Type
-                        td= computer.DateAcquired
-                        td= computer.Warranty
-                        td
-                            a(href='#{location}/computerTable?where=HomeCheckout=\'#{computer.HomeCheckout}\'')
-                                div= computer.HomeCheckout
-                        td
-                            a(href='#{location}/computerTable?where=RotationGroup=\'#{computer.RotationGroup}\'')
-                                div= computer.RotationGroup
-                        td= computer.Notes
+                        if(showOptions.FirstName)
+                            td
+                                a(href='#{location}/computerTable?where=EmployeeID=\'#{computer.EmployeeID}\'')
+                                    div= computer.FirstName
+                        if(showOptions.LastName)
+                            td
+                                a(href='#{location}/computerTable?where=EmployeeID=\'#{computer.EmployeeID}\'')
+                                    div= computer.LastName
+                        if(showOptions.Make)
+                            td
+                                a(href='#{location}/computerTable?where=Make=\'#{computer.Make}\'')
+                                    div= computer.Make
+                        if(showOptions.Model)
+                            td
+                                a(href='#{location}/computerTable?where=Model=\'#{computer.Model}\'')
+                                    div= computer.Model
+                        if(showOptions.SerialNumber)
+                            td= computer.SerialNumber
+                        if(showOptions.ServiceTag)
+                            td= computer.ServiceTag
+                        if(showOptions.ExpressServiceCode)
+                            td= computer.ExpressServiceCode
+                        if(showOptions.Type)
+                            td
+                                a(href='#{location}/computerTable?where=Type=\'#{computer.Type}\'')
+                                    div= computer.Type
+                        if(showOptions.DateAcquired)
+                            td= computer.DateAcquired
+                        if(showOptions.Warranty)
+                            td= computer.Warranty
+                        if(showOptions.HomeCheckout)
+                            td
+                                a(href='#{location}/computerTable?where=HomeCheckout=\'#{computer.HomeCheckout}\'')
+                                    div= computer.HomeCheckout
+                        if(showOptions.Rotation)
+                            td
+                                a(href='#{location}/computerTable?where=RotationGroup=\'#{computer.RotationGroup}\'')
+                                    div= computer.RotationGroup
+                        if(showOptions.Notes)
+                            td= computer.Notes
+                        if(showOptions.History)
+                            td= computer.History
                         if(hardware)
                             td
                                 a(href='#{location}/computerTable?where=ProcessorType=\'#{computer.ProcessorType}\'')
@@ -154,7 +171,9 @@ block content
                                 a(href='#{location}/computerTable?where=VCName=\'#{computer.VCName}\'')
                                     div= computer.VCName
     script.
-
+        function toggleSidebar(){
+            $("#sidebar").slideToggle();
+        }
         function getComputerInfo(ICN, EmployeeID) {
             window.location.href = '#{location}/computer?EmployeeID=' + EmployeeID + '&ICN=' + ICN;
         }

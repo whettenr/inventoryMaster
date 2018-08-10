@@ -58,6 +58,22 @@ let printerFilters = [];
 let peripheralFilters = [];
 let finalQuery = "";
 let hardware = false;
+let showOptions = {
+    ICN: true,
+    FirstName: true,
+    LastName: true,
+    Make: true,
+    Model: true,
+    SerialNumber: false,
+    ServiceTag: false,
+    ExpressServiceCode: false,
+    Type: true,
+    DateAcquired: true,
+    Warranty: true,
+    HomeCheckout: false,
+    Rotation: true,
+    Notes: true
+};
 
 
 /* GET home page. */
@@ -270,6 +286,9 @@ router.get('/computerTable', function (req, res, next) {
         hardware = false;
     }
 
+    let showOption = req.query.showOption;
+    showOptions[showOption] = !showOptions[showOption];
+
 
     database.query(query)
         .then(rows => {
@@ -283,6 +302,7 @@ router.get('/computerTable', function (req, res, next) {
                 filters: filters,
                 user: req.session.user,
                 sortby: req.query.sortby,
+                showOptions,
                 hardware,
                 location
             });
