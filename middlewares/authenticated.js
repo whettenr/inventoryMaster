@@ -49,6 +49,7 @@ module.exports = function (req, res, next) {
             .then(() => {
                 if (checkUser(user)) {
                     req.session.user = user;
+                    req.session.user.maxAge = 24 * 60 * 60 * 1000;
                     res.redirect(location + goTo);
                 }
                 else {
