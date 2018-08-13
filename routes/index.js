@@ -1010,16 +1010,15 @@ router.get('/peripheral', function (req, res, next) {
             return database.query('Select * FROM Employee ORDER BY LastName');
         })
         .then(rows => {
-            employee = rows[0];
+            employees = rows;
             return database.query('SELECT * FROM Peripheral WHERE ICN = ' + ICN);
         })
         .then(rows => {
-            employees = rows;
-            return database.query('Select * FROM Employee WHERE EmployeeID = ' + employee.EmployeeID)
-        })
-
-        .then(rows => {
             peripheral = rows[0];
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + peripheral.EmployeeID)
+        })
+        .then(rows => {
+            employees = rows;
             return database.query('SELECT DISTINCT Model FROM Peripheral');
         })
         .then(rows => {
@@ -1761,18 +1760,18 @@ router.get('/search', function (req, res, next) {
             else if (peripheralRows.length === 1 && !employeeRows.length && !computerRows.length && !monitorRows.length && !printerRows.length) {
                 res.redirect(location + '/peripheral?ICN=' + peripheralRows[0].ICN + "&EmployeeID=" + peripheralRows[0].EmployeeID);
             }
-        })
-        .then(() => {
-            res.render('card', {
-                employees: employeeRows,
-                computers: computerRows,
-                monitors: monitorRows,
-                printers: printerRows,
-                peripherals: peripheralRows,
-                location,
-                user: req.session.user,
-                title: "Search: " + req.query.searchTerms
-            })
+            else{
+                res.render('card', {
+                    employees: employeeRows,
+                    computers: computerRows,
+                    monitors: monitorRows,
+                    printers: printerRows,
+                    peripherals: peripheralRows,
+                    location,
+                    user: req.session.user,
+                    title: "Search: " + req.query.searchTerms
+                })
+            }
         })
         .catch(err => {
             console.log(err);
