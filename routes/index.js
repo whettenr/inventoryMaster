@@ -1814,14 +1814,14 @@ router.post('/newComputer', function (req, res, next) {
 router.post('/newMonitor', function (req, res, next) {
     let database = new Database(config.getConfig());
 
-    database.query('INSERT INTO Monitor (ICN, EmployeeID, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout, History) VALUES (?)', [[req.body.icn, req.body.employeeId, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, ""]])
+    database.query('INSERT INTO Monitor (ICN, EmployeeID, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout, History) VALUES (?)', [[req.body.icn, req.body.EmployeeID, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, ""]])
         .then(rows => {
             if (rows)
                 console.log(rows);
             return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?EmployeeID=' + req.body.employeeId);
+            res.redirect(location + '/card?EmployeeID=' + req.body.EmployeeID);
 
         })
         .catch(err => {
