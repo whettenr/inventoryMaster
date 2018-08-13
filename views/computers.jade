@@ -110,7 +110,8 @@ block content
                 each computer in computers
                     tr
                         td
-                            .divButton(onclick='getComputerInfo(#{computer.ICN}, #{computer.EmployeeID})')= computer.ICN
+                            a(href='#{location}/computer?ICN=' + computer.ICN)
+                                div= computer.ICN
                                 //i(class="material-icons") laptop
                         if(showOptions.FirstName)
                             td

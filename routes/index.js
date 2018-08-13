@@ -830,7 +830,6 @@ router.get('/getItemOptions', function (req, res, next) {
 
 router.get('/computer', function (req, res, next) {
     let ICN = req.query.ICN;
-    let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
     let modelOptions = {};
     let employees = {};
@@ -849,7 +848,11 @@ router.get('/computer', function (req, res, next) {
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select * FROM Employee WHERE EmployeeID = ' + EmployeeID)
+            return database.query('SELECT * FROM Computer WHERE ICN = ' + ICN);
+        })
+        .then(rows => {
+            computer = rows[0];
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + computer.EmployeeID)
         })
         .then(rows => {
             employee = rows[0];
@@ -857,10 +860,6 @@ router.get('/computer', function (req, res, next) {
         })
         .then(rows => {
             typeOptions = rows;
-            return database.query('SELECT * FROM Computer WHERE ICN = ' + ICN);
-        })
-        .then(rows => {
-            computer = rows[0];
             return database.query('SELECT DISTINCT Model FROM Computer');
         })
         .then(rows => {
@@ -897,7 +896,6 @@ router.get('/computer', function (req, res, next) {
 
 router.get('/monitor', function (req, res, next) {
     let ICN = req.query.ICN;
-    let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
     let modelOptions = {};
     let employees = {};
@@ -913,14 +911,14 @@ router.get('/monitor', function (req, res, next) {
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select * FROM Employee WHERE EmployeeID = ' + EmployeeID)
-        })
-        .then(rows => {
-            employee = rows[0];
             return database.query('SELECT * FROM Monitor WHERE ICN = ' + ICN);
         })
         .then(rows => {
             monitor = rows[0];
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + monitor.EmployeeID)
+        })
+        .then(rows => {
+            employee = rows[0];
             return database.query('SELECT DISTINCT Model FROM Monitor');
         })
         .then(rows => {
@@ -946,7 +944,6 @@ router.get('/monitor', function (req, res, next) {
 
 router.get('/printer', function (req, res, next) {
     let ICN = req.query.ICN;
-    let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
     let modelOptions = {};
     let employees = {};
@@ -962,14 +959,14 @@ router.get('/printer', function (req, res, next) {
         })
         .then(rows => {
             employees = rows;
-            return database.query('Select * FROM Employee WHERE EmployeeID = ' + EmployeeID)
-        })
-        .then(rows => {
-            employee = rows[0];
             return database.query('SELECT * FROM Printer WHERE ICN = ' + ICN);
         })
         .then(rows => {
             printer = rows[0];
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + printer.EmployeeID)
+        })
+        .then(rows => {
+            employee = rows[0];
             return database.query('SELECT DISTINCT Model FROM Printer');
         })
         .then(rows => {
@@ -994,7 +991,6 @@ router.get('/printer', function (req, res, next) {
 
 router.get('/peripheral', function (req, res, next) {
     let ICN = req.query.ICN;
-    // let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
     let modelOptions = {};
     let employees = {};

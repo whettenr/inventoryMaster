@@ -2,6 +2,7 @@ let cas = require('byu-cas');
 let config = require('../routes/config');
 let location = config.getLocation();
 let URL = config.getURL();
+const axios = require('axios');
 
 function checkUser(user) {
     if (location === '/inventory') {
@@ -49,6 +50,7 @@ module.exports = function (req, res, next) {
             .then(() => {
                 if (checkUser(user)) {
                     req.session.user = user;
+                    req.session.cookie.user = user;
                     req.session.user.maxAge = 24 * 60 * 60 * 1000;
                     res.redirect(location + goTo);
                 }
@@ -65,12 +67,28 @@ module.exports = function (req, res, next) {
         if (!req.session || !req.session.user) {
             let parameters = '';
             let query = req.query;
+            let goTo = req.originalUrl;
+            if (goTo = '/cas?goTo=') {
+                goTo = '/';
+            }
             for (let i in query) {
                 console.log(i);
                 console.log(query[i]);
                 parameters += '?' + i + '=' + query[i];
             }
-            res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent(URL + '/getTicket?goTo=' + req.originalUrl));
+            // axios.get('https://cas.byu.edu/cas/login?service=' + encodeURIComponent(URL + '/getTicket?goTo=' + goTo)
+            //     .then(function (response) {
+            //         // handle success
+            //         console.log(response);
+            //     })
+            //     .catch(function (error) {
+            //         // handle error
+            //         console.log(error);
+            //     })
+            //     .then(function () {
+            //         // always executed
+            //     });
+            res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent(URL + '/getTicket?goTo=' + goTo));
         }
         else {
             next();

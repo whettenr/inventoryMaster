@@ -6,7 +6,7 @@ block content
         .titles
             if(employee.PictureURL)
                 img.pic(src='#{employee.PictureURL}' onerror='javascript:this.src="images/default.png"')
-            //h1.center #{employee.FirstName} #{employee.LastName}
+            h1.left #{employee.FirstName} #{employee.LastName}
             h3.left Office: #{employee.Office} #{employee.Building}
             h3.left Category: #{employee.Category}
             h3.left Rotation Group: #{employee.RotationGroup}
@@ -90,7 +90,7 @@ block content
             each computer in computers
                 tr
                     td
-                        a(href='#{location}/computer?EmployeeID=' + computer.EmployeeID + '&ICN=' + computer.ICN)= computer.ICN
+                        a(href='#{location}/computer?ICN=' + computer.ICN)= computer.ICN
                     td= computer.Make
                     td= computer.Model
                     td= computer.Type
@@ -113,7 +113,7 @@ block content
             each monitor in monitors
                 tr
                     td
-                        a(href="#{location}/monitor?ICN=" + monitor.ICN + '&EmployeeID=' + monitor.EmployeeID)= monitor.ICN
+                        a(href="#{location}/monitor?ICN=" + monitor.ICN)= monitor.ICN
                     td= monitor.Make
                     td= monitor.Model
                     td= monitor.DateAcquired
@@ -135,7 +135,7 @@ block content
             each printer in printers
                 tr
                     td
-                        a(href="#{location}/printer?ICN=" + printer.ICN + '&EmployeeID=' + printer.EmployeeID)= printer.ICN
+                        a(href="#{location}/printer?ICN=" + printer.ICN)= printer.ICN
                     td= printer.Make
                     td= printer.Model
                     td= printer.DateAcquired
@@ -159,7 +159,7 @@ block content
             each peripheral in peripherals
                 tr
                     td
-                        a(href="#{location}/peripheral?ICN=" + peripheral.ICN + '&EmployeeID=' + peripheral.EmployeeID)= peripheral.ICN
+                        a(href="#{location}/peripheral?ICN=" + peripheral.ICN)= peripheral.ICN
                     td= peripheral.Item
                     td= peripheral.Make
                     td= peripheral.Model
