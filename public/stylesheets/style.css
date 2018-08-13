@@ -128,6 +128,18 @@ a:visited{
   color: white;
 }
 
+.sendToStorage {
+  float: left;
+}
+
+.sendToStorageButton {
+  float: left;
+}
+
+.mobileButtons {
+  display: none;
+}
+
 @media only screen and (max-width: 600px) {
   .sendToStorage {
     width: 100%;
@@ -135,6 +147,24 @@ a:visited{
 
   .sendToStorageButton {
     float: right;
+  }
+
+  .pic {
+    float: none;
+  }
+  .titles {
+    margin: 0;
+    padding-left: 50px;
+  }
+  .mobileButtons {
+    display: block;
+  }
+
+  #dropDown {
+    display: none;
+  }
+  .mobileButton {
+    margin-bottom: 10px;
   }
 }
 

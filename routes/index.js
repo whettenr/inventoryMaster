@@ -994,7 +994,7 @@ router.get('/printer', function (req, res, next) {
 
 router.get('/peripheral', function (req, res, next) {
     let ICN = req.query.ICN;
-    let EmployeeID = req.query.EmployeeID;
+    // let EmployeeID = req.query.EmployeeID;
     let makeOptions = {};
     let modelOptions = {};
     let employees = {};
@@ -1010,13 +1010,14 @@ router.get('/peripheral', function (req, res, next) {
             return database.query('Select * FROM Employee ORDER BY LastName');
         })
         .then(rows => {
-            employees = rows;
-            return database.query('Select * FROM Employee WHERE EmployeeID = ' + EmployeeID)
-        })
-        .then(rows => {
             employee = rows[0];
             return database.query('SELECT * FROM Peripheral WHERE ICN = ' + ICN);
         })
+        .then(rows => {
+            employees = rows;
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + employee.EmployeeID)
+        })
+
         .then(rows => {
             peripheral = rows[0];
             return database.query('SELECT DISTINCT Model FROM Peripheral');
@@ -1741,6 +1742,7 @@ router.get('/search', function (req, res, next) {
             return database.query('SELECT * FROM Peripheral WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR ITEM LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
+            peripheralRows = rows;
             return database.close();
         })
         .then(() => {
