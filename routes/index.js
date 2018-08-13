@@ -604,7 +604,7 @@ router.get('/otherSlots', function (req, res, next) {
 });
 
 router.get('/card', function (req, res, next) {
-    let employeeId = req.query.EmployeeID;
+    let employeeId = parseInt(req.query.EmployeeID);
     let employeeRows = {};
     let computerRows = {};
     let monitorRows = {};
