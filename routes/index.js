@@ -1730,6 +1730,7 @@ router.get('/search', function (req, res, next) {
         })
         .then(rows => {
             console.log(rows);
+            computerRows = rows;
             return database.query('SELECT * FROM Monitor WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
