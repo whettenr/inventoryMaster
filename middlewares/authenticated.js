@@ -69,7 +69,7 @@ module.exports = function (req, res, next) {
                 console.log(query[i]);
                 parameters += '?' + i + '=' + query[i];
             }
-            res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent(URL + '/getTicket?goTo=/'));
+            res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent(URL + '/getTicket?goTo=' + req.originalUrl));
         }
         else {
             next();

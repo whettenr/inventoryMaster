@@ -251,11 +251,11 @@ block content
 
     body
         .container
-            div(style='float: left;')
-                .byu-button.yellow(onclick='surplus();' style='float: left;') Send to Storage
             div(style='float: right;')
                 a.byu-button.medgray(href='#{location}/card?EmployeeID=#{employee.EmployeeID}' style='margin-right: 10px;') #{employee.FirstName}'s Stuff
                 .byu-button.green(onclick='go();') Submit
+            div.sendToStorage(style='float: left;')
+                .byu-button.yellow.sendToStorageButton(onclick='surplus();' style='float: left;') Send to Storage
             form(action='#{location}/form', method='post' id='form')
                 br
                 br

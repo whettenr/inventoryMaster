@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({secret: 'keyboard cat', cookie: {}, resave: true, saveUninitialized: false}));
+app.use(session({secret: 'keyboard cat', cookie: {maxAge: 43200000}, resave: true, saveUninitialized: false}));
 
 
 app.use('/', authenticated, indexRouter);
