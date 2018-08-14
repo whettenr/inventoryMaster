@@ -3,6 +3,10 @@ let config = require('../routes/config');
 let location = config.getLocation();
 let URL = config.getURL();
 const axios = require('axios');
+let cookiee = require('cookie-encryption');
+let vault = cookiee('ciao', {
+    maxAge: 43200000
+});
 
 function checkUser(user) {
     if (location === '/inventory') {
@@ -32,6 +36,9 @@ module.exports = function (req, res, next) {
         // console.log("goto2: " + goTo);
         let service = URL + '/getTicket?goTo=' + goTo;
         let user = '';
+        if(goTo = ''){
+            goTo = '/'
+        }
         let query = req.query;
         // let count = 0;
         // for (let i in query) {
@@ -50,9 +57,15 @@ module.exports = function (req, res, next) {
             .then(() => {
                 if (checkUser(user)) {
                     req.session.user = user;
-                    req.session.cookie.user = user;
-                    req.session.user.maxAge = 24 * 60 * 60 * 1000;
-                    res.redirect(location + goTo);
+                    let goTo = req.query.goTo;
+                    // req.session.cookie.user = user;
+                    // let randomNumber=Math.random().toString();
+                    // randomNumber=randomNumber.substring(2,randomNumber.length);
+                    // res.cookie('user',randomNumber, { maxAge: 900000, httpOnly: true });
+                    // req.session.user.maxAge = 24 * 60 * 60 * 1000;
+                    let json = JSON.stringify(user);
+                    vault.write(req, json);
+                    res.redirect(URL + goTo);
                 }
                 else {
                     res.redirect(location + '/login');
@@ -64,13 +77,11 @@ module.exports = function (req, res, next) {
             });
     }
     else {
-        if (!req.session || !req.session.user) {
+        let cookie = vault.read(req);
+        if (cookie === "") {
             let parameters = '';
             let query = req.query;
             let goTo = req.originalUrl;
-            if (goTo = '/cas?goTo=') {
-                goTo = '/';
-            }
             for (let i in query) {
                 console.log(i);
                 console.log(query[i]);

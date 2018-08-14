@@ -8,6 +8,8 @@ let cookieParser = require('cookie-parser');
 let LocalStrategy = require('passport-local').Strategy;
 let passport = require('passport');
 const bodyParser = require('body-parser');
+let cookiee = require('cookie-encryption');
+let vault = cookiee('ciao');
 // let users = require('./users')();
 // let axios = require('axios');
 
@@ -175,7 +177,7 @@ router.get('/employeesTable', function (req, res, next) {
                 title: 'Employees',
                 employees: employees,
                 filters: employeeFilters,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             });
         })
@@ -300,7 +302,7 @@ router.get('/computerTable', function (req, res, next) {
                 order: req.query.order,
                 computers: computers,
                 filters: filters,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 sortby: req.query.sortby,
                 showOptions,
                 hardware,
@@ -388,7 +390,7 @@ router.get('/monitorsTable', function (req, res, next) {
                 title: 'Monitors',
                 monitors: monitors,
                 filters: monitorFilters,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             });
         })
@@ -473,7 +475,7 @@ router.get('/peripheralTable', function (req, res, next) {
                 title: 'Peripherals',
                 peripherals: peripherals,
                 peripheralFilters: peripheralFilters,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             });
         })
@@ -558,7 +560,7 @@ router.get('/printerTable', function (req, res, next) {
                 title: 'Printers',
                 printers: printers,
                 filters: printerFilters,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             });
         })
@@ -578,7 +580,7 @@ router.get('/employees', function (req, res, next) {
             employees = rows;
         })
         .then(() => {
-            res.render('employees', {title: 'Employees', employees: employees, user: req.session.user, location});
+            res.render('employees', {title: 'Employees', employees: employees, user: JSON.parse(vault.read(req)), location});
 
         })
         .catch(err => {
@@ -595,7 +597,7 @@ router.get('/otherSlots', function (req, res, next) {
             employees = rows;
         })
         .then(() => {
-            res.render('index', {title: 'Other Slots', employees: employees, user: req.session.user, location});
+            res.render('index', {title: 'Other Slots', employees: employees, user: JSON.parse(vault.read(req)), location});
 
         })
         .catch(err => {
@@ -644,7 +646,7 @@ router.get('/card', function (req, res, next) {
                 printers: printerRows,
                 peripherals: peripheralRows,
                 location,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 title: employeeRows[0].FirstName + ' ' + employeeRows[0].LastName + "'s Stuff"
             })
         })
@@ -885,7 +887,7 @@ router.get('/computer', function (req, res, next) {
                 hardware,
                 employee,
                 processorTypeOptions,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             })
         })
@@ -933,7 +935,7 @@ router.get('/monitor', function (req, res, next) {
                 employees,
                 monitor,
                 employee,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             })
         })
@@ -980,7 +982,7 @@ router.get('/printer', function (req, res, next) {
                 employees,
                 printer,
                 employee,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             })
         })
@@ -1033,7 +1035,7 @@ router.get('/peripheral', function (req, res, next) {
                 employees,
                 peripheral,
                 employee,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             })
         })
@@ -1089,7 +1091,7 @@ router.get('/newPeripheral', function (req, res, next) {
                 itemOptions,
                 employees,
                 employee,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             })
         })
@@ -1190,7 +1192,7 @@ router.get('/newComputer', function (req, res, next) {
                 memoryOptions,
                 hardDriveOptions,
                 graphicsCardOptions,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             })
         })
@@ -1239,7 +1241,7 @@ router.get('/newMonitor', function (req, res, next) {
                 employees,
                 employee,
                 EmployeeID,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             })
         })
@@ -1522,7 +1524,7 @@ router.get('/download/computers', function (req, res, next) {
 });
 
 router.get('/tables', function (req, res, next) {
-    res.render('tables', {title: 'Tables', user: req.session.user, location})
+    res.render('tables', {title: 'Tables', user: JSON.parse(vault.read(req)), location})
 });
 
 router.get('/login', function (req, res) {
@@ -1532,9 +1534,9 @@ router.get('/login', function (req, res) {
 });
 
 router.get('/logout', function (req, res) {
-    req.session.user = null;
+    vault.flush();
     res.render('login', {
-        location
+        URL
     });
 });
 
@@ -1607,11 +1609,12 @@ router.get('/', function (req, res, next) {
             // console.log("test");
         })
         .then(() => {
+            let user = JSON.parse(vault.read(req));
             res.render('index', {
                 title: 'Welcome to Inventory',
                 employees: employees,
                 filters: employeeFilters,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             });
         })
@@ -1661,7 +1664,7 @@ router.get('/jsbSurplus', function (req, res, next) {
                 monitors: monitorRows,
                 printers: printerRows,
                 peripherals: peripheralRows,
-                user: req.session.user,
+                user: JSON.parse(vault.read(req)),
                 location
             })
         })
@@ -1722,7 +1725,7 @@ router.get('/search', function (req, res, next) {
     database.query("SELECT * FROM Employee WHERE FirstName LIKE ? OR LastName LIKE ? OR `Employee Notes` LIKE ?", [searchTerms, searchTerms, searchTerms])
         .then(rows => {
             employeeRows = rows;
-            return database.query("SELECT * FROM Computer JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Computer.ICN LIKE ? OR Computer.SerialNumber LIKE ? OR Computer.Make LIKE ? OR Computer.Model LIKE ? OR Computer.Type LIKE ? OR Computer.NOTES LIKE ? OR Hardware.ProcessorType LIKE ? OR Hardware.ProcessorSpeed LIKE ? OR Hardware.HardDrive LIKE ? OR Hardware.VCName LIKE ?", [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            return database.query("SELECT * FROM Computer JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Computer.ICN LIKE ? OR Computer.SerialNumber LIKE ? OR Computer.Make LIKE ? OR Computer.Model LIKE ? OR Computer.Type LIKE ? OR Computer.Notes LIKE ? OR Computer.History LIKE ? OR Hardware.ProcessorType LIKE ? OR Hardware.ProcessorSpeed LIKE ? OR Hardware.HardDrive LIKE ? OR Hardware.VCName LIKE ?", [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             console.log(rows);
@@ -1765,7 +1768,7 @@ router.get('/search', function (req, res, next) {
                     printers: printerRows,
                     peripherals: peripheralRows,
                     location,
-                    user: req.session.user,
+                    user: JSON.parse(vault.read(req)),
                     title: "Search: " + req.query.searchTerms
                 })
             }

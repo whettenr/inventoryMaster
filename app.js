@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 let authenticated = require('./middlewares/authenticated');
 let session = require('express-session');
+let cookiee = require('cookie-encryption');
+let vault = cookiee('ciao');
 
 
 var indexRouter = require('./routes/index');
