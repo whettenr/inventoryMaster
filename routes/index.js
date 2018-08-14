@@ -1568,15 +1568,6 @@ router.get('/', function (req, res, next) {
         }
     }
     query += " WHERE Type = 'On Rotation'";
-    if (employeeFilters.length > 0) {
-        for (let filter in employeeFilters) {
-            query += employeeFilters[filter];
-            query += ' and ';
-        }
-        query = query.substr(0, query.length - 5);
-    }
-
-
     if (req.query.sortby === 'employeeId') {
         query += ' Order BY Employee.EmployeeID';
     }
@@ -1613,7 +1604,7 @@ router.get('/', function (req, res, next) {
             res.render('index', {
                 title: 'Welcome to Inventory',
                 employees: employees,
-                filters: employeeFilters,
+                filters: {},
                 user: JSON.parse(vault.read(req)),
                 location
             });
