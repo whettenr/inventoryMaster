@@ -178,6 +178,7 @@ router.get('/employeesTable', function (req, res, next) {
                 employees: employees,
                 filters: employeeFilters,
                 user: JSON.parse(vault.read(req)),
+                download: 'employees',
                 location
             });
         })
@@ -305,6 +306,7 @@ router.get('/computerTable', function (req, res, next) {
                 user: JSON.parse(vault.read(req)),
                 sortby: req.query.sortby,
                 showOptions,
+                download: 'computers',
                 hardware,
                 location
             });
@@ -391,6 +393,7 @@ router.get('/monitorsTable', function (req, res, next) {
                 monitors: monitors,
                 filters: monitorFilters,
                 user: JSON.parse(vault.read(req)),
+                download: monitors,
                 location
             });
         })
@@ -476,6 +479,7 @@ router.get('/peripheralTable', function (req, res, next) {
                 peripherals: peripherals,
                 peripheralFilters: peripheralFilters,
                 user: JSON.parse(vault.read(req)),
+                download: peripherals,
                 location
             });
         })
@@ -561,6 +565,7 @@ router.get('/printerTable', function (req, res, next) {
                 printers: printers,
                 filters: printerFilters,
                 user: JSON.parse(vault.read(req)),
+                download: printers,
                 location
             });
         })
