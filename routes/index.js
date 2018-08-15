@@ -1558,10 +1558,7 @@ router.get('/download/employees', function (req, res, next) {
         query = query.substr(0, query.length - 5);
     }
 
-    if (req.query.sortby === 'ICN') {
-        query += ' Order BY ICN';
-    }
-    else if (req.query.sortby === 'EmployeeID') {
+    if (req.query.sortby === 'EmployeeID') {
         query += ' ORDER BY EmployeeID';
     }
     else if (req.query.sortby === 'Make') {
@@ -1574,7 +1571,7 @@ router.get('/download/employees', function (req, res, next) {
         query += ' ORDER BY lastName';
     }
     else {
-        query += ' Order BY ICN';
+        query += ' Order BY EmployeeID';
     }
     let database = new Database(config.getConfig());
 
