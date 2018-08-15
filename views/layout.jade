@@ -17,7 +17,7 @@ html
             span(slot="site-title") Religious Education Inventory
             span(slot="site-title" class="subtitle")= title
             if(download)
-                a(slot='actions' href='/download/' + download style='padding-right: 25px;') download
+                a(slot='actions' href='#{location}/download/' + download style='padding-right: 25px;') download
             byu-search(slot="search", action="submit-form", method="get", placeholder="search")
                 form(method="get" action="#{location}/search")
                     input(type="search" name="searchTerms" autofocus="autofocus")
