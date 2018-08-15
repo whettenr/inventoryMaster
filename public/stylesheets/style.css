@@ -140,6 +140,13 @@ a:visited{
   display: none;
 }
 
+input, select, textarea {
+  font-size: medium;
+  font-family: Vitesse A, Vitesse B, Georgia, serif;
+
+}
+
+
 @media only screen and (max-width: 600px) {
   .sendToStorage {
     width: 100%;

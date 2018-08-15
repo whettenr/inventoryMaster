@@ -39,6 +39,10 @@
 .left {
     /*padding-left: 25px;*/
 }
+.right {
+    float: right;
+    /*padding-right: 25px;*/
+}
 /*table {*/
     /*width: 100%;*/
     /*text-align: center;*/

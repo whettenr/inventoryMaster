@@ -254,21 +254,22 @@ block content
 
     body
         .container
+            img.right(src=employee.PictureURL)
             .info
             form(action='#{location}/monitor', method='post' id='form')
-                .info
-                    a#button.button.cancel(href='#{location}/card?EmployeeID=#{monitor.EmployeeID}') Back
-                    #go(onclick='go();') Submit
-                    br
-                h2 Monitor
-                h3 #{employee.FirstName} #{employee.LastName}
-                //div(class='categories')
-                    #mainInfoButton(onclick='showMain();') Main Info
-                    #otherInfoButton(onclick='showOther();') Other Info
-                    #historyInfoButton(onclick='showHistory();') History
-
+                div
+                    h2 #{employee.FirstName} #{employee.LastName}'s Monitor
+                    //h3 #{employee.FirstName} #{employee.LastName}
                 br
-                h3 Main Info
+                br
+                br
+                div(style='float: right;')
+                    a.byu-button.medgray(href='#{location}/card?EmployeeID=#{employee.EmployeeID}' style='margin-right: 10px;') #{employee.FirstName}'s Stuff
+                    .byu-button.green(onclick='go();') Submit
+                div.sendToStorage
+                    .byu-button.yellow.sendToStorageButton(onclick='surplus();') Send to Storage
+                br
+                br
                 div
                     .row
                         .col-25
@@ -313,7 +314,6 @@ block content
                         .col-75
                             textarea#notes(name='notes', placeholder='Write something..', style='height:200px')
                                 | #{monitor.Notes}
-                h3 Other Info
                 div
                     .row
                         .col-25
@@ -335,7 +335,6 @@ block content
                             label(for='homeCheckout') Home Checkout:
                         .col-75
                             input#homeCheckout(type='text', name='homeCheckout', placeholder='Home Checkout' value='#{monitor.HomeCheckout}')
-                h3 History Info
                 div
                     .row
                         .col-25
