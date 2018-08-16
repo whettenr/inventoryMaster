@@ -2,15 +2,7 @@ extends layout
 
 block content
     link(rel='stylesheet', href='#{location}/stylesheets/table.css')
-    #cardDad(style='display: none;')
-        #card
-            #computerInfo
-    if(peripheralFilters)
-        each filter, i in peripheralFilters
-            div= filter
-            a.filterButton(href='#{location}/peripheralTable?remove=' + i) Remove Filter
-            a.filterButton(href='#{location}/peripheralTable?not=' + i) Inverse Filter
-
+    include filters
     div= "Count: " + Object.keys(peripherals).length
     div(style='overflow-x:auto;')
         table#table
@@ -31,7 +23,9 @@ block content
                     td
                         a(href='#{location}/peripheralTable?sortby=Model')
                             div= "Model"
-                    td= "Item"
+                    td
+                        a(href='#{location}/peripheralTable?sortby=Item')
+                            div= "Item"
                     td= "Serial Number"
                     td= "Date Acquired"
                     td= "Warranty"
@@ -55,7 +49,9 @@ block content
                         td
                             a(href='#{location}/peripheralTable?where=Model=\'#{peripheral.Model}\'')
                                 div= peripheral.Model
-                        td= peripheral.Item
+                        td
+                            a(href='#{location}/peripheralTable?where=Item=\'#{peripheral.Item}\'')
+                                div= peripheral.Item
                         td= peripheral.SerialNumber
                         td= peripheral.DateAcquired
                         td= peripheral.Warranty

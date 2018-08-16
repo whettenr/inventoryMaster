@@ -5,11 +5,7 @@ block content
     if(sortby)
         div
             | Sort By: #{sortby} #{order}
-    if(filters)
-        each filter, i in filters
-            div= filter
-            a.byu-button.medgray(href='#{location}/computerTable?remove=' + i) Remove Filter
-            a.byu-button.navy(href='#{location}/computerTable?not=' + i) Inverse Filter
+    include filters
     br
     #sidebarToggle.byu-button.navy(onclick='toggleSidebar()')
         | Toggle Sidebar

@@ -300,9 +300,12 @@ block content
                         .col-25
                             label(for='model') Model:
                         .col-75
-                            select#model.custom-select.sources(name='model', placeholder='Model')
+                            select#model.custom-select.sources(name='model', placeholder='Model' onchange='checkModel()')
                                 each modelOption in modelOptions
-                                    option(value=modelOption.Model) #{modelOption.Model}
+                                    if(modelOption.Model === 'None')
+                                        option(value=modelOption.Model selected) #{modelOption.Model}
+                                    else
+                                        option(value=modelOption.Model) #{modelOption.Model}
                     .row
                         .col-25
                             label(for='notes') Notes:
@@ -376,13 +379,33 @@ block content
         }
 
         function refreshModelOptions() {
-            $.ajax({
-                type: "GET",
-                url: "#{location}/getModelOptions?type=Monitor&make=" + $("#make").val(),
-                data: {format: 'html'}
-            }).done(function (data) {
-                $("#model").html(data);
-            });
+            if ($("#make").val() === 'Add a New Option') {
+                let add = prompt("New Make:");
+                if (add !== null && add !== "") {
+                    console.log(add);
+                    $("#make").append(new Option(add, add));
+                    $("#make").val(add);
+                }
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "#{location}/getModelOptions?type=Monitor&make=" + $("#make").val(),
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#model").html(data);
+                });
+            }
+        }
+        function checkModel(){
+            if($("#model").val() === 'Add a New Option'){
+                let add = prompt("New Make:");
+                if (add !== null && add !== "") {
+                    console.log(add);
+                    $("#model").append(new Option(add, add));
+                    $("#model").val(add);
+                }
+            }
         }
         function changeEmployee(){
             console.log('changeEMployee');

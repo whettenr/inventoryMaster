@@ -78,8 +78,6 @@ let showOptions = {
 };
 
 
-/* GET home page. */
-
 function checkUser(user) {
     if (location === '/inventory') {
         for (let i in user.memberOf) {
@@ -175,6 +173,7 @@ router.get('/employeesTable', function (req, res, next) {
         .then(() => {
             res.render('index', {
                 title: 'Employees',
+                table: 'employeesTable',
                 employees: employees,
                 filters: employeeFilters,
                 user: JSON.parse(vault.read(req)),
@@ -291,6 +290,9 @@ router.get('/computerTable', function (req, res, next) {
 
     let showOption = req.query.showOption;
     showOptions[showOption] = !showOptions[showOption];
+    let actionButton = {};
+    actionButton.href = 'computerShowOptions';
+    actionButton.name = 'Show Options';
 
 
     database.query(query)
@@ -300,6 +302,8 @@ router.get('/computerTable', function (req, res, next) {
         .then(() => {
             res.render('computers', {
                 title: 'Computers',
+                table: 'computerTable',
+                actionButton,
                 order: req.query.order,
                 computers: computers,
                 filters: filters,
@@ -390,6 +394,7 @@ router.get('/monitorsTable', function (req, res, next) {
         .then(() => {
             res.render('monitorsTable', {
                 title: 'Monitors',
+                table: 'monitorsTable',
                 monitors: monitors,
                 filters: monitorFilters,
                 user: JSON.parse(vault.read(req)),
@@ -463,6 +468,9 @@ router.get('/peripheralTable', function (req, res, next) {
     else if (req.query.sortby === 'lastName') {
         query += ' ORDER BY lastName';
     }
+    else if (req.query.sortby === 'Item') {
+        query += ' ORDER BY Item';
+    }
     else {
         query += ' Order BY ICN';
     }
@@ -477,7 +485,8 @@ router.get('/peripheralTable', function (req, res, next) {
             res.render('peripheralTable', {
                 title: 'Peripherals',
                 peripherals: peripherals,
-                peripheralFilters: peripheralFilters,
+                table: 'peripheralTable',
+                filters: peripheralFilters,
                 user: JSON.parse(vault.read(req)),
                 download: peripherals,
                 location
@@ -562,6 +571,7 @@ router.get('/printerTable', function (req, res, next) {
         .then(() => {
             res.render('printerTable', {
                 title: 'Printers',
+                table: 'printerTable',
                 printers: printers,
                 filters: printerFilters,
                 user: JSON.parse(vault.read(req)),
@@ -1254,6 +1264,8 @@ router.get('/newMonitor', function (req, res, next) {
     database.query('SELECT DISTINCT Make FROM Monitor')
         .then(rows => {
             makeOptions = rows;
+            makeOptions[makeOptions.length] = {Make:'None'};
+            makeOptions[makeOptions.length] = {Make:'Add a New Option'};
             return database.query('Select * FROM Employee ORDER BY LastName');
         })
         .then(rows => {
@@ -1266,6 +1278,8 @@ router.get('/newMonitor', function (req, res, next) {
         })
         .then(rows => {
             modelOptions = rows;
+            modelOptions[modelOptions.length] = {Model:'None'};
+            modelOptions[modelOptions.length] = {Model:'Add a New Option'};
             return database.query('SELECT * FROM Monitor ORDER BY ICN DESC LIMIT 1');
         })
         .then(rows => {
@@ -1889,6 +1903,15 @@ router.get('/search', function (req, res, next) {
         });
 
 
+});
+
+router.get('/computerShowOptions', function(req, res, next) {
+        res.render('showOptions', {
+            showOptions,
+            title: 'Computer Show Options',
+            location,
+            user: JSON.parse(vault.read(req))
+        })
 });
 
 router.post('/newComputer', function (req, res, next) {
