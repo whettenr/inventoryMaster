@@ -159,6 +159,7 @@ input, select, textarea {
 
   .sendToStorageButton {
     float: right;
+    margin-top: 10px;
   }
 
   .pic {

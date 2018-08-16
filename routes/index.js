@@ -1014,6 +1014,7 @@ router.get('/printer', function (req, res, next) {
         })
         .then(() => {
             res.render('printer', {
+                title: employee.FirstName + ' ' + employee.LastName + '\'s Printer',
                 makeOptions,
                 modelOptions,
                 employees,
@@ -1066,6 +1067,7 @@ router.get('/peripheral', function (req, res, next) {
         })
         .then(() => {
             res.render('peripheral', {
+                title: employee.FirstName + ' ' + employee.LastName + '\'s ' + peripheral.Item,
                 makeOptions,
                 modelOptions,
                 itemOptions,
