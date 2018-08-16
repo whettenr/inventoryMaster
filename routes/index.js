@@ -1703,7 +1703,9 @@ router.get('/', function (req, res, next) {
     }
 
     let employees = {};
-
+    let actionButton = {};
+    actionButton.href = 'employeesTable';
+    actionButton.name = 'View All Employees';
     finalQuery = query;
 
     database.query(query)
@@ -1718,6 +1720,7 @@ router.get('/', function (req, res, next) {
             let user = JSON.parse(vault.read(req));
             res.render('index', {
                 title: 'Welcome to Inventory',
+                actionButton,
                 employees: employees,
                 filters: {},
                 user: JSON.parse(vault.read(req)),
