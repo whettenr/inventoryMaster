@@ -6,7 +6,8 @@ block content
         .titles
             if(employee.PictureURL)
                 img.pic(src='#{employee.PictureURL}' onerror='javascript:this.src="images/default.png"')
-            h1.left #{employee.FirstName} #{employee.LastName}
+            h1.left
+                a(href='#{location}/employee?EmployeeID=#{employee.EmployeeID}') #{employee.FirstName} #{employee.LastName}
             h3.left Office: #{employee.Office} #{employee.Building}
             h3.left Category: #{employee.Category}
             h3.left Rotation Group: #{employee.RotationGroup}

@@ -835,6 +835,38 @@ router.get('/getItemOptions', function (req, res, next) {
         })
 });
 
+router.get('/employee', function (req, res, next) {
+    let database = new Database(config.getConfig());
+    let EmployeeID = req.query.EmployeeID;
+    let employee = {};
+    let categories = {};
+    let buildings = {};
+    database.query('SELECT * FROM Employee WHERE EmployeeID = ' + EmployeeID)
+        .then(rows => {
+            employee = rows[0];
+            return database.query('SELECT DISTINCT Category FROM Employee')
+        })
+        .then(rows => {
+            categories = rows;
+            return database.query('SELECT DISTINCT Building FROM Employee')
+        })
+        .then(rows => {
+            buildings = rows;
+            return database.close();
+        })
+        .then(() => {
+            res.render('employee', {
+                title: employee.FirstName + ' ' + employee.LastName,
+                employee,
+                buildings,
+                categories,
+                location,
+                noSendToStorage: true,
+                user: JSON.parse(vault.read(req))
+            })
+        })
+});
+
 router.get('/computer', function (req, res, next) {
     let ICN = req.query.ICN;
     let makeOptions = {};
@@ -1977,6 +2009,22 @@ router.post('/printer', function (req, res, next) {
     let database = new Database(config.getConfig());
     database.query("UPDATE Printer SET EmployeeID = ?, LesOlsonID = ?, Make = ?, Model = ?, SerialNumber = ?, DateAcquired = ?, Warranty = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.lesOlsonId, req.body.make, req.body.model, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.notes, req.body.history, req.body.icn])
+        .then(rows => {
+            return database.close();
+        })
+        .then(() => {
+            res.redirect(location + '/card?EmployeeID=' + req.body.employeeId);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    // res.render('home', {title: 'Welcome', user: 'McKay'})
+});
+
+router.post('/employee', function (req, res, next) {
+    let database = new Database(config.getConfig());
+    database.query("UPDATE Employee SET FirstName = ?, LastName = ?, Category = ?, Office = ?, Building = ?, Email = ?, UserName = ?, RotationGroup = ?, DateSwitched = ?, `Employee Notes` = ?, PictureURL = ? WHERE EmployeeID = ?",
+        [req.body.firstName, req.body.lastName, req.body.category, req.body.office, req.body.building, req.body.email, req.body.userName, req.body.rotationGroup, req.body.dateSwitched, req.body.notes, req.body.pictureURL, req.body.employeeId])
         .then(rows => {
             return database.close();
         })

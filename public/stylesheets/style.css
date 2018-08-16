@@ -140,6 +140,11 @@ a:visited{
   display: none;
 }
 
+
+a:hover{
+  color: #66B200;
+}
+
 input, select, textarea {
   font-size: medium;
   font-family: Vitesse A, Vitesse B, Georgia, serif;

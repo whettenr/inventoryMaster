@@ -1,0 +1,91 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='#{location}/stylesheets/item.css')
+    style.
+        .sendToStorage {
+            display: none;
+        }
+    body
+        .container
+            include itemInfo
+            form(action='#{location}/employee', method='post' id='form')
+                br
+                br
+                div
+                    .row
+                        .col-25
+                            label(for='employeeId') Employee ID:
+                        .col-75
+                            input#employeeId(style='background-color: #f2f2f2; border: none; margin-top: 10px;', type='text', name='employeeId', placeholder='Employee ID', readonly="readonly", onclick='alert("this is not editable");' value='#{employee.EmployeeID}')
+                    .row
+                        .col-25
+                            label(for='firstName') First Name:
+                        .col-75
+                            input#firstName(name='firstName', type='text', value=employee.FirstName)
+                    .row
+                        .col-25
+                            label(for='lastName') Last Name:
+                        .col-75
+                            input#lastName(name='lastName', type='text', value=employee.LastName)
+                    .row
+                        .col-25
+                            label(for='category') Category:
+                        .col-75
+                            select#category.selectpicker(name='category')
+                                each category in categories
+                                    if(employee.Category === category.Category)
+                                        option(value=category.Category name=category.Category selected)= category.Category
+                                    else
+                                        option(value=category.Category name=category.Category)= category.Category
+                    .row
+                        .col-25
+                            label(for='office') Office:
+                        .col-75
+                            input#office(name='office', type='text', value=employee.Office)
+                    .row
+                        .col-25
+                            label(for='building') Building:
+                        .col-75
+                            select#building.selectpicker(name='building')
+                                each building in buildings
+                                    if(employee.Building === building.Building)
+                                        option(value=building.Building name=building.Building selected)= building.Building
+                                    else
+                                        option(value=building.Building name=building.Building)= building.Building
+                    .row
+                        .col-25
+                            label(for='email') Email:
+                        .col-75
+                            input#email(name='email', type='text', value=employee.Email)
+                    .row
+                        .col-25
+                            label(for='username') Username:
+                        .col-75
+                            input#username(name='username', type='text', value=employee.UserName)
+                    .row
+                        .col-25
+                            label(for='rotationGroup') Rotation Group:
+                        .col-75
+                            input#rotationGroup(name='rotationGroup', value=employee.RotationGroup)
+                    .row
+                        .col-25
+                            label(for='dateSwitched') Date Switched:
+                        .col-75
+                            input#dateSwitched(type='date' name='dateSwitched', value=employee.DateSwitched)
+                    .row
+                        .col-25
+                            label(for='pictureURL') PictureURL:
+                        .col-75
+                            input#pictureURL(name='pictureURL', type='text', value=employee.PictureURL)
+
+                    .row
+                        .col-25
+                            label(for='notes') Notes:
+                        .col-75
+                            textarea#notes(name='notes', placeholder='Write something..', style='height:200px')
+                                | #{employee['Employee Notes']}
+    script.
+        function go() {
+            $("#form").submit();
+        }
