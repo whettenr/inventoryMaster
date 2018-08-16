@@ -119,7 +119,6 @@ block content
 
         function surplus() {
             $("#employee").val('300');
-            alert("You just changed who this was assigned to. Please update the Type.");
         }
 
         function refreshModelOptions() {
@@ -132,18 +131,27 @@ block content
             });
         }
         function changeEmployee(){
-            console.log('changeEMployee');
             let history = $("#history").val();
             $("#history").val(history + date.toDateString() + ' Reassigned from ' + employee + ' to ' + $("#employee option:selected").attr('name') + ' by ' + user + ' \n');
         }
         function changeMake(){
             let history = $("#history").val();
-            $("#history").val(history + date.toDateString() + ' Changed from ')
+            $("#history").val(history + date.toDateString() + ' Make Changed from ' + make + ' to ' + $("#make option:selected").val() + ' by ' + user + ' \n')
+        }
+        function changeModel(){
+            let history = $("#history").val();
+            $("#history").val(history + date.toDateString() + ' Model Changed from ' + model + ' to ' + $("#model option:selected").val() + ' by ' + user + ' \n');
         }
         function go(){
             if(employee !== $("#employee option:selected").attr('name')){
                 changeEmployee();
             }
-            $("#form").submit();
+            if(make !== $("#make option:selected").val()){
+                changeMake();
+            }
+            if(model !== $("#model option:selected").val()){
+                changeModel();
+            }
+            //$("#form").submit();
 
         }

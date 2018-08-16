@@ -1133,6 +1133,7 @@ router.get('/newPeripheral', function (req, res, next) {
         })
         .then(() => {
             res.render('newPeripheral', {
+                title: employee.FirstName + ' ' + employee.LastName + '\'s New Peripheral',
                 ICN,
                 EmployeeID,
                 makeOptions,
@@ -1228,7 +1229,7 @@ router.get('/newComputer', function (req, res, next) {
         })
         .then(() => {
             res.render('newComputer', {
-                title: 'Welcome',
+                title: employee.FirstName + ' ' + employee.LastName + '\'s New Computer',
                 makeOptions,
                 modelOptions,
                 typeOptions,
@@ -1288,6 +1289,7 @@ router.get('/newMonitor', function (req, res, next) {
         })
         .then(() => {
             res.render('newMonitor', {
+                title: employee.FirstName + ' ' + employee.LastName + '\'s New Monitor',
                 ICN,
                 makeOptions,
                 modelOptions,
