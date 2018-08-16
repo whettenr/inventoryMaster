@@ -254,15 +254,8 @@ block content
 
     body
         .container
-            .info
+            include itemInfo
             form(action='#{location}/peripheral', method='post' id='form')
-                .info
-                    a#button.button.cancel(href='#{location}/card?EmployeeID=#{peripheral.EmployeeID}') Back
-                    #go(onclick='go();') Submit
-                    br
-                h2 Peripheral
-                h3 #{employee.FirstName} #{employee.LastName}
-
                 div
                     .row
                         .col-25
