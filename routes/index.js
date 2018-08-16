@@ -1053,7 +1053,7 @@ router.get('/peripheral', function (req, res, next) {
             return database.query('Select * FROM Employee WHERE EmployeeID = ' + peripheral.EmployeeID)
         })
         .then(rows => {
-            employees = rows;
+            employee = rows;
             return database.query('SELECT DISTINCT Model FROM Peripheral');
         })
         .then(rows => {
