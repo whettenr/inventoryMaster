@@ -74,7 +74,8 @@ let showOptions = {
     Warranty: true,
     HomeCheckout: false,
     Rotation: true,
-    Notes: true
+    Notes: true,
+    History: false
 };
 
 
@@ -217,10 +218,10 @@ router.get('/computerTable', function (req, res, next) {
     if (filters.length > 0) {
         query += " WHERE ";
         for (let filter in filters) {
-            if(filters[filter].includes('EmployeeID') || filters[filter].includes('RotationGroup')){
+            if (filters[filter].includes('EmployeeID') || filters[filter].includes('RotationGroup')) {
                 query += 'Employee.'
             }
-            else if(filters[filter].includes('Processor') || filters[filter].includes('Memory') || filters[filter].includes('HardDrive') || filters[filter].includes('VCName')){
+            else if (filters[filter].includes('Processor') || filters[filter].includes('Memory') || filters[filter].includes('HardDrive') || filters[filter].includes('VCName')) {
                 query += 'Hardware.'
             }
             else {
@@ -254,19 +255,19 @@ router.get('/computerTable', function (req, res, next) {
     else if (req.query.sortby === 'dateAcquired') {
         query += ' ORDER BY DateAcquired';
     }
-    else if(req.query.sortby === 'processorType'){
+    else if (req.query.sortby === 'processorType') {
         query += ' ORDER BY ProcessorType';
     }
-    else if(req.query.sortby === 'processorSpeed'){
+    else if (req.query.sortby === 'processorSpeed') {
         query += ' ORDER BY ProcessorSpeed';
     }
-    else if(req.query.sortby === 'memory'){
+    else if (req.query.sortby === 'memory') {
         query += ' ORDER BY Memory';
     }
-    else if(req.query.sortby === 'hardDrive'){
+    else if (req.query.sortby === 'hardDrive') {
         query += ' ORDER BY HardDrive';
     }
-    else if(req.query.sortby === 'vcName'){
+    else if (req.query.sortby === 'vcName') {
         query += ' ORDER BY VCName';
     }
     else {
@@ -281,15 +282,17 @@ router.get('/computerTable', function (req, res, next) {
     }
     console.log(query);
 
-    if(req.query.hardware === 'true'){
+    if (req.query.hardware === 'true') {
         hardware = true;
     }
-    else if (req.query.hardware === 'false'){
+    else if (req.query.hardware === 'false') {
         hardware = false;
     }
 
-    let showOption = req.query.showOption;
-    showOptions[showOption] = !showOptions[showOption];
+    if (req.query.showOption) {
+        let showOption = req.query.showOption;
+        showOptions[showOption] = !showOptions[showOption];
+    }
     let actionButton = {};
     actionButton.href = 'computerShowOptions';
     actionButton.name = 'Show Options';
@@ -595,7 +598,12 @@ router.get('/employees', function (req, res, next) {
             employees = rows;
         })
         .then(() => {
-            res.render('employees', {title: 'Employees', employees: employees, user: JSON.parse(vault.read(req)), location});
+            res.render('employees', {
+                title: 'Employees',
+                employees: employees,
+                user: JSON.parse(vault.read(req)),
+                location
+            });
 
         })
         .catch(err => {
@@ -612,7 +620,12 @@ router.get('/otherSlots', function (req, res, next) {
             employees = rows;
         })
         .then(() => {
-            res.render('index', {title: 'Other Slots', employees: employees, user: JSON.parse(vault.read(req)), location});
+            res.render('index', {
+                title: 'Other Slots',
+                employees: employees,
+                user: JSON.parse(vault.read(req)),
+                location
+            });
 
         })
         .catch(err => {
@@ -705,6 +718,7 @@ router.get('/getProcessorOptions', function (req, res, next) {
     database.query('SELECT DISTINCT ProcessorType FROM Computer LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Model = ?', [Model])
         .then(rows => {
             processorOptions = rows;
+            processorOptions[processorOptions.length] = {ProcessorType: 'None'};
             processorOptions[processorOptions.length] = {ProcessorType: 'Add a New Option'};
 
             database.close();
@@ -726,6 +740,7 @@ router.get('/getProcessorSpeedOptions', function (req, res, next) {
     database.query('SELECT DISTINCT ProcessorSpeed FROM Computer LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE ProcessorType = ?', [ProcessorType])
         .then(rows => {
             processorSpeedOptions = rows;
+            processorSpeedOptions[processorSpeedOptions.length] = {ProcessorSpeed: 'None'};
             processorSpeedOptions[processorSpeedOptions.length] = {ProcessorSpeed: 'Add a New Option'};
 
             database.close();
@@ -747,6 +762,7 @@ router.get('/getMemoryOptions', function (req, res, next) {
     database.query('SELECT DISTINCT Memory FROM Computer LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Model = ?', [Model])
         .then(rows => {
             memoryOptions = rows;
+            memoryOptions[memoryOptions.length] = {Memory: 'None'};
             memoryOptions[memoryOptions.length] = {Memory: 'Add a New Option'};
 
             database.close();
@@ -768,6 +784,7 @@ router.get('/getHardDriveOptions', function (req, res, next) {
     database.query('SELECT DISTINCT HardDrive FROM Computer LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Model = ?', [Model])
         .then(rows => {
             hardDriveOptions = rows;
+            hardDriveOptions[hardDriveOptions.length] = {HardDrive: 'None'};
             hardDriveOptions[hardDriveOptions.length] = {HardDrive: 'Add a New Option'};
 
             database.close();
@@ -789,6 +806,7 @@ router.get('/getGraphicsCardOptions', function (req, res, next) {
     database.query('SELECT DISTINCT VCName FROM Computer LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Model = ?', [Model])
         .then(rows => {
             graphicsCardOptions = rows;
+            graphicsCardOptions[graphicsCardOptions.length] = {VCName: 'None'};
             graphicsCardOptions[graphicsCardOptions.length] = {VCName: 'Add a New Option'};
 
             database.close();
@@ -1265,8 +1283,8 @@ router.get('/newMonitor', function (req, res, next) {
     database.query('SELECT DISTINCT Make FROM Monitor')
         .then(rows => {
             makeOptions = rows;
-            makeOptions[makeOptions.length] = {Make:'None'};
-            makeOptions[makeOptions.length] = {Make:'Add a New Option'};
+            makeOptions[makeOptions.length] = {Make: 'None'};
+            makeOptions[makeOptions.length] = {Make: 'Add a New Option'};
             return database.query('Select * FROM Employee ORDER BY LastName');
         })
         .then(rows => {
@@ -1279,8 +1297,8 @@ router.get('/newMonitor', function (req, res, next) {
         })
         .then(rows => {
             modelOptions = rows;
-            modelOptions[modelOptions.length] = {Model:'None'};
-            modelOptions[modelOptions.length] = {Model:'Add a New Option'};
+            modelOptions[modelOptions.length] = {Model: 'None'};
+            modelOptions[modelOptions.length] = {Model: 'Add a New Option'};
             return database.query('SELECT * FROM Monitor ORDER BY ICN DESC LIMIT 1');
         })
         .then(rows => {
@@ -1887,7 +1905,7 @@ router.get('/search', function (req, res, next) {
             else if (peripheralRows.length === 1 && !employeeRows.length && !computerRows.length && !monitorRows.length && !printerRows.length) {
                 res.redirect(location + '/peripheral?ICN=' + peripheralRows[0].ICN + "&EmployeeID=" + peripheralRows[0].EmployeeID);
             }
-            else{
+            else {
                 res.render('card', {
                     employees: employeeRows,
                     computers: computerRows,
@@ -1907,13 +1925,28 @@ router.get('/search', function (req, res, next) {
 
 });
 
-router.get('/computerShowOptions', function(req, res, next) {
-        res.render('showOptions', {
-            showOptions,
-            title: 'Computer Show Options',
-            location,
-            user: JSON.parse(vault.read(req))
-        })
+router.get('/computerShowOptions', function (req, res, next) {
+    res.render('showOptions', {
+        showOptions,
+        title: 'Computer Show Options',
+        location,
+        user: JSON.parse(vault.read(req))
+    })
+});
+
+router.post('/computerShowOptions', function (req, res, next) {
+    console.log(req.body);
+    for (let showOption in req.body) {
+        console.log(showOption);
+        if(req.body[showOption] === 'true'){
+            req.body[showOption] = true;
+        }
+        else{
+            req.body[showOption] = false;
+        }
+    }
+    showOptions = req.body;
+    res.redirect(location + '/computerTable');
 });
 
 router.post('/newComputer', function (req, res, next) {

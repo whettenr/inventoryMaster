@@ -6,17 +6,7 @@ block content
         div
             | Sort By: #{sortby} #{order}
     include filters
-    br
-    #sidebarToggle.byu-button.navy(onclick='toggleSidebar()')
-        | Toggle Sidebar
-    br
-    #sidebar(style='width: 200px; display: none;')
-        div= "Count: " + Object.keys(computers).length
-        include showOptions
-        if(hardware)
-            a.byu-button.whitenavy(href='#{location}/computerTable?hardware=false') Hide Hardware
-        else
-            a.byu-button.whitenavy(href='#{location}/computerTable?hardware=true') View Hardware
+    div= "Count: " + Object.keys(computers).length
     div(style='overflow-x:auto;')
         table#table
             tbody

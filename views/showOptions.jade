@@ -1,14 +1,35 @@
 extends layout
 block content
     body
-        each showOption, i in showOptions
-            if(showOption)
-                div.byu-button.navy= i
-                    input(type='hidden' value=showOption)
-            else
-                div.byu-button.whitenavy(onclick='change(#{i});')= i
-                    input(type='hidden' id=i value='#{showOption}')
+        #showOptions(style='padding-left: 25px;')
+            form#form(action='#{location}/computerShowOptions' method='post')
+                each showOption, i in showOptions
+                    if(showOption)
+                        div.byu-button.navy(onclick='change(#{i})' id=i+'Div')= i
+                            input(type='hidden' id=i name=i value='#{showOption}')
+                        br
+                    else
+                        div.byu-button.whitenavy(onclick='change(#{i})' id=i+'Div')= i
+                            input(type='hidden' id=i name=i value='#{showOption}')
+                        br
+                div(style='max-width: 100px;')
+                    input.byu-button.green(type='submit' value='submit')
+
     script.
         function change(id){
-            console.log($("#" + id.id).val());
+            let showOptionDiv = $("#" + id.id + 'Div');
+            let showOption = $("#" + id.id);
+            if(showOption.val() === 'true'){
+                showOption.val('false');
+                console.log("in like the flin");
+                showOptionDiv.addClass('whitenavy');
+                showOptionDiv.removeClass('navy');
+            }
+            else{
+                showOption.val('true');
+                console.log('out');
+                showOptionDiv.removeClass('whitenavy');
+                showOptionDiv.addClass('navy');
+            }
+            console.log(showOption);
         }
