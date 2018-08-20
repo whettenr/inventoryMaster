@@ -40,15 +40,6 @@ module.exports = function (req, res, next) {
             goTo = '/'
         }
         let query = req.query;
-        // let count = 0;
-        // for (let i in query) {
-        //     if(count !== 0 && i !== 'ticket') {
-        //         console.log(i);
-        //         console.log(query[i]);
-        //         service += '?' + i + '=' + query[i];
-        //     }
-        //     count++;
-        // }
         cas.validate(ticket, service)
             .then(function success(response) {
                 console.log("Ticket valid! Hello, " + response.username);
@@ -87,18 +78,6 @@ module.exports = function (req, res, next) {
                 console.log(query[i]);
                 parameters += '?' + i + '=' + query[i];
             }
-            // axios.get('https://cas.byu.edu/cas/login?service=' + encodeURIComponent(URL + '/getTicket?goTo=' + goTo)
-            //     .then(function (response) {
-            //         // handle success
-            //         console.log(response);
-            //     })
-            //     .catch(function (error) {
-            //         // handle error
-            //         console.log(error);
-            //     })
-            //     .then(function () {
-            //         // always executed
-            //     });
             res.redirect('https://cas.byu.edu/cas/login?service=' + encodeURIComponent(URL + '/getTicket?goTo=' + goTo));
         }
         else {

@@ -76,19 +76,23 @@ block content
                         td= "Notes"
                     if(showOptions.History)
                         td= "History"
-                    if(hardware)
+                    if(showOptions.ProcessorType)
                         td
                             a(href='#{location}/computerTable?sortby=processorType&hardware=true&order=asc')
                                 div= "Processor Type"
+                    if(showOptions.ProcessorSpeed)
                         td
                             a(href='#{location}/computerTable?sortby=processorSpeed&hardware=true&order=asc')
                                 div= "Processor Speed"
+                    if(showOptions.Memory)
                         td
                             a(href='#{location}/computerTable?sortby=memory&hardware=true&order=asc')
                                 div= "Memory"
+                    if(showOptions.HardDrive)
                         td
                             a(href='#{location}/computerTable?sortby=hardDrive&hardware=true&order=asc')
                                 div= "Hard Drive"
+                    if(showOptions.VCName)
                         td
                             a(href='#{location}/computerTable?sortby=vcName&hardware=true&order=asc')
                                 div= "Graphics Card"
@@ -140,19 +144,23 @@ block content
                             td= computer.Notes
                         if(showOptions.History)
                             td= computer.History
-                        if(hardware)
+                        if(showOptions.ProcessorType)
                             td
                                 a(href='#{location}/computerTable?where=ProcessorType=\'#{computer.ProcessorType}\'')
                                     div= computer.ProcessorType
+                        if(showOptions.ProcessorSpeed)
                             td
                                 a(href='#{location}/computerTable?where=ProcessorSpeed=\'#{computer.ProcessorSpeed}\'')
                                     div= computer.ProcessorSpeed
+                        if(showOptions.Memory)
                             td
                                 a(href='#{location}/computerTable?where=Memory=\'#{computer.Memory}\'')
                                     div= computer.Memory
+                        if(showOptions.HardDrive)
                             td
                                 a(href='#{location}/computerTable?where=HardDrive=\'#{computer.HardDrive}\'')
                                     div= computer.HardDrive
+                        if(showOptions.VCName)
                             td
                                 a(href='#{location}/computerTable?where=VCName=\'#{computer.VCName}\'')
                                     div= computer.VCName

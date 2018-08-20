@@ -75,7 +75,12 @@ let showOptions = {
     HomeCheckout: false,
     Rotation: true,
     Notes: true,
-    History: false
+    History: false,
+    ProcessorType: false,
+    ProcessorSpeed: false,
+    Memory: false,
+    HardDrive: false,
+    VCName: false
 };
 
 
@@ -2024,9 +2029,25 @@ router.post('/form', function (req, res, next) {
     database.query("UPDATE Computer Set EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
         .then(rows => {
-            return database.close();
+            return database.query('SELECT * FROM Hardware WHERE ProcessorType = ? and ProcessorSpeed = ? and Memory = ? and HardDrive = ? and VCName = ?', [req.body.processorType, req.body.processorSpeed, req.body.memory, req.body.hardDrive, req.body.graphicsCard])
+        })
+        .then(rows => {
+            if(rows.length > 0){
+                if(rows[0].HardwareID !== req.body.HardwareID){
+                    return database.query('UPDATE Computer Set HardwareID = ? WHERE ICN = ?', [rows[0].HardwareID, req.body.icn]);
+                }
+            }
+            else if (rows.length === 0){
+                return database.query('INSERT INTO Hardware (ProcessorType, ProcessorSpeed, Memory, HardDrive, VCName) VALUES (?,?,?,?,?)', [req.body.processorType, req.body.processorSpeed, req.body.memory, req.body.hardDrive, req.body.graphicsCard]);
+            }
+        })
+        .then(rows => {
+            if(rows.insertId){
+                return database.query('UPDATE Computer Set HardwareID = ? WHERE ICN = ?', [rows.insertId, req.body.icn])
+            }
         })
         .then(() => {
+            database.close();
             res.redirect(location + '/card?EmployeeID=' + req.body.employeeId);
         })
         .catch(err => {

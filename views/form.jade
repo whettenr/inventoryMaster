@@ -125,6 +125,7 @@ block content
                         .col-75
                             textarea#history(name='history' style='height:200px' readonly='readonly')
                                 | #{computer.History}
+                    input(type='hidden' name='HardwareID' value='#{computer.HardwareID}')
     script.
         let icn = "#{computer.ICN}";
         let employee = "#{employee.FirstName} #{employee.LastName}";
