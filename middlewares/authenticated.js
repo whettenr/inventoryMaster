@@ -54,6 +54,7 @@ module.exports = function (req, res, next) {
                     // randomNumber=randomNumber.substring(2,randomNumber.length);
                     // res.cookie('user',randomNumber, { maxAge: 900000, httpOnly: true });
                     // req.session.user.maxAge = 24 * 60 * 60 * 1000;
+                    user.filters = [];
                     let json = JSON.stringify(user);
                     vault.write(req, json);
                     res.redirect(URL + goTo);

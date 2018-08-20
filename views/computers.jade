@@ -96,6 +96,9 @@ block content
                         td
                             a(href='#{location}/computerTable?sortby=vcName&hardware=true&order=asc')
                                 div= "Graphics Card"
+                    if(showOptions.surplus)
+                        td
+                            div= "Surplus"
                 each computer in computers
                     tr
                         td
@@ -164,10 +167,39 @@ block content
                             td
                                 a(href='#{location}/computerTable?where=VCName=\'#{computer.VCName}\'')
                                     div= computer.VCName
+                        if(showOptions.surplus)
+                            if(computer.Surplussing === 0)
+                                td
+                                    button.byu-button.red(onclick='surplus(#{computer.ICN})' id='surplusButton#{computer.ICN}') Surplus
+                            else
+                                td
+                                    button.byu-button.red(onclick='undo(#{computer.ICN})' id='surplusButton#{computer.ICN}') Undo
     script.
-        function toggleSidebar(){
+        function toggleSidebar() {
             $("#sidebar").slideToggle();
         }
         function getComputerInfo(ICN, EmployeeID) {
             window.location.href = '#{location}/computer?EmployeeID=' + EmployeeID + '&ICN=' + ICN;
+        }
+
+        function surplus(ICN) {
+            $.ajax({
+                type: "GET",
+                url: "#{location}/finnaSurplus?table=Computer&ICN=" + ICN,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#surplusButton" + ICN).html('Undo');
+                $("#surplusButton" + ICN).attr("onclick", "undo(" + ICN + ")");
+            });
+        }
+
+        function undo(ICN) {
+            $.ajax({
+                type: "GET",
+                url: "#{location}/undoFinnaSurplus?table=Computer&ICN=" + ICN,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#surplusButton" + ICN).html('Surplus');
+                $("#surplusButton" + ICN).attr("onclick", "surplus(" + ICN + ")");
+            });
         }

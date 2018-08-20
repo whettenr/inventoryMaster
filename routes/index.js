@@ -80,7 +80,8 @@ let showOptions = {
     ProcessorSpeed: false,
     Memory: false,
     HardDrive: false,
-    VCName: false
+    VCName: false,
+    surplus: false
 };
 
 
@@ -196,6 +197,8 @@ router.get('/computerTable', function (req, res, next) {
     let connection = mysql.createConnection(config.getConfig());
     let database = new Database(config.getConfig());
     let computers = {};
+    // let user = JSON.parse(vault.read(req));
+    // let filters = user.filters;
 
     let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.EmployeeID LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID ';
     if (req.query.remove) {
@@ -218,6 +221,8 @@ router.get('/computerTable', function (req, res, next) {
         }
         if (check) {
             filters.push(req.query.where);
+            // user.filters = filters;
+            // vault.write(JSON.stringify(req, user));
         }
     }
     if (filters.length > 0) {
@@ -1939,14 +1944,43 @@ router.get('/computerShowOptions', function (req, res, next) {
     })
 });
 
+router.get('/finnaSurplus', function (req, res, next) {
+    let database = new Database(config.getConfig());
+    let ICN = req.query.ICN;
+    let table = req.query.table;
+    database.query('UPDATE ' + table + ' SET Surplussing = 1 WHERE ICN = ' + ICN)
+        .then(rows => {
+            database.close();
+            res.send('OK');
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
+router.get('/undoFinnaSurplus', function (req, res, next) {
+    let database = new Database(config.getConfig());
+    let ICN = req.query.ICN;
+    let table = req.query.table;
+    database.query('UPDATE ' + table + ' SET Surplussing = 0 WHERE ICN = ' + ICN)
+        .then(rows => {
+            database.close();
+            res.send('OK');
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
+
 router.post('/computerShowOptions', function (req, res, next) {
     console.log(req.body);
     for (let showOption in req.body) {
         console.log(showOption);
-        if(req.body[showOption] === 'true'){
+        if (req.body[showOption] === 'true') {
             req.body[showOption] = true;
         }
-        else{
+        else {
             req.body[showOption] = false;
         }
     }
@@ -2032,17 +2066,17 @@ router.post('/form', function (req, res, next) {
             return database.query('SELECT * FROM Hardware WHERE ProcessorType = ? and ProcessorSpeed = ? and Memory = ? and HardDrive = ? and VCName = ?', [req.body.processorType, req.body.processorSpeed, req.body.memory, req.body.hardDrive, req.body.graphicsCard])
         })
         .then(rows => {
-            if(rows.length > 0){
-                if(rows[0].HardwareID !== req.body.HardwareID){
+            if (rows.length > 0) {
+                if (rows[0].HardwareID !== req.body.HardwareID) {
                     return database.query('UPDATE Computer Set HardwareID = ? WHERE ICN = ?', [rows[0].HardwareID, req.body.icn]);
                 }
             }
-            else if (rows.length === 0){
+            else if (rows.length === 0) {
                 return database.query('INSERT INTO Hardware (ProcessorType, ProcessorSpeed, Memory, HardDrive, VCName) VALUES (?,?,?,?,?)', [req.body.processorType, req.body.processorSpeed, req.body.memory, req.body.hardDrive, req.body.graphicsCard]);
             }
         })
         .then(rows => {
-            if(rows.insertId){
+            if (rows.insertId) {
                 return database.query('UPDATE Computer Set HardwareID = ? WHERE ICN = ?', [rows.insertId, req.body.icn])
             }
         })
