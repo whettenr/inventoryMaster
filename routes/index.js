@@ -1699,80 +1699,7 @@ router.get('/logout', function (req, res) {
 });
 
 router.get('/', function (req, res, next) {
-    let database = new Database(config.getConfig());
-    if (req.query.clear) {
-        employeeFilters = [];
-    }
-    let query = 'Select Employee.EmployeeID, Employee.FirstName, Employee.LastName, Employee.Category, Employee.Office, Employee.Building, Employee.UserName, Employee.Email, Employee.RotationGroup, Employee.`Employee Notes`, Computer.DateAcquired FROM Employee LEFT JOIN Computer ON Employee.EmployeeID = Computer.EmployeeID';
-    if (req.query.remove) {
-        let splice = parseInt(req.query.remove);
-        employeeFilters.splice(splice, 1);
-    }
-    if (req.query.not) {
-        if (employeeFilters[req.query.not].includes('!='))
-            employeeFilters[req.query.not] = employeeFilters[req.query.not].replace('!=', '=');
-        else
-            employeeFilters[req.query.not] = employeeFilters[req.query.not].replace('=', '!=');
-    }
-    if (req.query.where) {
-        let check = true;
-        for (let i = 0; i < employeeFilters.length; i++) {
-            if (employeeFilters[i] === req.query.where) {
-                check = false;
-            }
-        }
-        if (check) {
-            employeeFilters.push(req.query.where);
-        }
-    }
-    query += " WHERE Type = 'On Rotation'";
-    if (req.query.sortby === 'employeeId') {
-        query += ' Order BY Employee.EmployeeID';
-    }
-    else if (req.query.sortby === 'firstName') {
-        query += ' ORDER BY Employee.FirstName';
-    }
-    else if (req.query.sortby === 'lastName') {
-        query += ' ORDER BY Employee.LastName';
-    }
-    else if (req.query.sortby === 'rotationGroup') {
-        query += ' ORDER BY Employee.RotationGroup';
-    }
-    else if (req.query.sortby === 'dateSwitched') {
-        query += ' ORDER BY Employee.DateSwitched';
-    }
-    else {
-        query += ' Order BY Employee.EmployeeID';
-    }
-
-    let employees = {};
-    let actionButton = {};
-    actionButton.href = 'employeesTable';
-    actionButton.name = 'View All Employees';
-    finalQuery = query;
-
-    database.query(query)
-        .then(rows => {
-            employees = rows;
-            // for(let i in employees){
-            //     employees[i].DateSwitched = new Date(employees[i].DateSwitched);
-            // }
-            // console.log("test");
-        })
-        .then(() => {
-            let user = JSON.parse(vault.read(req));
-            res.render('index', {
-                title: 'Welcome to Inventory',
-                actionButton,
-                employees: employees,
-                filters: {},
-                user: JSON.parse(vault.read(req)),
-                location
-            });
-        })
-        .catch(err => {
-            throw(err);
-        })
+    res.redirect(location + '/employeesTable');
 });
 
 router.get('/jsbSurplus', function (req, res, next) {
@@ -1852,9 +1779,9 @@ router.get('/updateDates', function (req, res, next) {
                     stuff += "UPDATE Employee SET DateSwitched = '";
                     stuff += datesAcquired[i].DateAcquired;
                     // stuff += newDate;
-                    stuff += "' WHERE EmployeeID = '";
+                    stuff += "' WHERE EmployeeID = ";
                     stuff += datesAcquired[i].EmployeeID;
-                    stuff += "';\n";
+                    stuff += ";\n";
                 }
             }
         })
