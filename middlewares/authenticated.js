@@ -149,7 +149,7 @@ module.exports = function (req, res, next) {
                     console.log(user.netId);
                     database.query('SELECT * FROM Filters WHERE user = \'' + user.netId + '\'')
                         .then(rows => {
-                            console.log(rows);
+                            console.log(rows.length);
                             if (rows.length === 0) {
                                 return database.query('INSERT INTO Filters (user, filters, monitorFilters, printerFilters, peripheralFilters, computerShowOptions, monitorShowOptions, printerShowOptions, peripheralShowOptions) VALUES (?,?,?,?,?,?,?,?,?)', [user.netId, '', '', '', '', JSON.stringify(defaultComputerShowOptions), JSON.stringify(defaultMonitorShowOptions), JSON.stringify(defaultPrinterShowOptions), JSON.stringify(defaultPeripheralShowOptions)])
                             }
