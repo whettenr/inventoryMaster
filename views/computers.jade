@@ -96,7 +96,7 @@ block content
                         td
                             a(href='#{location}/computerTable?sortby=vcName&hardware=true&order=asc')
                                 div= "Graphics Card"
-                    if(showOptions.surplus)
+                    if(showOptions.Surplus)
                         td
                             div= "Surplus"
                 each computer in computers
@@ -167,7 +167,7 @@ block content
                             td
                                 a(href='#{location}/computerTable?where=VCName=\'#{computer.VCName}\'')
                                     div= computer.VCName
-                        if(showOptions.surplus)
+                        if(showOptions.Surplus)
                             if(computer.Surplussing === 0)
                                 td
                                     button.byu-button.red(onclick='surplus(#{computer.ICN})' id='surplusButton#{computer.ICN}') Surplus

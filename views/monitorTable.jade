@@ -1,0 +1,114 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='#{location}/stylesheets/table.css')
+    include filters
+    div= "Count: " + Object.keys(monitors).length
+    div(style='overflow-x:auto;')
+        table#table
+            tbody
+                tr#myHeader
+                    td
+                        a(href='#{location}/monitorTable?sortby=ICN')
+                            div='ICN'
+                    if(showOptions.FirstName)
+                        td
+                            a(href='#{location}/monitorTable?sortby=firstname')
+                                div= "First Name"
+                    if(showOptions.LastName)
+                        td
+                            a(href='#{location}/monitorTable?sortby=lastName')
+                                div= "Last Name"
+                    if(showOptions.Make)
+                        td
+                            a(href='#{location}/monitorTable?sortby=Make')
+                                div= "Make"
+                    if(showOptions.Model)
+                        td
+                            a(href='#{location}/monitorTable?sortby=Model')
+                                div= "Model"
+                    if(showOptions.SerialNumber)
+                        td= "Serial Number"
+                    if(showOptions.DateAcquired)
+                        td
+                            a(href='#{location}/monitorTable?sortby=DateAcquired')
+                                div= "Date Acquired"
+                    if(showOptions.Warranty)
+                        td= "Warranty"
+                    if(showOptions.HomeCheckout)
+                        td= "Home Checkout"
+                    if(showOptions.Notes)
+                        td= "Notes"
+                    if(showOptions.Surplus)
+                        td
+                            div= "Surplus"
+                each monitor in monitors
+                    tr
+                        td
+                            a(href='#{location}/monitor?ICN=' + monitor.ICN)
+                                div= monitor.ICN
+                                //i(class="material-icons") laptop
+                        if(showOptions.FirstName)
+                            td
+                                a(href='#{location}/monitorTable?where=EmployeeID=#{monitor.EmployeeID}')
+                                    div= monitor.FirstName
+                        if(showOptions.LastName)
+                            td
+                                a(href='#{location}/monitorTable?where=EmployeeID=#{monitor.EmployeeID}')
+                                    div= monitor.LastName
+                        if(showOptions.Make)
+                            td
+                                a(href='#{location}/monitorTable?where=Make=\'#{monitor.Make}\'')
+                                    div= monitor.Make
+                        if(showOptions.Model)
+                            td
+                                a(href='#{location}/monitorTable?where=Model=\'#{monitor.Model}\'')
+                                    div= monitor.Model
+                        if(showOptions.SerialNumber)
+                            td= monitor.SerialNumber
+                        if(showOptions.DateAcquired)
+                            td= monitor.DateAcquired
+                        if(showOptions.Warranty)
+                            td= monitor.Warranty
+                        if(showOptions.HomeCheckout)
+                            td
+                                a(href='#{location}/monitorTable?where=HomeCheckout=\'#{monitor.HomeCheckout}\'')
+                                    div= monitor.HomeCheckout
+                        if(showOptions.Notes)
+                            td= monitor.Notes
+                        if(showOptions.Surplus)
+                            if(monitor.Surplussing === 0)
+                                td
+                                    button.byu-button.red(onclick='surplus(#{monitor.ICN})' id='surplusButton#{monitor.ICN}') Surplus
+                            else
+                                td
+                                    button.byu-button.red(onclick='undo(#{monitor.ICN})' id='surplusButton#{monitor.ICN}') Undo
+    script.
+
+        function getMonitorInfo(ICN, EmployeeID) {
+            window.location.href = "#{location}/monitor?ICN=" + ICN + '&EmployeeID=' + EmployeeID;
+        }
+
+        function surplus(ICN) {
+            $.ajax({
+                type: "GET",
+                url: "#{location}/finnaSurplus?table=Monitor&ICN=" + ICN,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#surplusButton" + ICN).html('Undo');
+                $("#surplusButton" + ICN).attr("onclick", "undo(" + ICN + ")");
+            });
+        }
+
+        function undo(ICN) {
+            $.ajax({
+                type: "GET",
+                url: "#{location}/undoFinnaSurplus?table=Monitor&ICN=" + ICN,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#surplusButton" + ICN).html('Surplus');
+                $("#surplusButton" + ICN).attr("onclick", "surplus(" + ICN + ")");
+            });
+        }
+
+

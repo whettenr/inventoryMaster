@@ -53,36 +53,13 @@ let location = config.getLocation();
 //     userRouter);
 
 
-let filters = [];
-let monitorFilters = [];
+// let filters = [];
+// let monitorFilters = [];
 let employeeFilters = [];
 let printerFilters = [];
 let peripheralFilters = [];
 let finalQuery = "";
 let hardware = false;
-let showOptions = {
-    ICN: true,
-    FirstName: true,
-    LastName: true,
-    Make: true,
-    Model: true,
-    SerialNumber: false,
-    ServiceTag: false,
-    ExpressServiceCode: false,
-    Type: true,
-    DateAcquired: true,
-    Warranty: true,
-    HomeCheckout: false,
-    Rotation: true,
-    Notes: true,
-    History: false,
-    ProcessorType: false,
-    ProcessorSpeed: false,
-    Memory: false,
-    HardDrive: false,
-    VCName: false,
-    surplus: false
-};
 
 
 function checkUser(user) {
@@ -194,123 +171,131 @@ router.get('/employeesTable', function (req, res, next) {
 });
 
 router.get('/computerTable', function (req, res, next) {
-    let connection = mysql.createConnection(config.getConfig());
     let database = new Database(config.getConfig());
     let computers = {};
-    // let user = JSON.parse(vault.read(req));
+    let user = JSON.parse(vault.read(req));
     // let filters = user.filters;
-
-    let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.EmployeeID LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID ';
-    if (req.query.remove) {
-        let splice = parseInt(req.query.remove);
-        filters.splice(splice, 1);
-
-    }
-    if (req.query.not) {
-        if (filters[req.query.not].includes('!='))
-            filters[req.query.not] = filters[req.query.not].replace('!=', '=');
-        else
-            filters[req.query.not] = filters[req.query.not].replace('=', '!=');
-    }
-    if (req.query.where) {
-        let check = true;
-        for (let i = 0; i < filters.length; i++) {
-            if (filters[i] === req.query.where) {
-                check = false;
+    let filterQuery = 'SELECT * FROM Filters WHERE user = \'' + user.netId + '\'';
+    let filters = [];
+    let actionButton = {};
+    let showOptions = {};
+    database.query(filterQuery)
+        .then(rows => {
+            showOptions = JSON.parse(rows[0].computerShowOptions);
+            if(rows[0].filters !== ""){
+                filters = rows[0].filters.split(',');
             }
-        }
-        if (check) {
-            filters.push(req.query.where);
-            // user.filters = filters;
-            // vault.write(JSON.stringify(req, user));
-        }
-    }
-    if (filters.length > 0) {
-        query += " WHERE ";
-        for (let filter in filters) {
-            if (filters[filter].includes('EmployeeID') || filters[filter].includes('RotationGroup')) {
-                query += 'Employee.'
+        })
+        .then(() => {
+            let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.EmployeeID LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID ';
+            if (req.query.remove) {
+                let splice = parseInt(req.query.remove);
+                filters.splice(splice, 1);
+
             }
-            else if (filters[filter].includes('Processor') || filters[filter].includes('Memory') || filters[filter].includes('HardDrive') || filters[filter].includes('VCName')) {
-                query += 'Hardware.'
+            if (req.query.not) {
+                if (filters[req.query.not].includes('!='))
+                    filters[req.query.not] = filters[req.query.not].replace('!=', '=');
+                else
+                    filters[req.query.not] = filters[req.query.not].replace('=', '!=');
+            }
+            if (req.query.where) {
+                let check = true;
+                for (let i = 0; i < filters.length; i++) {
+                    if (filters[i] === req.query.where) {
+                        check = false;
+                    }
+                }
+                if (check) {
+                    filters.push(req.query.where);
+                    // user.filters = filters;
+                    // vault.write(JSON.stringify(req, user));
+                }
+            }
+            if (filters.length > 0) {
+                query += " WHERE ";
+                for (let filter in filters) {
+                    if (filters[filter].includes('EmployeeID') || filters[filter].includes('RotationGroup')) {
+                        query += 'Employee.'
+                    }
+                    else if (filters[filter].includes('Processor') || filters[filter].includes('Memory') || filters[filter].includes('HardDrive') || filters[filter].includes('VCName')) {
+                        query += 'Hardware.'
+                    }
+                    else {
+                        query += 'Computer.'
+                    }
+                    query += filters[filter];
+                    query += ' and ';
+                }
+                query = query.substr(0, query.length - 5);
+            }
+
+            if (req.query.sortby === 'ICN') {
+                query += ' Order BY ICN';
+            }
+            else if (req.query.sortby === 'EmployeeID') {
+                query += ' ORDER BY EmployeeID';
+            }
+            else if (req.query.sortby === 'Make') {
+                query += ' ORDER BY Make';
+            }
+            else if (req.query.sortby === 'Model') {
+                query += ' ORDER BY Model';
+            }
+            else if (req.query.sortby === 'firstname') {
+                query += ' ORDER BY FirstName';
+            }
+            else if (req.query.sortby === 'lastname') {
+                query += ' ORDER BY LastName';
+            }
+            else if (req.query.sortby === 'dateAcquired') {
+                query += ' ORDER BY DateAcquired';
+            }
+            else if (req.query.sortby === 'processorType') {
+                query += ' ORDER BY ProcessorType';
+            }
+            else if (req.query.sortby === 'processorSpeed') {
+                query += ' ORDER BY ProcessorSpeed';
+            }
+            else if (req.query.sortby === 'memory') {
+                query += ' ORDER BY Memory';
+            }
+            else if (req.query.sortby === 'hardDrive') {
+                query += ' ORDER BY HardDrive';
+            }
+            else if (req.query.sortby === 'vcName') {
+                query += ' ORDER BY VCName';
             }
             else {
-                query += 'Computer.'
+                query += ' Order BY ICN';
             }
-            query += filters[filter];
-            query += ' and ';
-            console.log(filter);
-        }
-        query = query.substr(0, query.length - 5);
-    }
 
-    if (req.query.sortby === 'ICN') {
-        query += ' Order BY ICN';
-    }
-    else if (req.query.sortby === 'EmployeeID') {
-        query += ' ORDER BY EmployeeID';
-    }
-    else if (req.query.sortby === 'Make') {
-        query += ' ORDER BY Make';
-    }
-    else if (req.query.sortby === 'Model') {
-        query += ' ORDER BY Model';
-    }
-    else if (req.query.sortby === 'firstname') {
-        query += ' ORDER BY FirstName';
-    }
-    else if (req.query.sortby === 'lastname') {
-        query += ' ORDER BY LastName';
-    }
-    else if (req.query.sortby === 'dateAcquired') {
-        query += ' ORDER BY DateAcquired';
-    }
-    else if (req.query.sortby === 'processorType') {
-        query += ' ORDER BY ProcessorType';
-    }
-    else if (req.query.sortby === 'processorSpeed') {
-        query += ' ORDER BY ProcessorSpeed';
-    }
-    else if (req.query.sortby === 'memory') {
-        query += ' ORDER BY Memory';
-    }
-    else if (req.query.sortby === 'hardDrive') {
-        query += ' ORDER BY HardDrive';
-    }
-    else if (req.query.sortby === 'vcName') {
-        query += ' ORDER BY VCName';
-    }
-    else {
-        query += ' Order BY ICN';
-    }
+            if (req.query.order === 'asc') {
+                query += ' ASC';
+            }
+            else if (req.query.order === 'dsc') {
+                query += ' DESC';
+            }
+            console.log(query);
 
-    if (req.query.order === 'asc') {
-        query += ' ASC';
-    }
-    else if (req.query.order === 'dsc') {
-        query += ' DESC';
-    }
-    console.log(query);
+            if (req.query.hardware === 'true') {
+                hardware = true;
+            }
+            else if (req.query.hardware === 'false') {
+                hardware = false;
+            }
 
-    if (req.query.hardware === 'true') {
-        hardware = true;
-    }
-    else if (req.query.hardware === 'false') {
-        hardware = false;
-    }
-
-    if (req.query.showOption) {
-        let showOption = req.query.showOption;
-        showOptions[showOption] = !showOptions[showOption];
-    }
-    let actionButton = {};
-    actionButton.href = 'computerShowOptions';
-    actionButton.name = 'Show Options';
-
-
-    database.query(query)
+            if (req.query.showOption) {
+                let showOption = req.query.showOption;
+                showOptions[showOption] = !showOptions[showOption];
+            }
+            actionButton.href = 'showOptions?table=computer';
+            actionButton.name = 'Show Options';
+            return database.query(query);
+        })
         .then(rows => {
             computers = rows;
+            return database.query('UPDATE Filters SET filters = "' + filters.toString() + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
             res.render('computers', {
@@ -331,87 +316,99 @@ router.get('/computerTable', function (req, res, next) {
         .catch(err => {
             console.log(err);
         });
-
-
 });
 
-router.get('/monitorsTable', function (req, res, next) {
-    let connection = mysql.createConnection(config.getConfig());
+router.get('/monitorTable', function (req, res, next) {
     let database = new Database(config.getConfig());
     let monitors = {};
+    let actionButton = {};
+    let user = JSON.parse(vault.read(req));
 
-    let query = 'SELECT * FROM Monitor LEFT JOIN Employee on Monitor.EmployeeID = Employee.employeeId';
-    if (req.query.remove) {
-        let splice = parseInt(req.query.remove);
-        monitorFilters.splice(splice, 1);
-
-    }
-    if (req.query.not) {
-        if (monitorFilters[req.query.not].includes('!='))
-            monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('!=', '=');
-        else
-            monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('=', '!=');
-    }
-    if (req.query.where) {
-        let check = true;
-        for (let i = 0; i < monitorFilters.length; i++) {
-            if (monitorFilters[i] === req.query.where) {
-                check = false;
+    let filterQuery = 'SELECT * FROM Filters WHERE user = \'' + user.netId + '\'';
+    let monitorFilters = [];
+    let showOptions = {};
+    database.query(filterQuery)
+        .then(rows => {
+            showOptions = JSON.parse(rows[0].monitorShowOptions);
+            if(rows[0].monitorFilters !== ""){
+                monitorFilters = rows[0].monitorFilters.split(',');
             }
-        }
-        if (check) {
-            monitorFilters.push(req.query.where);
-        }
-    }
-    if (monitorFilters.length > 0) {
-        query += " WHERE Monitor.";
-        for (let filter in monitorFilters) {
-            query += monitorFilters[filter];
-            query += ' and Monitor.';
-            console.log(filter);
-        }
-        query = query.substr(0, query.length - 13);
-    }
+            actionButton.href = 'showOptions?table=monitor';
+            actionButton.name = 'Show Options';
+            let query = 'SELECT * FROM Monitor LEFT JOIN Employee on Monitor.EmployeeID = Employee.employeeId';
+            if (req.query.remove) {
+                let splice = parseInt(req.query.remove);
+                monitorFilters.splice(splice, 1);
 
-    if (req.query.sortby === 'ICN') {
-        query += ' Order BY ICN';
-    }
-    else if (req.query.sortby === 'EmployeeID') {
-        query += ' ORDER BY EmployeeID';
-    }
-    else if (req.query.sortby === 'Make') {
-        query += ' ORDER BY Make';
-    }
-    else if (req.query.sortby === 'Model') {
-        query += ' ORDER BY Model';
-    }
-    else if (req.query.sortby === 'firstName') {
-        query += ' ORDER BY firstName';
-    }
-    else if (req.query.sortby === 'DateAcquired') {
-        query += ' ORDER BY DateAcquired';
-    }
-    else if (req.query.sortby === 'lastName') {
-        query += ' ORDER BY lastName';
-    }
-    else {
-        query += ' Order BY ICN';
-    }
-    console.log(query);
+            }
+            if (req.query.not) {
+                if (monitorFilters[req.query.not].includes('!='))
+                    monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('!=', '=');
+                else
+                    monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('=', '!=');
+            }
+            if (req.query.where) {
+                let check = true;
+                for (let i = 0; i < monitorFilters.length; i++) {
+                    if (monitorFilters[i] === req.query.where) {
+                        check = false;
+                    }
+                }
+                if (check) {
+                    monitorFilters.push(req.query.where);
+                }
+            }
+            if (monitorFilters.length > 0) {
+                query += " WHERE Monitor.";
+                for (let filter in monitorFilters) {
+                    query += monitorFilters[filter];
+                    query += ' and Monitor.';
+                    console.log(filter);
+                }
+                query = query.substr(0, query.length - 13);
+            }
 
-
-    database.query(query)
+            if (req.query.sortby === 'ICN') {
+                query += ' Order BY ICN';
+            }
+            else if (req.query.sortby === 'EmployeeID') {
+                query += ' ORDER BY EmployeeID';
+            }
+            else if (req.query.sortby === 'Make') {
+                query += ' ORDER BY Make';
+            }
+            else if (req.query.sortby === 'Model') {
+                query += ' ORDER BY Model';
+            }
+            else if (req.query.sortby === 'firstName') {
+                query += ' ORDER BY firstName';
+            }
+            else if (req.query.sortby === 'DateAcquired') {
+                query += ' ORDER BY DateAcquired';
+            }
+            else if (req.query.sortby === 'lastName') {
+                query += ' ORDER BY lastName';
+            }
+            else {
+                query += ' Order BY ICN';
+            }
+            console.log(query);
+            return database.query(query);
+        })
         .then(rows => {
             monitors = rows;
+            return database.query('UPDATE Filters SET monitorfilters = "' + monitorFilters.toString() + '"');
         })
         .then(() => {
-            res.render('monitorsTable', {
+            res.render('monitorTable', {
                 title: 'Monitors',
-                table: 'monitorsTable',
+                table: 'monitorTable',
                 monitors: monitors,
                 filters: monitorFilters,
                 user: JSON.parse(vault.read(req)),
                 download: monitors,
+                showOptions,
+                actionButton,
                 location
             });
         })
@@ -1935,13 +1932,32 @@ router.get('/search', function (req, res, next) {
 
 });
 
-router.get('/computerShowOptions', function (req, res, next) {
-    res.render('showOptions', {
-        showOptions,
-        title: 'Computer Show Options',
-        location,
-        user: JSON.parse(vault.read(req))
-    })
+router.get('/showOptions', function (req, res, next) {
+    let database = new Database(config.getConfig());
+    let user = JSON.parse(vault.read(req));
+    let table = req.query.table;
+    let properTable = '';
+    if(table === 'computer'){
+        properTable = 'Computer';
+    }
+    else if(table === 'monitor'){
+        properTable = 'Monitor';
+    }
+    database.query('SELECT * FROM Filters WHERE User = \'' + user.netId + '\'')
+        .then(rows => {
+            let showOptions = JSON.parse(rows[0][table + 'ShowOptions']);
+            res.render('showOptions', {
+                showOptions,
+                title: table + ' Show Options',
+                table: properTable,
+                location,
+                user: JSON.parse(vault.read(req))
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
 });
 
 router.get('/finnaSurplus', function (req, res, next) {
@@ -1972,20 +1988,29 @@ router.get('/undoFinnaSurplus', function (req, res, next) {
         });
 });
 
-
-router.post('/computerShowOptions', function (req, res, next) {
-    console.log(req.body);
+router.post('/showOptions', function (req, res, next) {
+    let database = new Database(config.getConfig());
+    let user = JSON.parse(vault.read(req));
+    let table = req.body.table;
+    let showOptions = {};
     for (let showOption in req.body) {
-        console.log(showOption);
-        if (req.body[showOption] === 'true') {
-            req.body[showOption] = true;
-        }
-        else {
-            req.body[showOption] = false;
+        if(showOption !== 'table'){
+            if(req.body[showOption] === 'true') {
+                showOptions[showOption] = true;
+            }
+            else {
+                showOptions[showOption] = false;
+            }
         }
     }
-    showOptions = req.body;
-    res.redirect(location + '/computerTable');
+
+    database.query('UPDATE Filters SET ' + table + 'ShowOptions = \'' + JSON.stringify(showOptions) + '\' WHERE User = \'' + user.netId + '\'')
+        .then(rows => {
+            res.redirect(location + '/' + table + 'Table');
+        })
+        .catch(err => {
+            console.log(err);
+        })
 });
 
 router.post('/newComputer', function (req, res, next) {

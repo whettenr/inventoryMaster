@@ -35,50 +35,9 @@ html
             byu-menu(slot="nav", collapsed="")
                 a(href="#{location}/") Employees
                 a(href="#{location}/computerTable") Computers
-                a(href="#{location}/monitorsTable") Monitors
+                a(href="#{location}/monitorTable") Monitors
                 a(href="#{location}/printerTable") Printers
                 a(href="#{location}/peripheralTable") Peripherals
                 a(href="#{location}/jsbSurplus") JSB Storage
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
         block content
-    script.
-        function dragStart(event) {
-            console.log(event.target);
-            event.dataTransfer.setData("Text", event.target.innerHTML);
-        }
-
-        function allowDrop(event) {
-            event.target.style.backgroundColor = 'red';
-            event.preventDefault();
-        }
-        function stop(event) {
-            document.getElementById("mySidebar").style.display = "none";
-        }
-
-        function dragLeave(event) {
-            event.target.style.backgroundColor = '#ffffff';
-        }
-
-        function dragging(event) {
-            document.getElementById("mySidebar").style.width = "25%";
-            document.getElementById("mySidebar").style.display = "block";
-        }
-
-        function drop(event) {
-            event.preventDefault();
-            var data = event.dataTransfer.getData("Text");
-            //        event.target.appendChild(document.getElementById(data));
-            console.log(event);
-            document.getElementById("demo").innerHTML = data + " Was moved to " + event.target.innerHTML;
-        }
-
-        function w3_open() {
-            document.getElementById("mySidebar").style.width = "25%";
-            document.getElementById("mySidebar").style.display = "block";
-        }
-        function w3_close() {
-            console.log('closer');
-            document.getElementById("mySidebar").style.display = "none";
-        }
-
-

@@ -2,7 +2,7 @@ extends layout
 block content
     body
         #showOptions(style='padding-left: 25px;')
-            form#form(action='#{location}/computerShowOptions' method='post')
+            form#form(action='#{location}/showOptions' method='post')
                 each showOption, i in showOptions
                     if(showOption)
                         div.byu-button.navy(onclick='change(#{i})' id=i+'Div')= i
@@ -12,10 +12,14 @@ block content
                         div.byu-button.whitenavy(onclick='change(#{i})' id=i+'Div')= i
                             input(type='hidden' id=i name=i value='#{showOption}')
                         br
+                input(type='hidden' name='table' value='#{table}')
                 div(style='max-width: 100px;')
-                    input.byu-button.green(type='submit' value='submit')
+                    button.byu-button.green(onclick='submit()')= 'Submit'
 
     script.
+        function submit(){
+            $("#form").submit();
+        }
         function change(id){
             let showOptionDiv = $("#" + id.id + 'Div');
             let showOption = $("#" + id.id);
