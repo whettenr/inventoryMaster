@@ -146,6 +146,7 @@ module.exports = function (req, res, next) {
                         "Surplus": false
                     };
                     let database = new Database(config.getConfig());
+                    console.log(user.netId);
                     database.query('SELECT * FROM Filters WHERE user = \'' + user.netId + '\'')
                         .then(rows => {
                             if (rows.length === 0) {
