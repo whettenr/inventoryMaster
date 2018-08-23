@@ -88,6 +88,18 @@ block content
                             span.slider.round
                 .row
                     .col-25
+                        label(for='touch') Touch:
+                    .col-75
+                            label.switch
+                                input#touch(type='checkbox', name='touch')
+                                span.slider.round
+                .row
+                    .col-25
+                        label(for='screenResolution') Screen Resolution:
+                    .col-75
+                        input#screenResolution(type='text' name='screenResolution', placeholder='3840x2160')
+                .row
+                    .col-25
                         label(for='processorType') Processor Type:
                     .col-75
                         select#processorType.custom-select.sources(name='processorType' onchange='newProcessorType();')
