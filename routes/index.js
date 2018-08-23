@@ -230,7 +230,7 @@ router.get('/computerTable', function (req, res, next) {
                     if (filters[filter].includes('EmployeeID') || filters[filter].includes('RotationGroup')) {
                         query += 'Employee.'
                     }
-                    else if (filters[filter].includes('Processor') || filters[filter].includes('Memory') || filters[filter].includes('HardDrive') || filters[filter].includes('VCName')) {
+                    else if (filters[filter].includes('Processor') || filters[filter].includes('Memory') || filters[filter].includes('HardDrive') || filters[filter].includes('VCName') || filters[filter].includes('Touch') || filters[filter].includes('ScreenResolution')) {
                         query += 'Hardware.'
                     }
                     else {
