@@ -44,6 +44,18 @@ let URL = config.getURL();
 
 let location = config.getLocation();
 
+function getCurrentDate(){
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    if (month.toString().length === 1)
+        month = "0" + month;
+    if (day.toString().length === 1)
+        day = "0" + day;
+    let newDate = date.getFullYear() + '-' + month + '-' + day;
+    return newDate;
+}
+
 
 // router.set('trust proxy', 1);
 
@@ -1163,6 +1175,7 @@ router.get('/newPeripheral', function (req, res, next) {
                 EmployeeID,
                 makeOptions,
                 modelOptions,
+                date: getCurrentDate(),
                 itemOptions,
                 employees,
                 employee,
@@ -1257,6 +1270,7 @@ router.get('/newComputer', function (req, res, next) {
                 employee,
                 employees,
                 ICN,
+                date: getCurrentDate(),
                 EmployeeID,
                 processorTypeOptions,
                 processorSpeedOptions,
@@ -1280,16 +1294,6 @@ router.get('/newMonitor', function (req, res, next) {
     let employees = {};
     let monitor = {};
     let employee = {};
-
-    let date = new Date();
-    let month = date.getMonth() + 1;
-    let day = date.getDate();
-    if (month.toString().length === 1)
-        month = "0" + month;
-    if (day.toString().length === 1)
-        day = "0" + day;
-    let newDate = date.getFullYear() + '-' + month + '-' + day;
-    date = newDate;
 
     let database = new Database(config.getConfig());
 
@@ -1326,7 +1330,7 @@ router.get('/newMonitor', function (req, res, next) {
                 modelOptions,
                 employees,
                 employee,
-                date,
+                date: getCurrentDate(),
                 EmployeeID,
                 user: JSON.parse(vault.read(req)),
                 location
