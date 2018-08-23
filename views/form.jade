@@ -91,8 +91,14 @@ block content
                         .col-25
                             label(for='homeCheckout') Home Checkout:
                         .col-75
-                            input#homeCheckout(type='text', name='homeCheckout', placeholder='Home Checkout' value='#{computer.HomeCheckout}')
-                div
+                            if(computer.HomeCheckout === 'on')
+                                label.switch
+                                    input#homeCheckout(type='checkbox', name='homeCheckout', placeholder='Home Checkout' checked)
+                                    span.slider.round
+                            else
+                                label.switch
+                                    input#homeCheckout(type='checkbox', name='homeCheckout', placeholder='Home Checkout')
+                                    span.slider.round
                     .row
                         .col-25
                             label(for='processorType') Processor Type:

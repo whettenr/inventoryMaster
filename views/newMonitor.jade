@@ -55,7 +55,7 @@ block content
                     .col-25
                         label(for='dateAcquired') Date Acquired:
                     .col-75
-                        input#dateAcquired(type='date' name='dateAcquired', placeholder='Date Acquired')
+                        input#dateAcquired(type='date' name='dateAcquired', placeholder='Date Acquired' value='#{date}')
                 .row
                     .col-25
                         label(for='warranty') Warranty:
@@ -65,7 +65,9 @@ block content
                     .col-25
                         label(for='homeCheckout') Home Checkout:
                     .col-75
-                        input#homeCheckout(type='text', name='homeCheckout', placeholder='Home Checkout')
+                        label.switch
+                            input#homeCheckout(type='checkbox', name='homeCheckout', placeholder='Home Checkout')
+                            span.slider.round
                 .row
                     .col-25
                         label(for='notes') Notes:

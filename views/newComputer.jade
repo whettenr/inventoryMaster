@@ -9,7 +9,7 @@ block content
     body
         .container
             include itemInfo
-            form(action='#{location}/newComputer', method='post')
+            form#form(action='#{location}/newComputer', method='post')
 
                 br
                 .row
@@ -48,7 +48,7 @@ block content
                     .col-25
                         label(for='type') Type:
                     .col-75
-                        select#type.custom-select.sources(name='type', placeholder='Computer Type' onchange='stopBounce(typeBounce)')
+                        select#type.custom-select.sources(name='type', placeholder='Computer Type')
                             each typeOption in typeOptions
                                 if(typeOption.Type === "None")
                                     option(value=typeOption.Type selected) #{typeOption.Type}
@@ -73,12 +73,12 @@ block content
                     .col-25
                         label(for='dateAcquired') Date Acquired:
                     .col-75
-                        input#dateAcquired(type='date', name='dateAcquired', placeholder='Date Acquired')
+                        input#dateAcquired(type='date', name='dateAcquired', placeholder='YYYY-MM-DD' value='#{date}')
                 .row
                     .col-25
                         label(for='warranty') Warranty:
                     .col-75
-                        input#warranty(type='date', name='warranty', placeholder='Warranty')
+                        input#warranty(type='date', name='warranty', placeholder='YYYY-MM-DD')
                 .row
                     .col-25
                         label(for='homeCheckout') Home Checkout:
@@ -283,4 +283,9 @@ block content
         function stopBounce(id) {
             console.log(id);
             $('#' + id.id).css('display', 'none');
+        }
+
+        function go() {
+            $("#form").submit();
+
         }

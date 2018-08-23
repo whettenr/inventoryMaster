@@ -1203,10 +1203,6 @@ router.get('/newComputer', function (req, res, next) {
             makeOptions = rows;
             makeOptions[makeOptions.length] = {Make: 'None'};
             makeOptions[makeOptions.length] = {Make: 'Add a New Option'};
-            // return database.query('SELECT DISTINCT Model FROM computer');
-        })
-        .then(rows => {
-            // modelOptions = rows;
             return database.query('Select DISTINCT Type FROM Computer ORDER BY Type');
         })
         .then(rows => {
@@ -1285,6 +1281,16 @@ router.get('/newMonitor', function (req, res, next) {
     let monitor = {};
     let employee = {};
 
+    let date = new Date();
+    let month = date.getMonth() + 1;
+    let day = date.getDate();
+    if (month.toString().length === 1)
+        month = "0" + month;
+    if (day.toString().length === 1)
+        day = "0" + day;
+    let newDate = date.getFullYear() + '-' + month + '-' + day;
+    date = newDate;
+
     let database = new Database(config.getConfig());
 
     database.query('SELECT DISTINCT Make FROM Monitor')
@@ -1320,6 +1326,7 @@ router.get('/newMonitor', function (req, res, next) {
                 modelOptions,
                 employees,
                 employee,
+                date,
                 EmployeeID,
                 user: JSON.parse(vault.read(req)),
                 location
@@ -1764,7 +1771,7 @@ router.get('/updateDates', function (req, res, next) {
                     let dateArray = new Date(datesAcquired[i].Warranty);
                     let year = "";
                     let month = dateArray.getMonth() + 1;
-                    let day = dateArray.getUTCDay();
+                    let day = dateArray.getDate();
 
                     // if (dateArray.getFullYear() === 2)
                     //     year = "20" + dateArray.getFullYear();
@@ -1944,6 +1951,9 @@ router.post('/showOptions', function (req, res, next) {
 router.post('/newComputer', function (req, res, next) {
     let database = new Database(config.getConfig());
     let hardwareId = -1;
+    if(!req.body.homeCheckout){
+        req.body.homeCheckout = 'off';
+    }
 
     database.query('SELECT * FROM Hardware WHERE ProcessorType = ? and ProcessorSpeed = ? and Memory = ? and HardDrive = ? and VCName = ?', [req.body.processorType, req.body.processorSpeed, req.body.memory, req.body.hardDrive, req.body.graphicsCard])
         .then(rows => {
@@ -1962,6 +1972,11 @@ router.post('/newComputer', function (req, res, next) {
 
         })
         .then(() => {
+            if(req.body.type === 'On Rotation'){
+                return database.query("UPDATE Employee Set DateSwitched=? WHERE EmployeeID=?", [req.body.dateAcquired, req.body.EmployeeID]);
+            }
+        })
+        .then(() => {
             return database.close();
         })
         .then(() => {
@@ -1975,6 +1990,9 @@ router.post('/newComputer', function (req, res, next) {
 
 router.post('/newMonitor', function (req, res, next) {
     let database = new Database(config.getConfig());
+    if(!req.body.homeCheckout){
+        req.body.homeCheckout = 'off';
+    }
 
     database.query('INSERT INTO Monitor (ICN, EmployeeID, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout, History) VALUES (?)', [[req.body.icn, req.body.employeeId, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, ""]])
         .then(rows => {
@@ -1993,6 +2011,9 @@ router.post('/newMonitor', function (req, res, next) {
 
 router.post('/newPeripheral', function (req, res, next) {
     let database = new Database(config.getConfig());
+    if(!req.body.homeCheckout){
+        req.body.homeCheckout = 'off';
+    }
 
     database.query('INSERT INTO Peripheral (ICN, EmployeeID, Item, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout, History) VALUES (?)', [[req.body.icn, req.body.employeeId, req.body.item, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, ""]])
         .then(rows => {
@@ -2013,6 +2034,9 @@ router.post('/newPeripheral', function (req, res, next) {
 
 router.post('/form', function (req, res, next) {
     let database = new Database(config.getConfig());
+    if(!req.body.homeCheckout){
+        req.body.homeCheckout = 'off';
+    }
     database.query("UPDATE Computer Set EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
         .then(rows => {
@@ -2045,6 +2069,9 @@ router.post('/form', function (req, res, next) {
 
 router.post('/monitor', function (req, res, next) {
     let database = new Database(config.getConfig());
+    if(!req.body.homeCheckout){
+        req.body.homeCheckout = 'off';
+    }
     database.query("UPDATE Monitor SET EmployeeID = ?, Make = ?, Model = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.make, req.body.model, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
         .then(rows => {
@@ -2062,6 +2089,9 @@ router.post('/monitor', function (req, res, next) {
 
 router.post('/peripheral', function (req, res, next) {
     let database = new Database(config.getConfig());
+    if(!req.body.homeCheckout){
+        req.body.homeCheckout = 'off';
+    }
     database.query("UPDATE Peripheral SET EmployeeID = ?, Item = ?, Make = ?, Model = ?, SerialNumber = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.item, req.body.make, req.body.model, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
         .then(rows => {
@@ -2078,6 +2108,9 @@ router.post('/peripheral', function (req, res, next) {
 
 router.post('/printer', function (req, res, next) {
     let database = new Database(config.getConfig());
+    if(!req.body.homeCheckout){
+        req.body.homeCheckout = 'off';
+    }
     database.query("UPDATE Printer SET EmployeeID = ?, LesOlsonID = ?, Make = ?, Model = ?, SerialNumber = ?, DateAcquired = ?, Warranty = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.lesOlsonId, req.body.make, req.body.model, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.notes, req.body.history, req.body.icn])
         .then(rows => {
@@ -2094,6 +2127,9 @@ router.post('/printer', function (req, res, next) {
 
 router.post('/employee', function (req, res, next) {
     let database = new Database(config.getConfig());
+    if(!req.body.homeCheckout){
+        req.body.homeCheckout = 'off';
+    }
     database.query("UPDATE Employee SET FirstName = ?, LastName = ?, Category = ?, Office = ?, Building = ?, Email = ?, UserName = ?, RotationGroup = ?, DateSwitched = ?, `Employee Notes` = ?, PictureURL = ? WHERE EmployeeID = ?",
         [req.body.firstName, req.body.lastName, req.body.category, req.body.office, req.body.building, req.body.email, req.body.userName, req.body.rotationGroup, req.body.dateSwitched, req.body.notes, req.body.pictureURL, req.body.employeeId])
         .then(rows => {

@@ -55,5 +55,15 @@ block content
                         td= peripheral.SerialNumber
                         td= peripheral.DateAcquired
                         td= peripheral.Warranty
-                        td= peripheral.HomeCheckout
+                        td
+                            a(href='#{location}/peripheralTable?where=HomeCheckout=\'#{peripheral.HomeCheckout}\'')
+                                div
+                                if(peripheral.HomeCheckout === 'on')
+                                    label.switch
+                                        div#homeCheckout.checked(type='checkbox', name='homeCheckout')
+                                        span.slider.round
+                                else
+                                    label.switch
+                                        div#homeCheckout(type='checkbox', name='homeCheckout')
+                                        span.slider.round
                         td= peripheral.Notes
