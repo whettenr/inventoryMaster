@@ -1958,6 +1958,9 @@ router.post('/newComputer', function (req, res, next) {
     if(!req.body.homeCheckout){
         req.body.homeCheckout = 'off';
     }
+    if(!req.body.touch){
+        req.body.touch = 'off';
+    }
 
     database.query('SELECT * FROM Hardware WHERE ProcessorType = ? and ProcessorSpeed = ? and Memory = ? and HardDrive = ? and VCName = ? and ScreenResolution = ? and Touch = ?', [req.body.processorType, req.body.processorSpeed, req.body.memory, req.body.hardDrive, req.body.graphicsCard, req.body.screenResolution, req.body.touch])
         .then(rows => {
@@ -2040,6 +2043,9 @@ router.post('/form', function (req, res, next) {
     let database = new Database(config.getConfig());
     if(!req.body.homeCheckout){
         req.body.homeCheckout = 'off';
+    }
+    if(!req.body.touch){
+        req.body.touch = 'off';
     }
     database.query("UPDATE Computer Set EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
         [req.body.employeeId, req.body.make, req.body.model, req.body.serialNumber, req.body.serviceTag, req.body.expressServiceCode, req.body.type, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, req.body.notes, req.body.history, req.body.icn])
