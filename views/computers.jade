@@ -144,25 +144,13 @@ block content
                                 a(href='#{location}/computerTable?where=HomeCheckout=\'#{computer.HomeCheckout}\'')
                                     div
                                         if(computer.HomeCheckout === 'on')
-                                            label.switch
-                                                div#homeCheckout.checked(type='checkbox', name='homeCheckout')
-                                                span.slider.round
-                                        else
-                                            label.switch
-                                                div#homeCheckout(type='checkbox', name='homeCheckout')
-                                                span.slider.round
+                                            i(class="material-icons")= 'home'
                         if(showOptions.Touch)
                             td
                                 a(href='#{location}/computerTable?where=Touch=\'#{computer.Touch}\'')
                                     div
                                         if(computer.Touch === 'on')
-                                            label.switch
-                                                div#touch.checked(type='checkbox', name='homeCheckout')
-                                                span.slider.round
-                                        else
-                                            label.switch
-                                                div#touch(type='checkbox', name='homeCheckout')
-                                                span.slider.round
+                                            i(class="material-icons")= 'touch_app'
                         if(showOptions.ScreenResolution)
                             td
                                 a(href='#{location}/computerTable?where=ScreenResolution=\'#{computer.ScreenResolution}\'')

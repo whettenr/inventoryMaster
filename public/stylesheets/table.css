@@ -32,10 +32,6 @@ a {
     z-index: 2;
 }
 
-a:hover {
-    color: #66B200;
-}
-
 .divButton {
     text-decoration: underline;
 }

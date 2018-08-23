@@ -946,10 +946,11 @@ router.get('/computer', function (req, res, next) {
         })
         .then(rows => {
             typeOptions = rows;
-            return database.query('SELECT DISTINCT Model FROM Computer');
+            return database.query('SELECT DISTINCT Model FROM Computer ORDER BY Model');
         })
         .then(rows => {
             modelOptions = rows;
+            modelOptions[modelOptions.length] = {Model: 'Add a New Option'};
             return database.query('SELECT * FROM Hardware WHERE HardwareID = ' + computer.HardwareID);
         })
         .then(rows => {

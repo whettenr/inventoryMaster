@@ -53,8 +53,6 @@ block content
                                         option(value=typeOption.Type selected) #{typeOption.Type}
                                     else
                                         option(value=typeOption.Type) #{typeOption.Type}
-                            #typeBounce.bounce
-                                i(class="fa fa-angle-double-down") &#8594;
                     .row
                         .col-25
                             label(for='notes') Notes:
@@ -149,6 +147,7 @@ block content
                             textarea#history(name='history' style='height:200px' readonly='readonly')
                                 | #{computer.History}
                     input(type='hidden' name='HardwareID' value='#{computer.HardwareID}')
+    script(src='#{location}/javascripts/computer.js')
     script.
         let icn = "#{computer.ICN}";
         let employee = "#{employee.FirstName} #{employee.LastName}";
