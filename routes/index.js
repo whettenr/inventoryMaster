@@ -199,7 +199,7 @@ router.get('/computerTable', function (req, res, next) {
             }
         })
         .then(() => {
-            let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.EmployeeID LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID ';
+            let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.EmployeeID LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Computer.EmployeeID != 400';
             if (req.query.remove) {
                 let splice = parseInt(req.query.remove);
                 filters.splice(splice, 1);
@@ -225,7 +225,7 @@ router.get('/computerTable', function (req, res, next) {
                 }
             }
             if (filters.length > 0) {
-                query += " WHERE ";
+                query += " and ";
                 for (let filter in filters) {
                     if (filters[filter].includes('EmployeeID') || filters[filter].includes('RotationGroup')) {
                         query += 'Employee.'
@@ -347,7 +347,7 @@ router.get('/monitorTable', function (req, res, next) {
             }
             actionButton.href = 'showOptions?table=monitor';
             actionButton.name = 'Show Options';
-            let query = 'SELECT * FROM Monitor LEFT JOIN Employee on Monitor.EmployeeID = Employee.employeeId';
+            let query = 'SELECT * FROM Monitor LEFT JOIN Employee on Monitor.EmployeeID = Employee.employeeId WHERE Monitor.EmployeeID != 400';
             if (req.query.remove) {
                 let splice = parseInt(req.query.remove);
                 monitorFilters.splice(splice, 1);
@@ -371,7 +371,7 @@ router.get('/monitorTable', function (req, res, next) {
                 }
             }
             if (monitorFilters.length > 0) {
-                query += " WHERE Monitor.";
+                query += " and Monitor.";
                 for (let filter in monitorFilters) {
                     query += monitorFilters[filter];
                     query += ' and Monitor.';
@@ -436,7 +436,7 @@ router.get('/peripheralTable', function (req, res, next) {
     let database = new Database(config.getConfig());
     let peripherals = {};
 
-    let query = 'SELECT * FROM Peripheral LEFT JOIN Employee on Peripheral.EmployeeID = Employee.EmployeeID';
+    let query = 'SELECT * FROM Peripheral LEFT JOIN Employee on Peripheral.EmployeeID = Employee.EmployeeID WHERE Peripheral.EmployeeID != 400';
     if (req.query.remove) {
         let splice = parseInt(req.query.remove);
         peripheralFilters.splice(splice, 1);
@@ -460,7 +460,7 @@ router.get('/peripheralTable', function (req, res, next) {
         }
     }
     if (peripheralFilters.length > 0) {
-        query += " WHERE Peripheral.";
+        query += " and Peripheral.";
         for (let filter in peripheralFilters) {
             query += peripheralFilters[filter];
             query += ' and Peripheral.';
@@ -526,7 +526,7 @@ router.get('/printerTable', function (req, res, next) {
     let database = new Database(config.getConfig());
     let printers = {};
 
-    let query = 'SELECT * FROM Printer JOIN Employee on Printer.EmployeeID = Employee.employeeId';
+    let query = 'SELECT * FROM Printer JOIN Employee on Printer.EmployeeID = Employee.employeeId WHERE Printer.EmployeeID != 400';
     if (req.query.remove) {
         let splice = parseInt(req.query.remove);
         printerFilters.splice(splice, 1);
@@ -550,7 +550,7 @@ router.get('/printerTable', function (req, res, next) {
         }
     }
     if (printerFilters.length > 0) {
-        query += " WHERE Printer.";
+        query += " and Printer.";
         for (let filter in printerFilters) {
             query += printerFilters[filter];
             query += ' and Printer.';
