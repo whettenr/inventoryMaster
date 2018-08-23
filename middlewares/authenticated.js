@@ -90,6 +90,8 @@ module.exports = function (req, res, next) {
                         "DateAcquired": true,
                         "Warranty": true,
                         "HomeCheckout": false,
+                        "Touch": false,
+                        "ScreenResolution": false,
                         "Rotation": true,
                         "Notes": true,
                         "History": false,

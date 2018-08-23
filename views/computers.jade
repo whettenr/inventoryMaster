@@ -70,6 +70,10 @@ block content
                         td= "Warranty"
                     if(showOptions.HomeCheckout)
                         td= "Home Checkout"
+                    if(showOptions.Touch)
+                        td= "Touch"
+                    if(showOptions.ScreenResolution)
+                        td= "Screen Resolution"
                     if(showOptions.Rotation)
                         td= "Rotation"
                     if(showOptions.Notes)
@@ -147,7 +151,23 @@ block content
                                             label.switch
                                                 div#homeCheckout(type='checkbox', name='homeCheckout')
                                                 span.slider.round
-                        if(showOptions.Rotation)
+                        if(showOptions.Touch)
+                            td
+                                a(href='#{location}/computerTable?where=Touch=\'#{computer.Touch}\'')
+                                    div
+                                        if(computer.Touch === 'on')
+                                            label.switch
+                                                div#touch.checked(type='checkbox', name='homeCheckout')
+                                                span.slider.round
+                                        else
+                                            label.switch
+                                                div#touch(type='checkbox', name='homeCheckout')
+                                                span.slider.round
+                        if(showOptions.ScreenResolution)
+                            td
+                                a(href='#{location}/computerTable?where=ScreenResolution=\'#{computer.ScreenResolution}\'')
+                                    div= computer.ScreenResolution
+                                if(showOptions.Rotation)
                             td
                                 a(href='#{location}/computerTable?where=RotationGroup=\'#{computer.RotationGroup}\'')
                                     div= computer.RotationGroup
