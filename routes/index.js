@@ -409,9 +409,10 @@ router.get('/monitorTable', function (req, res, next) {
         })
         .then(rows => {
             monitors = rows;
-            return database.query('UPDATE Filters SET monitorfilters = "' + monitorFilters.toString() + '"');
+            return database.query('UPDATE Filters SET monitorFilters = "' + monitorFilters.toString() + '"');
         })
         .then(() => {
+            database.close();
             res.render('monitorTable', {
                 title: 'Monitors',
                 table: 'monitorTable',
@@ -512,8 +513,10 @@ router.get('/peripheralTable', function (req, res, next) {
         })
         .then(rows => {
             peripherals = rows;
+            return database.query('UPDATE Filters SET peripheralFilters = "' + peripheralFilters.toString() + '"')
         })
         .then(() => {
+            database.close();
             res.render('peripheralTable', {
                 title: 'Peripherals',
                 peripherals: peripherals,
