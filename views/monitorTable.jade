@@ -81,10 +81,10 @@ block content
                         if(showOptions.Surplus)
                             if(monitor.Surplussing === 0)
                                 td
-                                    button.byu-button.red(onclick='surplus(#{monitor.ICN})' id='surplusButton#{monitor.ICN}') Surplus
+                                    div.byu-button.navy(onclick='surplus(#{monitor.ICN})' id='surplusButton#{monitor.ICN}') Surplus
                             else
                                 td
-                                    button.byu-button.red(onclick='undo(#{monitor.ICN})' id='surplusButton#{monitor.ICN}') Undo
+                                    div.byu-button.whitenavy(onclick='undo(#{monitor.ICN})' id='surplusButton#{monitor.ICN}') Undo
     script.
 
         function getMonitorInfo(ICN, EmployeeID) {
@@ -99,6 +99,8 @@ block content
             }).done(function (data) {
                 $("#surplusButton" + ICN).html('Undo');
                 $("#surplusButton" + ICN).attr("onclick", "undo(" + ICN + ")");
+                $("#surplusButton" + ICN).removeClass("navy");
+                $("#surplusButton" + ICN).addClass("whitenavy");
             });
         }
 
@@ -110,6 +112,8 @@ block content
             }).done(function (data) {
                 $("#surplusButton" + ICN).html('Surplus');
                 $("#surplusButton" + ICN).attr("onclick", "surplus(" + ICN + ")");
+                $("#surplusButton" + ICN).removeClass("whitenavy");
+                $("#surplusButton" + ICN).addClass("navy");
             });
         }
 
