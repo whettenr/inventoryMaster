@@ -11,59 +11,104 @@ block content
                     td
                         a(href='#{location}/peripheralTable?sortby=ICN')
                             div='ICN'
-                    td
-                        a(href='#{location}/peripheralTable?sortby=firstname')
-                            div= "First Name"
-                    td
-                        a(href='#{location}/peripheralTable?sortby=lastName')
-                            div= "Last Name"
-                    td
-                        a(href='#{location}/peripheralTable?sortby=Make')
-                            div= "Make"
-                    td
-                        a(href='#{location}/peripheralTable?sortby=Model')
-                            div= "Model"
-                    td
-                        a(href='#{location}/peripheralTable?sortby=Item')
-                            div= "Item"
-                    td= "Serial Number"
-                    td= "Date Acquired"
-                    td= "Warranty"
-                    td= "Home Checkout"
-                    td= "Notes"
+                    if(showOptions.FirstName)
+                        td
+                            a(href='#{location}/peripheralTable?sortby=firstname')
+                                div= "First Name"
+                    if(showOptions.LastName)
+                        td
+                            a(href='#{location}/peripheralTable?sortby=lastName')
+                                div= "Last Name"
+                    if(showOptions.Make)
+                        td
+                            a(href='#{location}/peripheralTable?sortby=Make')
+                                div= "Make"
+                    if(showOptions.Model)
+                        td
+                            a(href='#{location}/peripheralTable?sortby=Model')
+                                div= "Model"
+                    if(showOptions.Item)
+                        td
+                            a(href='#{location}/peripheralTable?sortby=Item')
+                                div= "Item"
+                    if(showOptions.SerialNumber)
+                        td= "Serial Number"
+                    if(showOptions.DateAcquired)
+                        td= "Date Acquired"
+                    if(showOptions.Warranty)
+                        td= "Warranty"
+                    if(showOptions.HomeCheckout)
+                        td= "Home Checkout"
+                    if(showOptions.Notes)
+                        td= "Notes"
+                    if(showOptions.Surplus)
+                        td= "Surplus"
                 each peripheral in peripherals
                     tr
                         td
                             a(href='#{location}/peripheral?ICN=' + peripheral.ICN)
                                 div= peripheral.ICN
                                 //i(class="material-icons") laptop
-                        td
-                            a(href='#{location}/peripheralTable?where=EmployeeID=\'#{peripheral.EmployeeID}\'')
-                                div= peripheral.FirstName
-                        td
-                            a(href='#{location}/peripheralTable?where=EmployeeID=\'#{peripheral.EmployeeID}\'')
-                                div= peripheral.LastName
-                        td
-                            a(href='#{location}/peripheralTable?where=Make=\'#{peripheral.Make}\'')
-                                div= peripheral.Make
-                        td
-                            a(href='#{location}/peripheralTable?where=Model=\'#{peripheral.Model}\'')
-                                div= peripheral.Model
-                        td
-                            a(href='#{location}/peripheralTable?where=Item=\'#{peripheral.Item}\'')
-                                div= peripheral.Item
-                        td= peripheral.SerialNumber
-                        td= peripheral.DateAcquired
-                        td= peripheral.Warranty
-                        td
-                            a(href='#{location}/peripheralTable?where=HomeCheckout=\'#{peripheral.HomeCheckout}\'')
-                                div
-                                if(peripheral.HomeCheckout === 'on')
-                                    label.switch
-                                        div#homeCheckout.checked(type='checkbox', name='homeCheckout')
-                                        span.slider.round
-                                else
-                                    label.switch
-                                        div#homeCheckout(type='checkbox', name='homeCheckout')
-                                        span.slider.round
-                        td= peripheral.Notes
+                        if(showOptions.FirstName)
+                            td
+                                a(href='#{location}/peripheralTable?where=EmployeeID=\'#{peripheral.EmployeeID}\'')
+                                    div= peripheral.FirstName
+                        if(showOptions.LastName)
+                            td
+                                a(href='#{location}/peripheralTable?where=EmployeeID=\'#{peripheral.EmployeeID}\'')
+                                    div= peripheral.LastName
+                        if(showOptions.Make)
+                            td
+                                a(href='#{location}/peripheralTable?where=Make=\'#{peripheral.Make}\'')
+                                    div= peripheral.Make
+                        if(showOptions.Model)
+                            td
+                                a(href='#{location}/peripheralTable?where=Model=\'#{peripheral.Model}\'')
+                                    div= peripheral.Model
+                        if(showOptions.Item)
+                            td
+                                a(href='#{location}/peripheralTable?where=Item=\'#{peripheral.Item}\'')
+                                    div= peripheral.Item
+                        if(showOptions.SerialNumber)
+                            td= peripheral.SerialNumber
+                        if(showOptions.DateAcquired)
+                            td= peripheral.DateAcquired
+                        if(showOptions.Warranty)
+                            td= peripheral.Warranty
+                        if(showOptions.HomeCheckout)
+                            td
+                                a(href='#{location}/peripheralTable?where=HomeCheckout=\'#{peripheral.HomeCheckout}\'')
+                                    div
+                                        if(peripheral.HomeCheckout === 'on')
+                                            i(class="material-icons")= 'home'
+                        if(showOptions.Notes)
+                            td= peripheral.Notes
+                        if(showOptions.Surplus)
+                            if(peripheral.Surplussing === 0)
+                                td
+                                    button.byu-button.red(onclick='surplus(#{peripheral.ICN})' id='surplusButton#{peripheral.ICN}') Surplus
+                            else
+                                td
+                                    button.byu-button.red(onclick='undo(#{peripheral.ICN})' id='surplusButton#{peripheral.ICN}') Undo
+    script.
+        function surplus(ICN) {
+            $.ajax({
+                type: "GET",
+                url: "#{location}/finnaSurplus?table=Peripheral&ICN=" + ICN,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#surplusButton" + ICN).html('Undo');
+                $("#surplusButton" + ICN).attr("onclick", "undo(" + ICN + ")");
+            });
+        }
+
+        function undo(ICN) {
+            $.ajax({
+                type: "GET",
+                url: "#{location}/undoFinnaSurplus?table=Peripheral&ICN=" + ICN,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#surplusButton" + ICN).html('Surplus');
+                $("#surplusButton" + ICN).attr("onclick", "surplus(" + ICN + ")");
+            });
+        }

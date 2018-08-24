@@ -75,13 +75,7 @@ block content
                                 a(href='#{location}/monitorTable?where=HomeCheckout=\'#{monitor.HomeCheckout}\'')
                                     div
                                         if(monitor.HomeCheckout === 'on')
-                                            label.switch
-                                                div#homeCheckout.checked(type='checkbox', name='homeCheckout')
-                                                span.slider.round
-                                        else
-                                            label.switch
-                                                div#homeCheckout(type='checkbox', name='homeCheckout')
-                                                span.slider.round
+                                            i(class="material-icons")= 'home'
                         if(showOptions.Notes)
                             td= monitor.Notes
                         if(showOptions.Surplus)

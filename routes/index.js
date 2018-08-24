@@ -44,7 +44,7 @@ let URL = config.getURL();
 
 let location = config.getLocation();
 
-function getCurrentDate(){
+function getCurrentDate() {
     let date = new Date();
     let month = date.getMonth() + 1;
     let day = date.getDate();
@@ -69,7 +69,7 @@ function getCurrentDate(){
 // let monitorFilters = [];
 let employeeFilters = [];
 let printerFilters = [];
-let peripheralFilters = [];
+// let peripheralFilters = [];
 let finalQuery = "";
 let hardware = false;
 
@@ -194,7 +194,7 @@ router.get('/computerTable', function (req, res, next) {
     database.query(filterQuery)
         .then(rows => {
             showOptions = JSON.parse(rows[0].computerShowOptions);
-            if(rows[0].filters !== ""){
+            if (rows[0].filters !== "") {
                 filters = rows[0].filters.split(',');
             }
         })
@@ -342,7 +342,7 @@ router.get('/monitorTable', function (req, res, next) {
     database.query(filterQuery)
         .then(rows => {
             showOptions = JSON.parse(rows[0].monitorShowOptions);
-            if(rows[0].monitorFilters !== ""){
+            if (rows[0].monitorFilters !== "") {
                 monitorFilters = rows[0].monitorFilters.split(',');
             }
             actionButton.href = 'showOptions?table=monitor';
@@ -432,74 +432,84 @@ router.get('/monitorTable', function (req, res, next) {
 });
 
 router.get('/peripheralTable', function (req, res, next) {
-    let connection = mysql.createConnection(config.getConfig());
     let database = new Database(config.getConfig());
     let peripherals = {};
-
-    let query = 'SELECT * FROM Peripheral LEFT JOIN Employee on Peripheral.EmployeeID = Employee.EmployeeID WHERE Peripheral.EmployeeID != 400';
-    if (req.query.remove) {
-        let splice = parseInt(req.query.remove);
-        peripheralFilters.splice(splice, 1);
-
-    }
-    if (req.query.not) {
-        if (peripheralFilters[req.query.not].includes('!='))
-            peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('!=', '=');
-        else
-            peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('=', '!=');
-    }
-    if (req.query.where) {
-        let check = true;
-        for (let i = 0; i < peripheralFilters.length; i++) {
-            if (peripheralFilters[i] === req.query.where) {
-                check = false;
+    let user = JSON.parse(vault.read(req));
+    let filterQuery = 'SELECT * FROM Filters WHERE user = \'' + user.netId + '\'';
+    let showOptions = {};
+    let actionButton = {};
+    let peripheralFilters = [];
+    database.query(filterQuery)
+        .then(rows => {
+            showOptions = JSON.parse(rows[0].peripheralShowOptions);
+            if (rows[0].peripheralFilters !== "") {
+                peripheralFilters = rows[0].peripheralFilters.split(',');
             }
-        }
-        if (check) {
-            peripheralFilters.push(req.query.where);
-        }
-    }
-    if (peripheralFilters.length > 0) {
-        query += " and Peripheral.";
-        for (let filter in peripheralFilters) {
-            query += peripheralFilters[filter];
-            query += ' and Peripheral.';
-            console.log(filter);
-        }
-        query = query.substr(0, query.length - 16);
-    }
+            let query = 'SELECT * FROM Peripheral LEFT JOIN Employee on Peripheral.EmployeeID = Employee.EmployeeID WHERE Peripheral.EmployeeID != 400';
+            if (req.query.remove) {
+                let splice = parseInt(req.query.remove);
+                peripheralFilters.splice(splice, 1);
 
-    if (req.query.sortby === 'ICN') {
-        query += ' Order BY ICN';
-    }
-    else if (req.query.sortby === 'EmployeeID') {
-        query += ' ORDER BY EmployeeID';
-    }
-    else if (req.query.sortby === 'Make') {
-        query += ' ORDER BY Make';
-    }
-    else if (req.query.sortby === 'Model') {
-        query += ' ORDER BY Model';
-    }
-    else if (req.query.sortby === 'firstName') {
-        query += ' ORDER BY firstName';
-    }
-    else if (req.query.sortby === 'DateAcquired') {
-        query += ' ORDER BY DateAcquired';
-    }
-    else if (req.query.sortby === 'lastName') {
-        query += ' ORDER BY lastName';
-    }
-    else if (req.query.sortby === 'Item') {
-        query += ' ORDER BY Item';
-    }
-    else {
-        query += ' Order BY ICN';
-    }
-    console.log(query);
+            }
+            actionButton.href = 'showOptions?table=peripheral';
+            actionButton.name = 'Show Options';
+            if (req.query.not) {
+                if (peripheralFilters[req.query.not].includes('!='))
+                    peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('!=', '=');
+                else
+                    peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('=', '!=');
+            }
+            if (req.query.where) {
+                let check = true;
+                for (let i = 0; i < peripheralFilters.length; i++) {
+                    if (peripheralFilters[i] === req.query.where) {
+                        check = false;
+                    }
+                }
+                if (check) {
+                    peripheralFilters.push(req.query.where);
+                }
+            }
+            if (peripheralFilters.length > 0) {
+                query += " and Peripheral.";
+                for (let filter in peripheralFilters) {
+                    query += peripheralFilters[filter];
+                    query += ' and Peripheral.';
+                    console.log(filter);
+                }
+                query = query.substr(0, query.length - 16);
+            }
 
-
-    database.query(query)
+            if (req.query.sortby === 'ICN') {
+                query += ' Order BY ICN';
+            }
+            else if (req.query.sortby === 'EmployeeID') {
+                query += ' ORDER BY EmployeeID';
+            }
+            else if (req.query.sortby === 'Make') {
+                query += ' ORDER BY Make';
+            }
+            else if (req.query.sortby === 'Model') {
+                query += ' ORDER BY Model';
+            }
+            else if (req.query.sortby === 'firstName') {
+                query += ' ORDER BY firstName';
+            }
+            else if (req.query.sortby === 'DateAcquired') {
+                query += ' ORDER BY DateAcquired';
+            }
+            else if (req.query.sortby === 'lastName') {
+                query += ' ORDER BY lastName';
+            }
+            else if (req.query.sortby === 'Item') {
+                query += ' ORDER BY Item';
+            }
+            else {
+                query += ' Order BY ICN';
+            }
+            console.log(query);
+            return database.query(query);
+        })
         .then(rows => {
             peripherals = rows;
         })
@@ -507,6 +517,8 @@ router.get('/peripheralTable', function (req, res, next) {
             res.render('peripheralTable', {
                 title: 'Peripherals',
                 peripherals: peripherals,
+                showOptions,
+                actionButton,
                 table: 'peripheralTable',
                 filters: peripheralFilters,
                 user: JSON.parse(vault.read(req)),
@@ -1877,11 +1889,14 @@ router.get('/showOptions', function (req, res, next) {
     let user = JSON.parse(vault.read(req));
     let table = req.query.table;
     let properTable = '';
-    if(table === 'computer'){
+    if (table === 'computer') {
         properTable = 'Computer';
     }
-    else if(table === 'monitor'){
+    else if (table === 'monitor') {
         properTable = 'Monitor';
+    }
+    else if (table === 'peripheral') {
+        properTable = 'Peripheral';
     }
     database.query('SELECT * FROM Filters WHERE User = \'' + user.netId + '\'')
         .then(rows => {
@@ -1934,8 +1949,8 @@ router.post('/showOptions', function (req, res, next) {
     let table = req.body.table;
     let showOptions = {};
     for (let showOption in req.body) {
-        if(showOption !== 'table'){
-            if(req.body[showOption] === 'true') {
+        if (showOption !== 'table') {
+            if (req.body[showOption] === 'true') {
                 showOptions[showOption] = true;
             }
             else {
@@ -1956,10 +1971,10 @@ router.post('/showOptions', function (req, res, next) {
 router.post('/newComputer', function (req, res, next) {
     let database = new Database(config.getConfig());
     let hardwareId = -1;
-    if(!req.body.homeCheckout){
+    if (!req.body.homeCheckout) {
         req.body.homeCheckout = 'off';
     }
-    if(!req.body.touch){
+    if (!req.body.touch) {
         req.body.touch = 'off';
     }
 
@@ -1980,7 +1995,7 @@ router.post('/newComputer', function (req, res, next) {
 
         })
         .then(() => {
-            if(req.body.type === 'On Rotation'){
+            if (req.body.type === 'On Rotation') {
                 return database.query("UPDATE Employee Set DateSwitched=? WHERE EmployeeID=?", [req.body.dateAcquired, req.body.EmployeeID]);
             }
         })
@@ -1998,7 +2013,7 @@ router.post('/newComputer', function (req, res, next) {
 
 router.post('/newMonitor', function (req, res, next) {
     let database = new Database(config.getConfig());
-    if(!req.body.homeCheckout){
+    if (!req.body.homeCheckout) {
         req.body.homeCheckout = 'off';
     }
 
@@ -2019,7 +2034,7 @@ router.post('/newMonitor', function (req, res, next) {
 
 router.post('/newPeripheral', function (req, res, next) {
     let database = new Database(config.getConfig());
-    if(!req.body.homeCheckout){
+    if (!req.body.homeCheckout) {
         req.body.homeCheckout = 'off';
     }
 
@@ -2042,10 +2057,10 @@ router.post('/newPeripheral', function (req, res, next) {
 
 router.post('/form', function (req, res, next) {
     let database = new Database(config.getConfig());
-    if(!req.body.homeCheckout){
+    if (!req.body.homeCheckout) {
         req.body.homeCheckout = 'off';
     }
-    if(!req.body.touch){
+    if (!req.body.touch) {
         req.body.touch = 'off';
     }
     database.query("UPDATE Computer Set EmployeeID = ?, Make = ?, Model = ?, SerialNumber = ?, ServiceTag = ?, ExpressServiceCode = ?, Type = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
@@ -2080,7 +2095,7 @@ router.post('/form', function (req, res, next) {
 
 router.post('/monitor', function (req, res, next) {
     let database = new Database(config.getConfig());
-    if(!req.body.homeCheckout){
+    if (!req.body.homeCheckout) {
         req.body.homeCheckout = 'off';
     }
     database.query("UPDATE Monitor SET EmployeeID = ?, Make = ?, Model = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
@@ -2100,7 +2115,7 @@ router.post('/monitor', function (req, res, next) {
 
 router.post('/peripheral', function (req, res, next) {
     let database = new Database(config.getConfig());
-    if(!req.body.homeCheckout){
+    if (!req.body.homeCheckout) {
         req.body.homeCheckout = 'off';
     }
     database.query("UPDATE Peripheral SET EmployeeID = ?, Item = ?, Make = ?, Model = ?, SerialNumber = ?, DateAcquired = ?, Warranty = ?, HomeCheckout = ?, Notes = ?, History = ? WHERE ICN = ?",
@@ -2119,7 +2134,7 @@ router.post('/peripheral', function (req, res, next) {
 
 router.post('/printer', function (req, res, next) {
     let database = new Database(config.getConfig());
-    if(!req.body.homeCheckout){
+    if (!req.body.homeCheckout) {
         req.body.homeCheckout = 'off';
     }
     database.query("UPDATE Printer SET EmployeeID = ?, LesOlsonID = ?, Make = ?, Model = ?, SerialNumber = ?, DateAcquired = ?, Warranty = ?, Notes = ?, History = ? WHERE ICN = ?",
@@ -2138,7 +2153,7 @@ router.post('/printer', function (req, res, next) {
 
 router.post('/employee', function (req, res, next) {
     let database = new Database(config.getConfig());
-    if(!req.body.homeCheckout){
+    if (!req.body.homeCheckout) {
         req.body.homeCheckout = 'off';
     }
     database.query("UPDATE Employee SET FirstName = ?, LastName = ?, Category = ?, Office = ?, Building = ?, Email = ?, UserName = ?, RotationGroup = ?, DateSwitched = ?, `Employee Notes` = ?, PictureURL = ? WHERE EmployeeID = ?",
