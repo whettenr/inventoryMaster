@@ -24,6 +24,13 @@ block content
                 div.mobileButton.byu-button.royal(onclick='newMonitor(#{employee.EmployeeID})') New Monitor
                 div.mobileButton.byu-button.royal(href='/computerTable') New Printer
                 div.mobileButton.byu-button.royal(onclick='newPeripheral(#{employee.EmployeeID})') New Peripheral
+            if(employee.EmployeeID === 300)
+                br
+                br
+                if(surplussing === 'false')
+                    a.byu-button.royal(href='#{location}/card?EmployeeID=300&surplussing=true')= 'Show only surplussing'
+                else
+                    a.byu-button.royal(href='#{location}/card?EmployeeID=300&surplussing=false')= 'Show Everything'
 
             br
         br
@@ -88,6 +95,8 @@ block content
                     | Type
                 th
                     | Date Acquired
+                if(employee.EmployeeID === 300)
+                    th= "Surplus"
             each computer in computers
                 tr
                     td
@@ -96,6 +105,13 @@ block content
                     td= computer.Model
                     td= computer.Type
                     td= computer.DateAcquired
+                    if(employee.EmployeeID === 300)
+                        if(computer.Surplussing === 0)
+                            td
+                                button.byu-button.navy(onclick='surplus(#{computer.ICN})' id='surplusButton#{computer.ICN}') Surplus
+                        else
+                            td
+                                button.byu-button.whitenavy(onclick='undo(#{computer.ICN})' id='surplusButton#{computer.ICN}') Undo
     if(Object.keys(monitors).length)
         .titles
             h4 Monitors:
@@ -111,6 +127,8 @@ block content
                     | Model
                 th
                     | Date Acquired
+                if(employee.EmployeeID === 300)
+                    th= "Surplus"
             each monitor in monitors
                 tr
                     td
@@ -118,6 +136,13 @@ block content
                     td= monitor.Make
                     td= monitor.Model
                     td= monitor.DateAcquired
+                    if(employee.EmployeeID === 300)
+                        if(monitor.Surplussing === 0)
+                            td
+                                button.byu-button.navy(onclick='surplus(#{monitor.ICN})' id='surplusButton#{monitor.ICN}') Surplus
+                        else
+                            td
+                                button.byu-button.whitenavy(onclick='undo(#{monitor.ICN})' id='surplusButton#{monitor.ICN}') Undo
     if(Object.keys(printers).length)
         .titles
             h4 Printers:
@@ -157,6 +182,8 @@ block content
                     | Model
                 th
                     | Date Acquired
+                if(employee.EmployeeID === 300)
+                    th= "Surplus"
             each peripheral in peripherals
                 tr
                     td
@@ -165,6 +192,13 @@ block content
                     td= peripheral.Make
                     td= peripheral.Model
                     td= peripheral.DateAcquired
+                    if(employee.EmployeeID === 300)
+                        if(peripheral.Surplussing === 0)
+                            td
+                                button.byu-button.navy(onclick='surplus(#{peripheral.ICN})' id='surplusButton#{peripheral.ICN}') Surplus
+                        else
+                            td
+                                button.byu-button.whitenavy(onclick='undo(#{peripheral.ICN})' id='surplusButton#{peripheral.ICN}') Undo
     br
     script.
         function getComputerInfo(ICN, EmployeeID) {
