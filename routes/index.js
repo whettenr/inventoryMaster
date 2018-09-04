@@ -675,17 +675,26 @@ router.get('/card', function (req, res, next) {
     let printerRows = {};
     let peripheralRows = {};
     let employees;
+    let surplussing = req.query.surplussing;
 
     let database = new Database(config.getConfig());
 
     database.query('SELECT * FROM Employee WHERE EmployeeID = ' + employeeId)
         .then(rows => {
             employeeRows = rows;
-            return database.query('SELECT * FROM Computer WHERE EmployeeID = ' + employeeId);
+            let query = 'SELECT * FROM Computer WHERE EmployeeID = ' + employeeId;
+            if(surplussing === 'true'){
+                query += ' AND Surplussing = true;';
+            }
+            return database.query(query);
         })
         .then(rows => {
             computerRows = rows;
-            return database.query('SELECT * FROM Monitor WHERE EmployeeID = ' + employeeId);
+            let query = 'SELECT * FROM Monitor WHERE EmployeeID = ' + employeeId;
+            if(surplussing === 'true'){
+                query += ' AND Surplussing = true;';
+            }
+            return database.query(query);
         })
         .then(rows => {
             monitorRows = rows;
@@ -693,7 +702,11 @@ router.get('/card', function (req, res, next) {
         })
         .then(rows => {
             printerRows = rows;
-            return database.query('SELECT * FROM Peripheral WHERE EmployeeID = ' + employeeId);
+            let query = 'SELECT * FROM Peripheral WHERE EmployeeID = ' + employeeId;
+            if(surplussing === 'true'){
+                query += ' AND Surplussing = true;';
+            }
+            return database.query(query);
         })
         .then(rows => {
             peripheralRows = rows;
@@ -707,6 +720,7 @@ router.get('/card', function (req, res, next) {
                 monitors: monitorRows,
                 printers: printerRows,
                 peripherals: peripheralRows,
+                surplussing,
                 location,
                 user: JSON.parse(vault.read(req)),
                 title: employeeRows[0].FirstName + ' ' + employeeRows[0].LastName + "'s Stuff"
