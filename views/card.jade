@@ -95,7 +95,7 @@ block content
                     | Type
                 th
                     | Date Acquired
-                if(employee.EmployeeID === 300)
+                if(employee && employee.EmployeeID === 300)
                     th= "Surplus"
             each computer in computers
                 tr
@@ -105,7 +105,7 @@ block content
                     td= computer.Model
                     td= computer.Type
                     td= computer.DateAcquired
-                    if(employee.EmployeeID === 300)
+                    if(employee && employee.EmployeeID === 300)
                         if(computer.Surplussing === 0)
                             td
                                 button.byu-button.navy(onclick='surplus(#{computer.ICN})' id='surplusButton#{computer.ICN}') Surplus
@@ -127,7 +127,7 @@ block content
                     | Model
                 th
                     | Date Acquired
-                if(employee.EmployeeID === 300)
+                if(employee && employee.EmployeeID === 300)
                     th= "Surplus"
             each monitor in monitors
                 tr
@@ -182,7 +182,7 @@ block content
                     | Model
                 th
                     | Date Acquired
-                if(employee.EmployeeID === 300)
+                if(employee && employee.EmployeeID === 300)
                     th= "Surplus"
             each peripheral in peripherals
                 tr
@@ -192,7 +192,7 @@ block content
                     td= peripheral.Make
                     td= peripheral.Model
                     td= peripheral.DateAcquired
-                    if(employee.EmployeeID === 300)
+                    if(employee && employee.EmployeeID === 300)
                         if(peripheral.Surplussing === 0)
                             td
                                 button.byu-button.navy(onclick='surplus(#{peripheral.ICN})' id='surplusButton#{peripheral.ICN}') Surplus
