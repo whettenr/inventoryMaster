@@ -1851,22 +1851,22 @@ router.get('/search', function (req, res, next) {
         .then(rows => {
             console.log(rows);
             computerRows = rows;
-            return database.query('SELECT * FROM Monitor WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            return database.query('SELECT * FROM Monitor WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Notes LIKE ? OR History LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             monitorRows = rows;
-            return database.query('SELECT * FROM Printer WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            return database.query('SELECT * FROM Printer WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Notes LIKE ? OR History LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             printerRows = rows;
-            return database.query('SELECT * FROM Peripheral WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR ITEM LIKE ? OR NOTES LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            return database.query('SELECT * FROM Peripheral WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Item LIKE ? OR Notes LIKE ? OR History Like ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             peripheralRows = rows;
             return database.close();
         })
         .then(() => {
-            if (employeeRows.length === 1) {
+            if (employeeRows.length === 1 && !computerRows.length && !monitorRows.length && !printerRows.length && !peripheralRows.length) {
                 res.redirect(location + '/card?EmployeeID=' + employeeRows[0].EmployeeID);
             }
             else if (computerRows.length === 1 && !employeeRows.length && !monitorRows.length && !printerRows.length && !peripheralRows.length) {

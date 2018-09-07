@@ -136,7 +136,7 @@ block content
                     td= monitor.Make
                     td= monitor.Model
                     td= monitor.DateAcquired
-                    if(employee.EmployeeID === 300)
+                    if(employee && employee.EmployeeID === 300)
                         if(monitor.Surplussing === 0)
                             td
                                 button.byu-button.navy(onclick='surplus(#{monitor.ICN})' id='surplusButton#{monitor.ICN}') Surplus

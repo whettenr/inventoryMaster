@@ -372,6 +372,8 @@ block content
         }
 
         function go() {
+            if (employee !== $("#employee option:selected").attr('name')) {
+                changeEmployee();
+            }
             $("#form").submit();
-
         }
