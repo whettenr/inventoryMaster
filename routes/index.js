@@ -307,7 +307,7 @@ router.get('/computerTable', function (req, res, next) {
         })
         .then(rows => {
             computers = rows;
-            return database.query('UPDATE Filters SET filters = "' + filters.toString() + '" WHERE user = \'' + user.netId + '\'');
+            return database.query('UPDATE Filters SET filters = "' + filters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
             res.render('computers', {
