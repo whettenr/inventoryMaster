@@ -683,7 +683,7 @@ router.get('/card', function (req, res, next) {
         .then(rows => {
             employeeRows = rows;
             let query = 'SELECT * FROM Computer WHERE EmployeeID = ' + employeeId;
-            if(surplussing === 'true'){
+            if (surplussing === 'true') {
                 query += ' AND Surplussing = true;';
             }
             return database.query(query);
@@ -691,7 +691,7 @@ router.get('/card', function (req, res, next) {
         .then(rows => {
             computerRows = rows;
             let query = 'SELECT * FROM Monitor WHERE EmployeeID = ' + employeeId;
-            if(surplussing === 'true'){
+            if (surplussing === 'true') {
                 query += ' AND Surplussing = true;';
             }
             return database.query(query);
@@ -703,7 +703,7 @@ router.get('/card', function (req, res, next) {
         .then(rows => {
             printerRows = rows;
             let query = 'SELECT * FROM Peripheral WHERE EmployeeID = ' + employeeId;
-            if(surplussing === 'true'){
+            if (surplussing === 'true') {
                 query += ' AND Surplussing = true;';
             }
             return database.query(query);
@@ -741,7 +741,7 @@ router.get('/getModelOptions', function (req, res, next) {
 
     let modelOptions = {};
 
-    database.query('SELECT DISTINCT Model FROM ?? WHERE Make = ? ORDER BY Model', [Type, Make])
+    database.query('SELECT DISTINCT Model FROM ?? WHERE Make = ? AND EmployeeID != 400 ORDER BY Model', [Type, Make])
         .then(rows => {
             modelOptions = rows;
             modelOptions[modelOptions.length] = {Model: 'None'};
@@ -873,7 +873,7 @@ router.get('/getPeripheralModelOptions', function (req, res, next) {
 
     let modelOptions = {};
 
-    database.query('SELECT DISTINCT Model FROM Peripheral WHERE Make = ? ORDER BY Model', [Make])
+    database.query('SELECT DISTINCT Model FROM Peripheral WHERE Make = ? AND EmployeeID != 400 ORDER BY Model', [Make])
         .then(rows => {
             modelOptions = rows;
             modelOptions[modelOptions.length] = {Model: 'None'};
@@ -895,7 +895,7 @@ router.get('/getItemOptions', function (req, res, next) {
 
     let itemOptions = {};
 
-    database.query('SELECT DISTINCT Item FROM Peripheral WHERE Model = ? ORDER BY Item', [Model])
+    database.query('SELECT DISTINCT Item FROM Peripheral WHERE Model = ? AND EmployeeID != 400 ORDER BY Item', [Model])
         .then(rows => {
             itemOptions = rows;
             itemOptions[itemOptions.length] = {Item: 'None'};
@@ -975,7 +975,7 @@ router.get('/computer', function (req, res, next) {
         })
         .then(rows => {
             typeOptions = rows;
-            return database.query('SELECT DISTINCT Model FROM Computer ORDER BY Model');
+            return database.query('SELECT DISTINCT Model FROM Computer WHERE Make = "' + computer.Make + '" AND EmployeeID != 400 ORDER BY Model');
         })
         .then(rows => {
             modelOptions = rows;
