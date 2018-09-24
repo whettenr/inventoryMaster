@@ -419,7 +419,7 @@ router.get('/monitorTable', function (req, res, next) {
                 monitors: monitors,
                 filters: monitorFilters,
                 user: JSON.parse(vault.read(req)),
-                download: monitors,
+                download: 'monitors',
                 showOptions,
                 actionButton,
                 location
@@ -525,7 +525,7 @@ router.get('/peripheralTable', function (req, res, next) {
                 table: 'peripheralTable',
                 filters: peripheralFilters,
                 user: JSON.parse(vault.read(req)),
-                download: peripherals,
+                download: 'peripherals',
                 location
             });
         })
@@ -612,7 +612,7 @@ router.get('/printerTable', function (req, res, next) {
                 printers: printers,
                 filters: printerFilters,
                 user: JSON.parse(vault.read(req)),
-                download: printers,
+                download: 'printers',
                 location
             });
         })
