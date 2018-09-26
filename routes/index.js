@@ -1931,6 +1931,42 @@ router.get('/updatePageCounts', function (req, res, next) {
         .then(rows => {
             printers = rows;
             for (let i in printers) {
+                if (printers[i]['Page Count 03/09/2015']) {
+                    let stuff = '';
+                    stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
+                    stuff += printers[i].ICN;
+                    stuff += ", '2015-03-09', 'B&W', ";
+                    stuff += printers[i]['Page Count 03/09/2015'];
+                    stuff += ");";
+                    queries.push(stuff);
+                }
+                if (printers[i]['Page Count 6/5/2015']) {
+                    let stuff = '';
+                    stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
+                    stuff += printers[i].ICN;
+                    stuff += ", '2015-06-05', 'B&W', ";
+                    stuff += printers[i]['Page Count 6/5/2015'];
+                    stuff += ");";
+                    queries.push(stuff);
+                }
+                if (printers[i]['Page Count 8/22/2013']) {
+                    let stuff = '';
+                    stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
+                    stuff += printers[i].ICN;
+                    stuff += ", '2013-08-22', 'B&W', ";
+                    stuff += printers[i]['Page Count 8/22/2013'];
+                    stuff += ");";
+                    queries.push(stuff);
+                }
+                if (printers[i]['Page Count 12/3/13']) {
+                    let stuff = '';
+                    stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
+                    stuff += printers[i].ICN;
+                    stuff += ", '2013-12-03', 'B&W', ";
+                    stuff += printers[i]['Page Count 12/3/13'];
+                    stuff += ");";
+                    queries.push(stuff);
+                }
                 if (printers[i]['Page Count 9/12/2014']) {
                     let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
@@ -2042,8 +2078,8 @@ router.get('/updatePageCounts', function (req, res, next) {
                     let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
-                    stuff += ", '2014-09-12', 'B&W', ";
-                    stuff += printers[i]['Page Count 9/12/2014'];
+                    stuff += ", '2015-09-04', 'B&W', ";
+                    stuff += printers[i]['Page Count 9/4/15'];
                     stuff += ");";
                     queries.push(stuff);
 
@@ -2052,8 +2088,8 @@ router.get('/updatePageCounts', function (req, res, next) {
                     let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
-                    stuff += ", '2014-09-04', 'B&W', ";
-                    stuff += printers[i]['Page Count 9/4/15'];
+                    stuff += ", '2017-09-20', 'B&W', ";
+                    stuff += printers[i]['Page Count 9/20/2017'];
                     stuff += ");";
                     queries.push(stuff);
 
@@ -2085,7 +2121,9 @@ router.get('/updatePageCounts', function (req, res, next) {
 
             for(let query of queries){
                 pool.query(query, function(err, info){
-                    console.log(info);
+                    if(err){
+                        console.log(query);
+                    }
                 });
             }
         })

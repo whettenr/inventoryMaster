@@ -163,7 +163,7 @@ module.exports = function (req, res, next) {
 
                 }
                 else {
-                    res.redirect(location + '/login');
+                    res.render('login');
                 }
             })
             .catch(function error(e) {
