@@ -1926,121 +1926,172 @@ router.get('/updateDates', function (req, res, next) {
 router.get('/updatePageCounts', function (req, res, next) {
     let database = new Database(config.getConfig());
     let printers = {};
-    let stuff = '';
+    let queries = [];
     database.query("SELECT * FROM Printer")
         .then(rows => {
             printers = rows;
             for (let i in printers) {
                 if (printers[i]['Page Count 9/12/2014']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2014-09-12', 'B&W', ";
                     stuff += printers[i]['Page Count 9/12/2014'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
                 }
                 if (printers[i]['Page Count 12/3/15']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2015-12-03', 'B&W', ";
                     stuff += printers[i]['Page Count 12/3/15'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
                 }
                 if (printers[i]['Page Count 3/7/2014']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2014-03-07', 'B&W', ";
                     stuff += printers[i]['Page Count 3/7/2014'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
                 }
                 if (printers[i]['Page Count 3/2/16']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2016-03-02', 'B&W', ";
                     stuff += printers[i]['Page Count 3/2/16'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
+
                 }
                 if (printers[i]['Page Count 6/6/16']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2016-06-06', 'B&W', ";
                     stuff += printers[i]['Page Count 6/6/16'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
+
                 }
                 if (printers[i]['Page Count 12/12/2014']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2014-12-12', 'B&W', ";
                     stuff += printers[i]['Page Count 12/12/2014'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
+
                 }
                 if (printers[i]['Page Count 12/5/16']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2016-12-05', 'B&W', ";
                     stuff += printers[i]['Page Count 12/5/16'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
+
                 }
                 if (printers[i]['Page Count 6/8/17']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2017-06-08', 'B&W', ";
                     stuff += printers[i]['Page Count 6/8/17'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
+
                 }
                 if (printers[i]['Page Count 3/7/17']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2017-03-07', 'B&W', ";
                     stuff += printers[i]['Page Count 3/7/17'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
+
                 }
                 if (printers[i]['Page Count 9/15/16']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2016-09-15', 'B&W', ";
                     stuff += printers[i]['Page Count 9/15/16'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
+
                 }
                 if (printers[i]['Page Count 6/6/2014']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2014-06-06', 'B&W', ";
                     stuff += printers[i]['Page Count 6/6/2014'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
+
                 }
                 if (printers[i]['Page Count 9/4/15']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2014-09-12', 'B&W', ";
                     stuff += printers[i]['Page Count 9/12/2014'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
+
                 }
                 if (printers[i]['Page Count 9/20/2017']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2014-09-04', 'B&W', ";
                     stuff += printers[i]['Page Count 9/4/15'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
+
                 }
                 if (printers[i]['Page Count 12/18/2017']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2017-12-18', 'B&W', ";
                     stuff += printers[i]['Page Count 12/18/2017'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
+
                 }
                 if (printers[i]['Page Count 3/16/18']) {
+                    let stuff = '';
                     stuff += "INSERT INTO PageCounts (ICN, Date, Type, PageCount) Values(";
                     stuff += printers[i].ICN;
                     stuff += ", '2018-03-16', 'B&W', ";
                     stuff += printers[i]['Page Count 3/16/18'];
-                    stuff += ");\n";
+                    stuff += ");";
+                    queries.push(stuff);
+
                 }
             }
         })
         .then(() => {
-        console.log(stuff);
-            res.render('home', {title: stuff, user: 'McKay'})
+            let pool = mysql.createPool(config.getConfig());
+
+            for(let query of queries){
+                pool.query(query, function(err, info){
+                    console.log(info);
+                });
+            }
+        })
+        .then(() => {
+            res.render('home', {title: 'test', user: 'McKay'})
+
         })
         .catch(err => {
             console.log(err);
@@ -2398,6 +2449,16 @@ router.post('/employee', function (req, res, next) {
             console.log(err);
         });
     // res.render('home', {title: 'Welcome', user: 'McKay'})
+});
+
+router.get('/test', function (req, res, next) {
+   let test = {
+       test1: 'test1',
+       test2: 'test2'
+   };
+   test.test3 = 'test3';
+   console.log(test);
+   res.redirect('/');
 });
 
 
