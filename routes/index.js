@@ -1068,9 +1068,13 @@ router.get('/printer', function (req, res, next) {
     let modelOptions = {};
     let employees = {};
     let pageCounts = {};
+    let averagePrintCount = {};
     let printer = {};
     let employee = {};
     let highChartJSONDiff = {
+        chart: {
+            type: 'column'
+        },
         title: {
             text: 'Difference'
         },
@@ -1164,6 +1168,10 @@ router.get('/printer', function (req, res, next) {
         })
         .then(rows => {
             modelOptions = rows;
+            return database.query('SELECT Date, AVG(PageCount) FROM PageCounts JOIN Printer ON PageCounts.ICN = Printer.ICN WHERE Model = \'' + printer.Model + '\' GROUP BY Date;')
+        })
+        .then(rows => {
+            averagePrintCount = rows;
             return database.query('SELECT * FROM PageCounts WHERE ICN = ' + ICN + ' ORDER BY DATE');
         })
         .then(rows => {
@@ -1174,6 +1182,10 @@ router.get('/printer', function (req, res, next) {
             let series = [];
             let data = [];
             let categories = [];
+            let avgData = [];
+            for(let pageCount of averagePrintCount){
+                avgData.push(pageCount['AVG(PageCount)']);
+            }
             for(let pageCount of pageCounts){
                 data.push(pageCount.PageCount);
                 let date = new Date(pageCount.Date);
@@ -1181,7 +1193,13 @@ router.get('/printer', function (req, res, next) {
             }
             series.push({
                 name: 'Print Counts',
+                color: '#002E5D',
                 data: data
+            });
+            series.push({
+                name: 'Average',
+                color: '#66B200',
+                data: avgData
             });
             highChartJSON.xAxis = {};
             highChartJSONDiff.xAxis = {};
@@ -1194,6 +1212,7 @@ router.get('/printer', function (req, res, next) {
             }
             diffSeries.push({
                 name: 'Difference',
+                color: '#002E5D',
                 data: diffData
             });
             highChartJSONDiff.series = diffSeries;

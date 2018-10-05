@@ -76,12 +76,11 @@ block content
                         .col-75
                             textarea#history(name='history' style='height:200px' readonly='readonly') #{printer.History}
                     .row
-                        .col-25
-                            #highChartJSON(style='display: none;')= json
-                            #highChart
-                        .col-75
-                            #highChartJSONDiff(style='display: none;')= diffJson
-                            #highChart2
+                        #highChartJSON(style='display: none;')= json
+                        #highChart
+                    .row
+                        #highChartJSONDiff(style='display: none;')= diffJson
+                        #highChart2
     script.
         let icn = "#{printer.ICN}";
         let employee = "#{employee.FirstName} #{employee.LastName}";
