@@ -23,6 +23,9 @@ block content
                     td
                         a(href='#{location}/printerTable?sortby=Model')
                             div= "Model"
+                    td
+                        a(href='#{location}/printerTable?sortby=LesOlsonID')
+                            div= "Les Olson ID"
                     td= "Serial Number"
                     td
                         a(href='#{location}/printerTable?sortby=dateAcquired')
@@ -47,6 +50,7 @@ block content
                         td
                             a(href='#{location}/printerTable?where=Model=\'#{printer.Model}\'')
                                 div= printer.Model
+                        td= printer.LesOlsonID
                         td= printer.SerialNumber
                         td= printer.DateAcquired
                         td= printer.Warranty

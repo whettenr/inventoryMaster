@@ -10,6 +10,8 @@ let passport = require('passport');
 const bodyParser = require('body-parser');
 let cookiee = require('cookie-encryption');
 let vault = cookiee('ciao');
+let Highcharts = require('highcharts');
+
 // let users = require('./users')();
 // let axios = require('axios');
 
@@ -595,6 +597,9 @@ router.get('/printerTable', function (req, res, next) {
     else if (req.query.sortby === 'dateAcquired') {
         query += ' ORDER BY DateAcquired';
     }
+    else if (req.query.sortby === 'LesOlsonID') {
+        query += ' ORDER BY LesOlsonID';
+    }
     else {
         query += ' Order BY ICN';
     }
@@ -1063,10 +1068,18 @@ router.get('/printer', function (req, res, next) {
     let makeOptions = {};
     let modelOptions = {};
     let employees = {};
+    let pageCounts = {};
     let printer = {};
     let employee = {};
+    let highChartJSON = {};
+    highChartJSON.series = [];
+    let seriesPoint = {};
+    seriesPoint.name = 'Installation';
+    seriesPoint.data = [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175];
+    highChartJSON.series.push(seriesPoint);
 
     let database = new Database(config.getConfig());
+    highChartJSON = JSON.stringify(highChartJSON);
 
     database.query('SELECT DISTINCT Make FROM Printer')
         .then(rows => {
@@ -1087,6 +1100,10 @@ router.get('/printer', function (req, res, next) {
         })
         .then(rows => {
             modelOptions = rows;
+            return database.query('SELECT * FROM PageCounts WHERE ICN = ' + ICN);
+        })
+        .then(rows => {
+            pageCounts = rows;
             return database.close();
         })
         .then(() => {
@@ -1098,7 +1115,8 @@ router.get('/printer', function (req, res, next) {
                 printer,
                 employee,
                 user: JSON.parse(vault.read(req)),
-                location
+                location,
+                json: highChartJSON
             })
         })
         .catch(err => {
