@@ -7,7 +7,6 @@ let authenticated = require('./middlewares/authenticated');
 let session = require('express-session');
 let cookiee = require('cookie-encryption');
 let vault = cookiee('ciao');
-let Highcharts = require('highcharts');
 
 // // Load module after Highcharts is loaded
 // require('highcharts/modules/exporting')(Highcharts);

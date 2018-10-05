@@ -10,7 +10,6 @@ let passport = require('passport');
 const bodyParser = require('body-parser');
 let cookiee = require('cookie-encryption');
 let vault = cookiee('ciao');
-let Highcharts = require('highcharts');
 
 // let users = require('./users')();
 // let axios = require('axios');
@@ -1071,15 +1070,80 @@ router.get('/printer', function (req, res, next) {
     let pageCounts = {};
     let printer = {};
     let employee = {};
-    let highChartJSON = {};
-    highChartJSON.series = [];
-    let seriesPoint = {};
-    seriesPoint.name = 'Installation';
-    seriesPoint.data = [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175];
-    highChartJSON.series.push(seriesPoint);
+    let highChartJSONDiff = {
+        title: {
+            text: 'Difference'
+        },
+        yAxis: {
+            title: {
+                text: 'Pages'
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                }
+            }
+        },
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 1200
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        }
+    };
+    let highChartJSON = {
+        title: {
+            text: 'Print Count'
+        },
+        yAxis: {
+            title: {
+                text: 'Pages'
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                }
+            }
+        },
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 1200
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        }
+    };
 
     let database = new Database(config.getConfig());
-    highChartJSON = JSON.stringify(highChartJSON);
 
     database.query('SELECT DISTINCT Make FROM Printer')
         .then(rows => {
@@ -1100,10 +1164,42 @@ router.get('/printer', function (req, res, next) {
         })
         .then(rows => {
             modelOptions = rows;
-            return database.query('SELECT * FROM PageCounts WHERE ICN = ' + ICN);
+            return database.query('SELECT * FROM PageCounts WHERE ICN = ' + ICN + ' ORDER BY DATE');
         })
         .then(rows => {
             pageCounts = rows;
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            let series = [];
+            let data = [];
+            let categories = [];
+            for(let pageCount of pageCounts){
+                data.push(pageCount.PageCount);
+                let date = new Date(pageCount.Date);
+                categories.push(monthNames[date.getMonth()] + ' ' + date.getFullYear());
+            }
+            series.push({
+                name: 'Print Counts',
+                data: data
+            });
+            highChartJSON.xAxis = {};
+            highChartJSONDiff.xAxis = {};
+            highChartJSON.xAxis.categories = categories;
+            highChartJSONDiff.xAxis.categories = categories;
+            let diffSeries = [];
+            let diffData = [];
+            for(let i = 1; i < pageCounts.length; i++){
+                diffData.push(pageCounts[i].PageCount - pageCounts[i-1].PageCount);
+            }
+            diffSeries.push({
+                name: 'Difference',
+                data: diffData
+            });
+            highChartJSONDiff.series = diffSeries;
+            highChartJSON.series = series;
+            highChartJSON = JSON.stringify(highChartJSON);
+            highChartJSONDiff = JSON.stringify(highChartJSONDiff);
             return database.close();
         })
         .then(() => {
@@ -1116,7 +1212,8 @@ router.get('/printer', function (req, res, next) {
                 employee,
                 user: JSON.parse(vault.read(req)),
                 location,
-                json: highChartJSON
+                json: highChartJSON,
+                diffJson: highChartJSONDiff
             })
         })
         .catch(err => {
