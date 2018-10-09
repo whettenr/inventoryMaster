@@ -1,0 +1,235 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='#{location}/stylesheets/table.css')
+    if(sortby)
+        div
+            | Sort By: #{sortby} #{order}
+    include filters
+    if(employee)
+        include employeeInfo
+    div= "Count: " + Object.keys(computers).length
+    div(style='overflow-x:auto;')
+        table#table
+            tbody
+                tr#myHeader
+                    td
+                        if(order === 'asc')
+                            a(href='#{location}/stuffTable?sortby=ICN&order=dsc')
+                                div='ICN'
+                        else
+                            a(href='#{location}/stuffTable?sortby=ICN&order=asc')
+                                div='ICN'
+                    if(showOptions.FirstName)
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/stuffTable?sortby=firstname&order=dsc')
+                                    div= "First Name"
+                            else
+                                a(href='#{location}/stuffTable?sortby=firstname&order=asc')
+                                    div= "First Name"
+                    if(showOptions.LastName)
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/stuffTable?sortby=lastname&order=dsc')
+                                    div= "Last Name"
+                            else
+                                a(href='#{location}/stuffTable?sortby=lastname&order=asc')
+                                    div= "Last Name"
+                    if(showOptions.Make)
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/stuffTable?sortby=Make&order=dsc')
+                                    div= "Make"
+                            else
+                                a(href='#{location}/stuffTable?sortby=Make&order=asc')
+                                    div= "Make"
+                    if(showOptions.Model)
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/stuffTable?sortby=Model&order=dsc')
+                                    div= "Model"
+                            else
+                                a(href='#{location}/stuffTable?sortby=Model&order=asc')
+                                    div= "Model"
+                    if(showOptions.Item)
+                        td
+                            a(href='#{location}/peripheralTable?sortby=Item')
+                                div= "Item"
+                    if(showOptions.SerialNumber)
+                        td= "Serial Number"
+                    if(showOptions.ServiceTag)
+                        td= "Service Tag"
+                    if(showOptions.ExpressServiceCode)
+                        td= "Express Service Code"
+                    if(showOptions.Type)
+                        td= "Type"
+                    if(showOptions.DateAcquired)
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/stuffTable?sortby=dateAcquired&order=dsc')
+                                    div= "Date Acquired"
+                            else
+                                a(href='#{location}/stuffTable?sortby=dateAcquired&order=asc')
+                                    div= "Date Acquired"
+                    if(showOptions.Warranty)
+                        td= "Warranty"
+                    if(showOptions.HomeCheckout)
+                        td= "Home Checkout"
+                    if(showOptions.Touch)
+                        td= "Touch"
+                    if(showOptions.ScreenResolution)
+                        td= "Screen Resolution"
+                    if(showOptions.Rotation)
+                        td= "Rotation"
+                    if(showOptions.Notes)
+                        td= "Notes"
+                    if(showOptions.History)
+                        td= "History"
+                    if(showOptions.ProcessorType)
+                        td
+                            a(href='#{location}/stuffTable?sortby=processorType&hardware=true&order=asc')
+                                div= "Processor Type"
+                    if(showOptions.ProcessorSpeed)
+                        td
+                            a(href='#{location}/stuffTable?sortby=processorSpeed&hardware=true&order=asc')
+                                div= "Processor Speed"
+                    if(showOptions.Memory)
+                        td
+                            a(href='#{location}/stuffTable?sortby=memory&hardware=true&order=asc')
+                                div= "Memory"
+                    if(showOptions.HardDrive)
+                        td
+                            a(href='#{location}/stuffTable?sortby=hardDrive&hardware=true&order=asc')
+                                div= "Hard Drive"
+                    if(showOptions.VCName)
+                        td
+                            a(href='#{location}/stuffTable?sortby=vcName&hardware=true&order=asc')
+                                div= "Graphics Card"
+                    if(showOptions.Surplus)
+                        td
+                            div= "Surplus"
+                each computer in computers
+                    tr
+                        td
+                            a(href='#{location}/computer?ICN=' + computer.ICN)
+                                div= computer.ICN
+                                //i(class="material-icons") laptop
+                        if(showOptions.FirstName)
+                            td
+                                a(href='#{location}/stuffTable?where=EmployeeID=\'#{computer.EmployeeID}\'')
+                                    div= computer.FirstName
+                        if(showOptions.LastName)
+                            td
+                                a(href='#{location}/stuffTable?where=EmployeeID=\'#{computer.EmployeeID}\'')
+                                    div= computer.LastName
+                        if(showOptions.Make)
+                            td
+                                a(href='#{location}/stuffTable?where=Make=\'#{computer.Make}\'')
+                                    div= computer.Make
+                        if(showOptions.Model)
+                            td
+                                a(href='#{location}/stuffTable?where=Model=\'#{computer.Model}\'')
+                                    div= computer.Model
+                        if(showOptions.Item)
+                            td
+                                a(href='#{location}/stuffTable?where=Item=\'#{computer.Item}\'')
+                                    div= computer.Item
+                        if(showOptions.SerialNumber)
+                            td= computer.SerialNumber
+                        if(showOptions.ServiceTag)
+                            td= computer.ServiceTag
+                        if(showOptions.ExpressServiceCode)
+                            td= computer.ExpressServiceCode
+                        if(showOptions.Type)
+                            td
+                                a(href='#{location}/stuffTable?where=Type=\'#{computer.Type}\'')
+                                    div= computer.Type
+                        if(showOptions.DateAcquired)
+                            td= computer.DateAcquired
+                        if(showOptions.Warranty)
+                            td= computer.Warranty
+                        if(showOptions.HomeCheckout)
+                            td
+                                a(href='#{location}/stuffTable?where=HomeCheckout=\'#{computer.HomeCheckout}\'')
+                                    div
+                                        if(computer.HomeCheckout === 'on')
+                                            i(class="material-icons")= 'home'
+                        if(showOptions.Touch)
+                            td
+                                a(href='#{location}/stuffTable?where=Touch=\'#{computer.Touch}\'')
+                                    div
+                                        if(computer.Touch === 'on')
+                                            i(class="material-icons")= 'touch_app'
+                        if(showOptions.ScreenResolution)
+                            td
+                                a(href='#{location}/stuffTable?where=ScreenResolution=\'#{computer.ScreenResolution}\'')
+                                    div= computer.ScreenResolution
+                                if(showOptions.Rotation)
+                            td
+                                a(href='#{location}/stuffTable?where=RotationGroup=\'#{computer.RotationGroup}\'')
+                                    div= computer.RotationGroup
+                        if(showOptions.Notes)
+                            td= computer.Notes
+                        if(showOptions.History)
+                            td= computer.History
+                        if(showOptions.ProcessorType)
+                            td
+                                a(href='#{location}/stuffTable?where=ProcessorType=\'#{computer.ProcessorType}\'')
+                                    div= computer.ProcessorType
+                        if(showOptions.ProcessorSpeed)
+                            td
+                                a(href='#{location}/stuffTable?where=ProcessorSpeed=\'#{computer.ProcessorSpeed}\'')
+                                    div= computer.ProcessorSpeed
+                        if(showOptions.Memory)
+                            td
+                                a(href='#{location}/stuffTable?where=Memory=\'#{computer.Memory}\'')
+                                    div= computer.Memory
+                        if(showOptions.HardDrive)
+                            td
+                                a(href='#{location}/stuffTable?where=HardDrive=\'#{computer.HardDrive}\'')
+                                    div= computer.HardDrive
+                        if(showOptions.VCName)
+                            td
+                                a(href='#{location}/stuffTable?where=VCName=\'#{computer.VCName}\'')
+                                    div= computer.VCName
+                        if(showOptions.Surplus)
+                            if(computer.Surplussing === 0)
+                                td
+                                    button.byu-button.navy(onclick='surplus(#{computer.ICN})' id='surplusButton#{computer.ICN}') Surplus
+                            else
+                                td
+                                    button.byu-button.whitenavy(onclick='undo(#{computer.ICN})' id='surplusButton#{computer.ICN}') Undo
+    script.
+        function toggleSidebar() {
+            $("#sidebar").slideToggle();
+        }
+        function getComputerInfo(ICN, EmployeeID) {
+            window.location.href = '#{location}/computer?EmployeeID=' + EmployeeID + '&ICN=' + ICN;
+        }
+
+        function surplus(ICN) {
+            $.ajax({
+                type: "GET",
+                url: "#{location}/finnaSurplus?table=Computer&ICN=" + ICN,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#surplusButton" + ICN).html('Undo');
+                $("#surplusButton" + ICN).attr("onclick", "undo(" + ICN + ")");
+                $("#surplusButton" + ICN).removeClass("navy");
+                $("#surplusButton" + ICN).addClass("whitenavy");
+            });
+        }
+
+        function undo(ICN) {
+            $.ajax({
+                type: "GET",
+                url: "#{location}/undoFinnaSurplus?table=Computer&ICN=" + ICN,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#surplusButton" + ICN).html('Surplus');
+                $("#surplusButton" + ICN).attr("onclick", "surplus(" + ICN + ")");
+                $("#surplusButton" + ICN).removeClass("whitenavy");
+                $("#surplusButton" + ICN).addClass("navy");
+            });
+        }

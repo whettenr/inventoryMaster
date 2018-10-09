@@ -1,0 +1,22 @@
+if(employee)
+    .titles
+        if(employee.PictureURL)
+            img.pic(src='#{employee.PictureURL}' onerror='javascript:this.src="images/default.png"')
+        h1.left
+            a(href='#{location}/employee?EmployeeID=#{employee.EmployeeID}') #{employee.FirstName} #{employee.LastName}
+        h3.left Office: #{employee.Office} #{employee.Building}
+        h3.left Category: #{employee.Category}
+        h3.left Rotation Group: #{employee.RotationGroup}
+        #dropDown.byu-button.royal(style='padding: 0;')
+            div(class='dropdown')
+                div(class='dropbtn') Add Item
+                div(class='dropdown-content')
+                    div(onclick='newComputer(#{employee.EmployeeID})') New Computer
+                    div(onclick='newMonitor(#{employee.EmployeeID})') New Monitor
+                    div(href='/computerTable') New Printer
+                    div(onclick='newPeripheral(#{employee.EmployeeID})') New Peripheral
+        .mobileButtons
+            div.mobileButton.byu-button.royal(onclick='newComputer(#{employee.EmployeeID})') New Computer
+            div.mobileButton.byu-button.royal(onclick='newMonitor(#{employee.EmployeeID})') New Monitor
+            div.mobileButton.byu-button.royal(href='/computerTable') New Printer
+            div.mobileButton.byu-button.royal(onclick='newPeripheral(#{employee.EmployeeID})') New Peripheral
