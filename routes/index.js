@@ -413,7 +413,7 @@ router.get('/monitorTable', function (req, res, next) {
         })
         .then(rows => {
             monitors = rows;
-            return database.query('UPDATE Filters SET monitorFilters = "' + monitorFilters.toString() + '"');
+            return database.query('UPDATE Filters SET monitorFilters = "' + monitorFilters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
             database.close();
@@ -517,7 +517,7 @@ router.get('/peripheralTable', function (req, res, next) {
         })
         .then(rows => {
             peripherals = rows;
-            return database.query('UPDATE Filters SET peripheralFilters = "' + peripheralFilters.toString() + '"')
+            return database.query('UPDATE Filters SET peripheralFilters = "' + peripheralFilters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'')
         })
         .then(() => {
             database.close();
