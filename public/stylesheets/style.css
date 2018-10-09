@@ -1,13 +1,10 @@
 body {
-  /*padding: 50px;*/
   font-family: ‘HCo Ringside Narrow SSm’, Arial Narrow, Arial, sans-serif;
-  /*font-family: Gotham, serif;*/
 }
 
 .navbar {
   overflow: hidden;
   background-color: #002E5D;
-  font-family: Arial;
 }
 
 .sidebar {
@@ -23,23 +20,15 @@ body {
 
 
 table {
-  /*font-family: arial, sans-serif;*/
-  /*border-spacing: 0;*/
   width: 100%;
-  /*border: 1px solid #ddd;*/
 }
 
 td, th {
   border: 1px solid #dddddd;
   text-align: center;
   padding: 8px;
-  /*cursor: pointer;*/
-
 }
 
-tr:nth-child(even) {
-  /*background-color: #dddddd;*/
-}
 input{
   width: 100%;
   border: none;
@@ -62,7 +51,6 @@ a:visited{
 }
 
 .dropdown {
-  /*float: left;*/
   overflow: hidden;
 }
 
