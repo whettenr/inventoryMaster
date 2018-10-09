@@ -44,6 +44,9 @@ let config = require('./config');
 let URL = config.getURL();
 
 let location = config.getLocation();
+const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+];
 
 function getCurrentDate() {
     let date = new Date();
@@ -686,7 +689,7 @@ router.get('/card', function (req, res, next) {
     database.query('SELECT * FROM Employee WHERE EmployeeID = ' + employeeId)
         .then(rows => {
             employeeRows = rows;
-            let query = 'SELECT * FROM Computer WHERE EmployeeID = ' + employeeId;
+            let query = 'SELECT Computer.*, MAX(Inventory.CurrentDate) FROM Computer LEFT JOIN Inventory ON Computer.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId + ' GROUP BY Computer.ICN;';
             if (surplussing === 'true') {
                 query += ' AND Surplussing = true;';
             }
@@ -694,7 +697,16 @@ router.get('/card', function (req, res, next) {
         })
         .then(rows => {
             computerRows = rows;
-            let query = 'SELECT * FROM Monitor WHERE EmployeeID = ' + employeeId;
+            for (let computer of computerRows) {
+                if (computer['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(computer['MAX(Inventory.CurrentDate)']);
+                    computer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                }
+                else {
+                    computer['MAX(Inventory.CurrentDate)'] = 'Never';
+                }
+            }
+            let query = 'SELECT Monitor.*, MAX(Inventory.CurrentDate) FROM Monitor LEFT JOIN Inventory ON Monitor.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId + ' GROUP BY Monitor.ICN;';
             if (surplussing === 'true') {
                 query += ' AND Surplussing = true;';
             }
@@ -702,11 +714,29 @@ router.get('/card', function (req, res, next) {
         })
         .then(rows => {
             monitorRows = rows;
-            return database.query('SELECT * FROM Printer WHERE EmployeeID = ' + employeeId);
+            for (let monitor of monitorRows) {
+                if (monitor['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(monitor['MAX(Inventory.CurrentDate)']);
+                    monitor['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                }
+                else {
+                    monitor['MAX(Inventory.CurrentDate)'] = 'Never';
+                }
+            }
+            return database.query('SELECT Printer.*, MAX(Inventory.CurrentDate) FROM Printer LEFT JOIN Inventory ON Printer.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId + ' GROUP BY Printer.ICN;');
         })
         .then(rows => {
             printerRows = rows;
-            let query = 'SELECT * FROM Peripheral WHERE EmployeeID = ' + employeeId;
+            for (let printer of printerRows) {
+                if (printer['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(printer['MAX(Inventory.CurrentDate)']);
+                    printer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                }
+                else {
+                    printer['MAX(Inventory.CurrentDate)'] = 'Never';
+                }
+            }
+            let query = 'SELECT Peripheral.*, MAX(Inventory.CurrentDate) FROM Peripheral LEFT JOIN Inventory ON Peripheral.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId + ' GROUP BY Peripheral.ICN;';
             if (surplussing === 'true') {
                 query += ' AND Surplussing = true;';
             }
@@ -714,6 +744,15 @@ router.get('/card', function (req, res, next) {
         })
         .then(rows => {
             peripheralRows = rows;
+            for (let peripheral of peripheralRows) {
+                if (peripheral['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(peripheral['MAX(Inventory.CurrentDate)']);
+                    peripheral['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                }
+                else {
+                    peripheral['MAX(Inventory.CurrentDate)'] = 'Never';
+                }
+            }
             return database.close();
         })
         .then(() => {
@@ -1176,17 +1215,14 @@ router.get('/printer', function (req, res, next) {
         })
         .then(rows => {
             pageCounts = rows;
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
             let series = [];
             let data = [];
             let categories = [];
             let avgData = [];
-            for(let pageCount of averagePrintCount){
+            for (let pageCount of averagePrintCount) {
                 avgData.push(pageCount['AVG(PageCount)']);
             }
-            for(let pageCount of pageCounts){
+            for (let pageCount of pageCounts) {
                 data.push(pageCount.PageCount);
                 let date = new Date(pageCount.Date);
                 categories.push(monthNames[date.getMonth()] + ' ' + date.getFullYear());
@@ -1207,8 +1243,8 @@ router.get('/printer', function (req, res, next) {
             highChartJSONDiff.xAxis.categories = categories;
             let diffSeries = [];
             let diffData = [];
-            for(let i = 1; i < pageCounts.length; i++){
-                diffData.push(pageCounts[i].PageCount - pageCounts[i-1].PageCount);
+            for (let i = 1; i < pageCounts.length; i++) {
+                diffData.push(pageCounts[i].PageCount - pageCounts[i - 1].PageCount);
             }
             diffSeries.push({
                 name: 'Difference',
@@ -2253,9 +2289,9 @@ router.get('/updatePageCounts', function (req, res, next) {
         .then(() => {
             let pool = mysql.createPool(config.getConfig());
 
-            for(let query of queries){
-                pool.query(query, function(err, info){
-                    if(err){
+            for (let query of queries) {
+                pool.query(query, function (err, info) {
+                    if (err) {
                         console.log(query);
                     }
                 });
@@ -2394,6 +2430,18 @@ router.get('/undoFinnaSurplus', function (req, res, next) {
         .catch(err => {
             console.log(err);
         });
+});
+
+router.get('/updateInventory', function (req, res, next) {
+    let ICN = req.query.ICN;
+    let database = new Database(config.getConfig());
+    database.query('INSERT INTO Inventory (ICN) VALUES(?)',[ICN])
+        .then(rows=> {
+            database.close();
+            let date = new Date();
+            res.send(monthNames[date.getMonth()] + ' ' + date.getFullYear());
+        })
+
 });
 
 router.post('/showOptions', function (req, res, next) {
@@ -2624,13 +2672,13 @@ router.post('/employee', function (req, res, next) {
 });
 
 router.get('/test', function (req, res, next) {
-   let test = {
-       test1: 'test1',
-       test2: 'test2'
-   };
-   test.test3 = 'test3';
-   console.log(test);
-   res.redirect('/');
+    let test = {
+        test1: 'test1',
+        test2: 'test2'
+    };
+    test.test3 = 'test3';
+    console.log(test);
+    res.redirect('/');
 });
 
 
