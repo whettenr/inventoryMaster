@@ -240,12 +240,11 @@ router.get('/computerTable', function (req, res, next) {
                     else {
                         query += 'Computer.'
                     }
-                    query += filters[filter];
+                    query += filters[filter].replace('%20', ' ').replace('%27', '\'').replace('%20', ' ').replace('%27', '\'');
                     query += ' and ';
                 }
                 query = query.substr(0, query.length - 5);
             }
-
             if (req.query.sortby === 'ICN') {
                 query += ' Order BY ICN';
             }
@@ -314,6 +313,7 @@ router.get('/computerTable', function (req, res, next) {
             for (let computer of computers) {
                 if (computer.DateAcquired) {
                     let date = new Date(computer.DateAcquired);
+                    computer.DateAcquiredFilter = computer.DateAcquired.substr(0, computer.DateAcquired.length - 3) + '%';
                     computer.DateAcquired = monthNames[date.getMonth()] + ' ' + date.getFullYear();
                 }
                 else {

@@ -136,7 +136,9 @@ block content
                                 a(href='#{location}/computerTable?where=Type=\'#{computer.Type}\'')
                                     div= computer.Type
                         if(showOptions.DateAcquired)
-                            td= computer.DateAcquired
+                            td
+                                a(href='#{location}/computerTable?where=DateAcquired LIKE \'#{computer.DateAcquiredFilter}\'')
+                                    div= computer.DateAcquired
                         if(showOptions.Warranty)
                             td= computer.Warranty
                         if(showOptions.HomeCheckout)
