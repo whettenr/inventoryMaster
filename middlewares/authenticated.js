@@ -111,7 +111,7 @@ module.exports = function (req, res, next) {
                         "SerialNumber": false,
                         "DateAcquired": true,
                         "Warranty": true,
-                        "HomeCheckout": false,
+                        "HomeCheckout": true,
                         "Notes": true,
                         "History": false,
                         "Surplus": false

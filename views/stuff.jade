@@ -106,6 +106,9 @@ block content
                         td
                             a(href='#{location}/stuffTable?sortby=vcName&hardware=true&order=asc')
                                 div= "Graphics Card"
+                    if(showOptions.Inventory)
+                        td
+                            div= "Inventory"
                     if(showOptions.Surplus)
                         td
                             div= "Surplus"
@@ -193,6 +196,9 @@ block content
                             td
                                 a(href='#{location}/stuffTable?where=VCName=\'#{computer.VCName}\'')
                                     div= computer.VCName
+                        if(showOptions.Inventory)
+                            td
+                                .byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
                         if(showOptions.Surplus)
                             if(computer.Surplussing === 0)
                                 td

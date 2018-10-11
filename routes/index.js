@@ -351,7 +351,7 @@ router.get('/stuffTable', function (req, res, next) {
             }
         })
         .then(() => {
-            let query = 'SELECT * FROM Stuff LEFT JOIN Employee on Stuff.EmployeeID = Employee.EmployeeID LEFT JOIN Hardware ON Stuff.HardwareID = Hardware.HardwareID WHERE Stuff.EmployeeID != 400';
+            let query = 'SELECT Stuff.*, Employee.*, Hardware.*, MAX(Inventory.CurrentDate) FROM Stuff LEFT JOIN Employee on Stuff.EmployeeID = Employee.EmployeeID LEFT JOIN Hardware ON Stuff.HardwareID = Hardware.HardwareID LEFT JOIN Inventory ON Stuff.ICN = Inventory.ICN WHERE Stuff.EmployeeID != 400';
             if (req.query.remove) {
                 let splice = parseInt(req.query.remove);
                 filters.splice(splice, 1);
@@ -431,7 +431,7 @@ router.get('/stuffTable', function (req, res, next) {
                 query += ' ORDER BY VCName';
             }
             else {
-                query += ' Order BY ICN';
+                query += ' GROUP BY Stuff.ICN Order BY Stuff.ICN';
             }
 
             if (req.query.order === 'asc') {
@@ -459,6 +459,15 @@ router.get('/stuffTable', function (req, res, next) {
         })
         .then(rows => {
             computers = rows;
+            for (let computer of computers) {
+                if (computer['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(computer['MAX(Inventory.CurrentDate)']);
+                    computer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                }
+                else {
+                    computer['MAX(Inventory.CurrentDate)'] = 'Never';
+                }
+            }
             return database.query('UPDATE Filters SET filters = "' + filters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
