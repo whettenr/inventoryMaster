@@ -311,6 +311,15 @@ router.get('/computerTable', function (req, res, next) {
         })
         .then(rows => {
             computers = rows;
+            for (let computer of computers) {
+                if (computer.DateAcquired) {
+                    let date = new Date(computer.DateAcquired);
+                    computer.DateAcquired = computer.DateAcquired + ' ' + monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                }
+                else {
+                    computer.DateAcquired = 'None';
+                }
+            }
             return database.query('UPDATE Filters SET filters = "' + filters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
