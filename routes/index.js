@@ -545,7 +545,7 @@ router.get('/printerTable', function (req, res, next) {
     let database = new Database(config.getConfig());
     let printers = {};
 
-    let query = 'SELECT * FROM Printer JOIN Employee on Printer.EmployeeID = Employee.employeeId WHERE Printer.EmployeeID != 400';
+    let query = 'SELECT Printer.*, Employee.*, Max(PageCounts.PageCount) FROM Printer JOIN Employee on Printer.EmployeeID = Employee.employeeId LEFT JOIN PageCounts ON Printer.ICN = PageCounts.ICN WHERE Printer.EmployeeID != 400';
     if (req.query.remove) {
         let splice = parseInt(req.query.remove);
         printerFilters.splice(splice, 1);
@@ -603,7 +603,7 @@ router.get('/printerTable', function (req, res, next) {
         query += ' ORDER BY LesOlsonID';
     }
     else {
-        query += ' Order BY ICN';
+        query += ' GROUP BY ICN Order BY ICN';
     }
     console.log(query);
 
@@ -1225,7 +1225,7 @@ router.get('/printer', function (req, res, next) {
                 categories.push(monthNames[date.getMonth()] + ' ' + date.getFullYear());
             }
             let sizeDifference = averagePrintCount.length - data.length;
-            for(let i = sizeDifference; i < averagePrintCount.length; i++){
+            for (let i = sizeDifference; i < averagePrintCount.length; i++) {
                 avgData.push(averagePrintCount[i]['AVG(PageCount)']);
 
             }
@@ -2438,8 +2438,8 @@ router.get('/undoFinnaSurplus', function (req, res, next) {
 router.get('/updateInventory', function (req, res, next) {
     let ICN = req.query.ICN;
     let database = new Database(config.getConfig());
-    database.query('INSERT INTO Inventory (ICN) VALUES(?)',[ICN])
-        .then(rows=> {
+    database.query('INSERT INTO Inventory (ICN) VALUES(?)', [ICN])
+        .then(rows => {
             database.close();
             let date = new Date();
             res.send(monthNames[date.getMonth()] + ' ' + date.getFullYear());

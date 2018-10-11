@@ -31,6 +31,7 @@ block content
                         a(href='#{location}/printerTable?sortby=dateAcquired')
                             div= "Date Acquired"
                     td= "Warranty"
+                    td= "Latest Print Count"
                     td= "Notes"
                 each printer in printers
                     tr
@@ -54,6 +55,7 @@ block content
                         td= printer.SerialNumber
                         td= printer.DateAcquired
                         td= printer.Warranty
+                        td= printer['Max(PageCounts.PageCount)']
                         td= printer.Notes
     script.
 
