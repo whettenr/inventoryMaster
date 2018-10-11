@@ -1225,6 +1225,9 @@ router.get('/printer', function (req, res, next) {
                 categories.push(monthNames[date.getMonth()] + ' ' + date.getFullYear());
             }
             let sizeDifference = averagePrintCount.length - data.length;
+            if(sizeDifference < 0){
+                sizeDifference = 0;
+            }
             for (let i = sizeDifference; i < averagePrintCount.length; i++) {
                 avgData.push(averagePrintCount[i]['AVG(PageCount)']);
 
