@@ -314,7 +314,7 @@ router.get('/computerTable', function (req, res, next) {
                 if (computer.DateAcquired) {
                     let date = new Date(computer.DateAcquired);
                     computer.DateAcquiredFilter = computer.DateAcquired.substr(0, computer.DateAcquired.length - 3) + '%';
-                    computer.DateAcquired = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                    computer.DateAcquired = computer.DateAcquired + ' ' + monthNames[date.getMonth()] + ' ' + date.getFullYear();
                 }
                 else {
                     computer.DateAcquired = 'None';
