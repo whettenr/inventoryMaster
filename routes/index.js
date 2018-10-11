@@ -2327,7 +2327,7 @@ router.get('/search', function (req, res, next) {
         })
         .then(rows => {
             monitorRows = rows;
-            return database.query('SELECT * FROM Printer WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Notes LIKE ? OR History LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            return database.query('SELECT * FROM Printer WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR LesOlsonID LIKE ? OR Model LIKE ? OR Notes LIKE ? OR History LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             printerRows = rows;
