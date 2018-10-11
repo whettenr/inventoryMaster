@@ -1219,14 +1219,17 @@ router.get('/printer', function (req, res, next) {
             let data = [];
             let categories = [];
             let avgData = [];
-            for (let pageCount of averagePrintCount) {
-                avgData.push(pageCount['AVG(PageCount)']);
-            }
             for (let pageCount of pageCounts) {
                 data.push(pageCount.PageCount);
                 let date = new Date(pageCount.Date);
                 categories.push(monthNames[date.getMonth()] + ' ' + date.getFullYear());
             }
+            let sizeDifference = averagePrintCount.length - data.length;
+            for(let i = sizeDifference; i < averagePrintCount.length; i++){
+                avgData.push(averagePrintCount[i]['AVG(PageCount)']);
+
+            }
+
             series.push({
                 name: 'Print Counts',
                 color: '#002E5D',
