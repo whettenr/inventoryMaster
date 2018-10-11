@@ -1829,64 +1829,131 @@ router.get('/download/monitors', function (req, res, next) {
 });
 
 router.get('/download/computers', function (req, res, next) {
-    let Rows = {};
-    let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.employeeId';
-    if (req.query.remove) {
-        let splice = parseInt(req.query.remove);
-        filters.splice(splice, 1);
-
-    }
-    if (req.query.not) {
-        if (filters[req.query.not].includes('!='))
-            filters[req.query.not] = filters[req.query.not].replace('!=', '=');
-        else
-            filters[req.query.not] = filters[req.query.not].replace('=', '!=');
-    }
-    if (req.query.where) {
-        let check = true;
-        for (let i = 0; i < filters.length; i++) {
-            if (filters[i] === req.query.where) {
-                check = false;
-            }
-        }
-        if (check) {
-            filters.push(req.query.where);
-        }
-    }
-    if (filters.length > 0) {
-        query += " WHERE ";
-        for (let filter in filters) {
-            query += filters[filter];
-            query += ' and ';
-            console.log(filter);
-        }
-        query = query.substr(0, query.length - 5);
-    }
-
-    if (req.query.sortby === 'ICN') {
-        query += ' Order BY ICN';
-    }
-    else if (req.query.sortby === 'EmployeeID') {
-        query += ' ORDER BY EmployeeID';
-    }
-    else if (req.query.sortby === 'Make') {
-        query += ' ORDER BY Make';
-    }
-    else if (req.query.sortby === 'firstName') {
-        query += ' ORDER BY firstName';
-    }
-    else if (req.query.sortby === 'lastName') {
-        query += ' ORDER BY lastName';
-    }
-    else {
-        query += ' Order BY ICN';
-    }
     let database = new Database(config.getConfig());
-
-    database.query(query)
+    let computers = {};
+    let user = JSON.parse(vault.read(req));
+    // let filters = user.filters;
+    let filterQuery = 'SELECT * FROM Filters WHERE user = \'' + user.netId + '\'';
+    let filters = [];
+    let actionButton = {};
+    let showOptions = {};
+    database.query(filterQuery)
         .then(rows => {
-            Rows = rows;
-            return database.close();
+            showOptions = JSON.parse(rows[0].computerShowOptions);
+            if (rows[0].filters !== "") {
+                filters = rows[0].filters.split(',');
+            }
+        })
+        .then(() => {
+            let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.EmployeeID LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Computer.EmployeeID != 400';
+            if (req.query.remove) {
+                let splice = parseInt(req.query.remove);
+                filters.splice(splice, 1);
+
+            }
+            if (req.query.not) {
+                if (filters[req.query.not].includes('!='))
+                    filters[req.query.not] = filters[req.query.not].replace('!=', '=');
+                else
+                    filters[req.query.not] = filters[req.query.not].replace('=', '!=');
+            }
+            if (req.query.where) {
+                let check = true;
+                for (let i = 0; i < filters.length; i++) {
+                    if (filters[i] === req.query.where) {
+                        check = false;
+                    }
+                }
+                if (check) {
+                    filters.push(req.query.where);
+                    // user.filters = filters;
+                    // vault.write(JSON.stringify(req, user));
+                }
+            }
+            if (filters.length > 0) {
+                query += " and ";
+                for (let filter in filters) {
+                    if (filters[filter].includes('EmployeeID') || filters[filter].includes('RotationGroup')) {
+                        query += 'Employee.'
+                    }
+                    else if (filters[filter].includes('Processor') || filters[filter].includes('Memory') || filters[filter].includes('HardDrive') || filters[filter].includes('VCName') || filters[filter].includes('Touch') || filters[filter].includes('ScreenResolution')) {
+                        query += 'Hardware.'
+                    }
+                    else {
+                        query += 'Computer.'
+                    }
+                    query += filters[filter];
+                    query += ' and ';
+                }
+                query = query.substr(0, query.length - 5);
+            }
+
+            if (req.query.sortby === 'ICN') {
+                query += ' Order BY ICN';
+            }
+            else if (req.query.sortby === 'EmployeeID') {
+                query += ' ORDER BY EmployeeID';
+            }
+            else if (req.query.sortby === 'Make') {
+                query += ' ORDER BY Make';
+            }
+            else if (req.query.sortby === 'Model') {
+                query += ' ORDER BY Model';
+            }
+            else if (req.query.sortby === 'firstname') {
+                query += ' ORDER BY FirstName';
+            }
+            else if (req.query.sortby === 'lastname') {
+                query += ' ORDER BY LastName';
+            }
+            else if (req.query.sortby === 'dateAcquired') {
+                query += ' ORDER BY DateAcquired';
+            }
+            else if (req.query.sortby === 'processorType') {
+                query += ' ORDER BY ProcessorType';
+            }
+            else if (req.query.sortby === 'processorSpeed') {
+                query += ' ORDER BY ProcessorSpeed';
+            }
+            else if (req.query.sortby === 'memory') {
+                query += ' ORDER BY Memory';
+            }
+            else if (req.query.sortby === 'hardDrive') {
+                query += ' ORDER BY HardDrive';
+            }
+            else if (req.query.sortby === 'vcName') {
+                query += ' ORDER BY VCName';
+            }
+            else {
+                query += ' Order BY ICN';
+            }
+
+            if (req.query.order === 'asc') {
+                query += ' ASC';
+            }
+            else if (req.query.order === 'dsc') {
+                query += ' DESC';
+            }
+            console.log(query);
+
+            if (req.query.hardware === 'true') {
+                hardware = true;
+            }
+            else if (req.query.hardware === 'false') {
+                hardware = false;
+            }
+
+            if (req.query.showOption) {
+                let showOption = req.query.showOption;
+                showOptions[showOption] = !showOptions[showOption];
+            }
+            actionButton.href = 'showOptions?table=computer';
+            actionButton.name = 'Show Options';
+            return database.query(query);
+        })
+        .then(rows => {
+            computers = rows;
+            return database.query('UPDATE Filters SET filters = "' + filters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
             let csvStream = csv.createWriteStream({headers: true}),
@@ -1900,8 +1967,8 @@ router.get('/download/computers', function (req, res, next) {
             });
 
             csvStream.pipe(writableStream);
-            for (let i = 0; i < Rows.length; i++) {
-                csvStream.write(Rows[i]);
+            for (let i = 0; i < computers.length; i++) {
+                csvStream.write(computers[i]);
             }
             csvStream.end();
         })
