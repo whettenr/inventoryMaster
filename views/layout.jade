@@ -37,11 +37,29 @@ html
                     else if (user.netId)
                         span(slot="user-name") #{user.netId}
             byu-menu(slot="nav", collapsed="")
-                a(href="#{location}/") Employees
-                a(href="#{location}/computerTable") Computers
-                a(href="#{location}/monitorTable") Monitors
-                a(href="#{location}/printerTable") Printers
-                a(href="#{location}/peripheralTable") Peripherals
-                a(href="#{location}/card?EmployeeID=300") JSB Storage
+                if(title === 'Employees')
+                    a(href="#{location}/" class='active') Employees
+                else
+                    a(href="#{location}/") Employees
+                if(title === 'Computers')
+                    a(href="#{location}/computerTable" class='active') Computers
+                else
+                    a(href="#{location}/computerTable") Computers
+                if(title === 'Monitors')
+                    a(href="#{location}/monitorTable" class='active') Monitors
+                else
+                    a(href="#{location}/monitorTable") Monitors
+                if(title === 'Printers')
+                    a(href="#{location}/printerTable" class='active') Printers
+                else
+                    a(href="#{location}/printerTable") Printers
+                if(title === 'Peripherals')
+                    a(href="#{location}/peripheralTable" class='active') Peripherals
+                else
+                    a(href="#{location}/peripheralTable") Peripherals
+                if(title === 'JSB Storage\'s Stuff')
+                    a(href="#{location}/card?EmployeeID=300" class='active') JSB Storage
+                else
+                    a(href="#{location}/card?EmployeeID=300") JSB Storage
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
         block content

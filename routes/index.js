@@ -319,6 +319,14 @@ router.get('/computerTable', function (req, res, next) {
                 else {
                     computer.DateAcquired = 'None';
                 }
+                if(computer.Warranty){
+                    let date = new Date(computer.Warranty + ' MST');
+                    computer.WarrantyFilter = computer.Warranty.substr(0, computer.Warranty.length - 3) + '%';
+                    computer.Warranty = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                }
+                else {
+                    computer.Warranty = 'None';
+                }
             }
             return database.query('UPDATE Filters SET filters = "' + filters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
