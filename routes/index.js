@@ -169,6 +169,16 @@ router.get('/employeesTable', function (req, res, next) {
             //     employees[i].DateSwitched = new Date(employees[i].DateSwitched);
             // }
             // console.log("test");
+            for (let employee of employees) {
+                if (employee.DateSwitched) {
+                    let date = new Date(employee.DateSwitched + ' MST');
+                    employee.DateSwitchedFilter = employee.DateSwitched.substr(0, employee.DateSwitched.length - 3) + '%';
+                    employee.DateSwitched = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                }
+                else {
+                    employee.DateSwitched = 'None';
+                }
+            }
         })
         .then(() => {
             res.render('index', {
