@@ -348,7 +348,7 @@ router.get('/computerTable', function (req, res, next) {
             return database.query('UPDATE Filters SET filters = "' + filters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
-            res.render('oneTableToRuleThemAll', {
+            res.render('OneTableToRuleThemAll', {
                 title: 'Computers',
                 table: 'computer',
                 actionButton,
@@ -451,7 +451,7 @@ router.get('/monitorTable', function (req, res, next) {
         })
         .then(() => {
             database.close();
-            res.render('oneTableToRuleThemAll', {
+            res.render('OneTableToRuleThemAll', {
                 title: 'Monitors',
                 table: 'monitor',
                 items: monitors,
@@ -555,7 +555,7 @@ router.get('/peripheralTable', function (req, res, next) {
         })
         .then(() => {
             database.close();
-            res.render('oneTableToRuleThemAll', {
+            res.render('OneTableToRuleThemAll', {
                 title: 'Peripherals',
                 items: peripherals,
                 showOptions,
@@ -658,7 +658,7 @@ router.get('/printerTable', function (req, res, next) {
             return database.query('UPDATE Filters SET printerFilters = "' + printerFilters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
-            res.render('oneTableToRuleThemAll', {
+            res.render('OneTableToRuleThemAll', {
                 title: 'Printers',
                 table: 'printer',
                 showOptions,
