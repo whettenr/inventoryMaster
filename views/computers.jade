@@ -2,11 +2,14 @@ extends layout
 
 block content
     link(rel='stylesheet', href='#{location}/stylesheets/table.css')
+    br
     if(sortby)
         div
             | Sort By: #{sortby} #{order}
-    include filters
-    div= "Count: " + Object.keys(computers).length
+    #filters
+        include filters
+
+    #count= "Count: " + Object.keys(computers).length
     div(style='overflow-x:auto;')
         table#table
             tbody
@@ -51,13 +54,37 @@ block content
                                 a(href='#{location}/computerTable?sortby=Model&order=asc')
                                     div= "Model"
                     if(showOptions.SerialNumber)
-                        td= "Serial Number"
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=SerialNumber&order=dsc')
+                                    div= "Serial Number"
+                            else
+                                a(href='#{location}/computerTable?sortby=SerialNumber&order=asc')
+                                    div= "Serial Number"
                     if(showOptions.ServiceTag)
-                        td= "Service Tag"
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=ServiceTag&order=dsc')
+                                    div= "Service Tag"
+                            else
+                                a(href='#{location}/computerTable?sortby=ServiceTag&order=asc')
+                                    div= "Service Tag"
                     if(showOptions.ExpressServiceCode)
-                        td= "Express Service Code"
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=ExpressServiceCode&order=dsc')
+                                    div= "Express Service Code"
+                            else
+                                a(href='#{location}/computerTable?sortby=ExpressServiceCode&order=asc')
+                                    div= "Express Service Code"
                     if(showOptions.Type)
-                        td= "Type"
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=Type&order=dsc')
+                                    div= "Type"
+                            else
+                                a(href='#{location}/computerTable?sortby=Type&order=asc')
+                                    div= "Type"
                     if(showOptions.DateAcquired)
                         td
                             if(order === 'asc')
@@ -67,19 +94,61 @@ block content
                                 a(href='#{location}/computerTable?sortby=dateAcquired&order=asc')
                                     div= "Date Acquired"
                     if(showOptions.Warranty)
-                        td= "Warranty"
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=Warranty&order=dsc')
+                                    div= "Warranty"
+                            else
+                                a(href='#{location}/computerTable?sortby=Warranty&order=asc')
+                                    div= "Warranty"
                     if(showOptions.HomeCheckout)
-                        td= "Home Checkout"
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=HomeCheckout&order=dsc')
+                                    div= "Home Checkout"
+                            else
+                                a(href='#{location}/computerTable?sortby=HomeCheckout&order=asc')
+                                    div= "Home Checkout"
                     if(showOptions.Touch)
-                        td= "Touch"
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=Touch&order=dsc')
+                                    div= "Touch"
+                            else
+                                a(href='#{location}/computerTable?sortby=Touch&order=asc')
+                                    div= "Touch"
                     if(showOptions.ScreenResolution)
-                        td= "Screen Resolution"
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=ScreenResolution&order=dsc')
+                                    div= "Screen Resolution"
+                            else
+                                a(href='#{location}/computerTable?sortby=ScreenResolution&order=asc')
+                                    div= "Screen Resolution"
                     if(showOptions.Rotation)
-                        td= "Rotation"
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=Rotation&order=dsc')
+                                    div= "Rotation"
+                            else
+                                a(href='#{location}/computerTable?sortby=Rotation&order=asc')
+                                    div= "Rotation"
                     if(showOptions.Notes)
-                        td= "Notes"
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=Computer.Notes&order=dsc')
+                                    div= "Notes"
+                            else
+                                a(href='#{location}/computerTable?sortby=Computer.Notes&order=asc')
+                                    div= "Notes"
                     if(showOptions.History)
-                        td= "History"
+                        td
+                            if(order === 'asc')
+                                a(href='#{location}/computerTable?sortby=History&order=dsc')
+                                    div= "History"
+                            else
+                                a(href='#{location}/computerTable?sortby=History&order=asc')
+                                    div= "History"
                     if(showOptions.ProcessorType)
                         td
                             a(href='#{location}/computerTable?sortby=processorType&hardware=true&order=asc')
@@ -193,6 +262,8 @@ block content
                                 td
                                     button.byu-button.whitenavy(onclick='undo(#{computer.ICN})' id='surplusButton#{computer.ICN}') Undo
     script.
+        $("#count").css('margin-left', window.getComputedStyle(document.getElementById('table'), null).getPropertyValue('margin-left'));
+        $("#filters").css('margin-left', window.getComputedStyle(document.getElementById('table'), null).getPropertyValue('margin-left'));
         function toggleSidebar() {
             $("#sidebar").slideToggle();
         }

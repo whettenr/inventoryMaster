@@ -100,7 +100,7 @@ module.exports = function (req, res, next) {
                         "Memory": false,
                         "HardDrive": false,
                         "VCName": false,
-                        "Surplus": false
+                        "Surplussing": false
                     };
                     let defaultMonitorShowOptions = {
                         "ICN": true,
@@ -114,7 +114,7 @@ module.exports = function (req, res, next) {
                         "HomeCheckout": false,
                         "Notes": true,
                         "History": false,
-                        "Surplus": false
+                        "Surplussing": false
                     };
                     let defaultPrinterShowOptions = {
                         "ICN": true,
@@ -128,7 +128,7 @@ module.exports = function (req, res, next) {
                         "HomeCheckout": false,
                         "Notes": true,
                         "History": false,
-                        "Surplus": false
+                        "Surplussing": false
                     };
                     let defaultPeripheralShowOptions = {
                         "ICN": true,
@@ -143,7 +143,7 @@ module.exports = function (req, res, next) {
                         "HomeCheckout": false,
                         "Notes": true,
                         "History": false,
-                        "Surplus": false
+                        "Surplussing": false
                     };
                     let database = new Database(config.getConfig());
                     database.query('SELECT * FROM Filters WHERE user = \'' + user.netId + '\'')

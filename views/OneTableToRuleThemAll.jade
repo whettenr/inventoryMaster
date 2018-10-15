@@ -1,0 +1,78 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='#{location}/stylesheets/table.css')
+    br
+    if(sortby)
+        div
+            | Sort By: #{sortby} #{order}
+    #filters
+        include filters
+
+    #count= "Count: " + Object.keys(items).length
+    div(style='overflow-x:auto;')
+        table#table
+            tbody
+                tr#myHeader
+                    each showOption, key in showOptions
+                        if(showOption)
+                            td
+                                if(order === 'asc')
+                                    a(href='#{location}/#{table}Table?sortby=#{key}&order=dsc')
+                                        div=key
+                                else
+                                    a(href='#{location}/#{table}able?sortby=#{key}&order=asc')
+                                        div=key
+                each computer in items
+                    tr
+                        each showOption, key in showOptions
+                            if(showOption)
+                                td
+                                    if(key === 'ICN')
+                                        a(href='#{location}/#{table}?#{key}=' + computer[key])
+                                            div= computer[key]
+                                    else
+                                        a(href='#{location}/#{table}Table?where=#{key}=\'#{computer[key]}\'')
+                                            if(key === 'HomeCheckout')
+                                                if(computer[key] === 'on')
+                                                    i(class='material-icons')= 'home'
+                                            else if(key === 'Touch')
+                                                if(computer[key] === 'on')
+                                                    i(class='material-icons')= 'touch_app'
+                                            else if(key === 'Surplussing')
+                                                if(computer[key] === 0)
+                                                    button.byu-button.navy(onclick='surplus(#{computer.ICN})' id='surplusButton#{computer.ICN}') Surplus
+                                                else
+                                                    button.byu-button.whitenavy(onclick='undo(#{computer.ICN})' id='surplusButton#{computer.ICN}') Undo
+                                            else
+                                                div= computer[key]
+
+    script.
+        $("#count").css('margin-left', window.getComputedStyle(document.getElementById('table'), null).getPropertyValue('margin-left'));
+        $("#filters").css('margin-left', window.getComputedStyle(document.getElementById('table'), null).getPropertyValue('margin-left'));
+
+        function surplus(ICN) {
+            $.ajax({
+                type: "GET",
+                url: "#{location}/finnaSurplus?table=#{table}&ICN=" + ICN,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#surplusButton" + ICN).html('Undo');
+                $("#surplusButton" + ICN).attr("onclick", "undo(" + ICN + ")");
+                $("#surplusButton" + ICN).removeClass("navy");
+                $("#surplusButton" + ICN).addClass("whitenavy");
+            });
+        }
+
+        function undo(ICN) {
+            $.ajax({
+                type: "GET",
+                url: "#{location}/undoFinnaSurplus?table=#{table}&ICN=" + ICN,
+                data: {format: 'html'}
+            }).done(function (data) {
+                $("#surplusButton" + ICN).html('Surplus');
+                $("#surplusButton" + ICN).attr("onclick", "surplus(" + ICN + ")");
+                $("#surplusButton" + ICN).removeClass("whitenavy");
+                $("#surplusButton" + ICN).addClass("navy");
+            });
+        }

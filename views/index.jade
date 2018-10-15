@@ -29,7 +29,7 @@ block content
                     th
                         a(href='#{location}/employeesTable?sortby=dateSwitched')
                             div= "Date Switched"
-                    th= "Notes"
+                    //th= "Notes"
                 each employee in employees
                     tr
                         td
@@ -45,4 +45,4 @@ block content
                             a(href='#{location}/employeesTable?where=rotationGroup=#{employee.RotationGroup}')
                                 div= employee.RotationGroup
                         td=employee.DateSwitched
-                        td= employee['Employee Notes']
+                        //td= employee['Employee Notes']

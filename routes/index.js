@@ -10,7 +10,7 @@ let passport = require('passport');
 const bodyParser = require('body-parser');
 let cookiee = require('cookie-encryption');
 let vault = cookiee('ciao');
-
+let axios = require('axios');
 // let users = require('./users')();
 // let axios = require('axios');
 
@@ -72,7 +72,7 @@ function getCurrentDate() {
 // let filters = [];
 // let monitorFilters = [];
 let employeeFilters = [];
-let printerFilters = [];
+// let printerFilters = [];
 // let peripheralFilters = [];
 let finalQuery = "";
 let hardware = false;
@@ -291,6 +291,13 @@ router.get('/computerTable', function (req, res, next) {
             else if (req.query.sortby === 'vcName') {
                 query += ' ORDER BY VCName';
             }
+            else if (req.query.sortby === 'Rotation') {
+                query += ' ORDER BY Employee.RotationGroup';
+            }
+            else if (req.query.sortby) {
+                query += ' ORDER BY ';
+                query += req.query.sortby;
+            }
             else {
                 query += ' Order BY ICN';
             }
@@ -329,7 +336,7 @@ router.get('/computerTable', function (req, res, next) {
                 else {
                     computer.DateAcquired = 'None';
                 }
-                if(computer.Warranty){
+                if (computer.Warranty) {
                     let date = new Date(computer.Warranty + ' MST');
                     computer.WarrantyFilter = computer.Warranty.substr(0, computer.Warranty.length - 3) + '%';
                     computer.Warranty = monthNames[date.getMonth()] + ' ' + date.getFullYear();
@@ -341,12 +348,12 @@ router.get('/computerTable', function (req, res, next) {
             return database.query('UPDATE Filters SET filters = "' + filters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
-            res.render('computers', {
+            res.render('oneTableToRuleThemAll', {
                 title: 'Computers',
-                table: 'computerTable',
+                table: 'computer',
                 actionButton,
                 order: req.query.order,
-                computers: computers,
+                items: computers,
                 filters: filters,
                 user: JSON.parse(vault.read(req)),
                 sortby: req.query.sortby,
@@ -444,10 +451,10 @@ router.get('/monitorTable', function (req, res, next) {
         })
         .then(() => {
             database.close();
-            res.render('monitorTable', {
+            res.render('oneTableToRuleThemAll', {
                 title: 'Monitors',
-                table: 'monitorTable',
-                monitors: monitors,
+                table: 'monitor',
+                items: monitors,
                 filters: monitorFilters,
                 user: JSON.parse(vault.read(req)),
                 download: 'monitors',
@@ -544,16 +551,16 @@ router.get('/peripheralTable', function (req, res, next) {
         })
         .then(rows => {
             peripherals = rows;
-            return database.query('UPDATE Filters SET peripheralFilters = "' + peripheralFilters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'')
+            return database.query('UPDATE Filters SET peripheralFilters = "' + peripheralFilters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
             database.close();
-            res.render('peripheralTable', {
+            res.render('oneTableToRuleThemAll', {
                 title: 'Peripherals',
-                peripherals: peripherals,
+                items: peripherals,
                 showOptions,
                 actionButton,
-                table: 'peripheralTable',
+                table: 'peripheral',
                 filters: peripheralFilters,
                 user: JSON.parse(vault.read(req)),
                 download: 'peripherals',
@@ -568,82 +575,95 @@ router.get('/peripheralTable', function (req, res, next) {
 });
 
 router.get('/printerTable', function (req, res, next) {
-    let connection = mysql.createConnection(config.getConfig());
     let database = new Database(config.getConfig());
     let printers = {};
-
-    let query = 'SELECT Printer.*, Employee.*, Max(PageCounts.PageCount) FROM Printer JOIN Employee on Printer.EmployeeID = Employee.employeeId LEFT JOIN PageCounts ON Printer.ICN = PageCounts.ICN WHERE Printer.EmployeeID != 400';
-    if (req.query.remove) {
-        let splice = parseInt(req.query.remove);
-        printerFilters.splice(splice, 1);
-
-    }
-    if (req.query.not) {
-        if (printerFilters[req.query.not].includes('!='))
-            printerFilters[req.query.not] = printerFilters[req.query.not].replace('!=', '=');
-        else
-            printerFilters[req.query.not] = printerFilters[req.query.not].replace('=', '!=');
-    }
-    if (req.query.where) {
-        let check = true;
-        for (let i = 0; i < printerFilters.length; i++) {
-            if (printerFilters[i] === req.query.where) {
-                check = false;
+    let user = JSON.parse(vault.read(req));
+    let filterQuery = 'SELECT * FROM Filters WHERE user = \'' + user.netId + '\'';
+    let showOptions = {};
+    let actionButton = {};
+    let printerFilters = [];
+    database.query(filterQuery)
+        .then(rows => {
+            showOptions = JSON.parse(rows[0].printerShowOptions);
+            if (rows[0].printerFilters !== "") {
+                printerFilters = rows[0].printerFilters.split(',');
             }
-        }
-        if (check) {
-            printerFilters.push(req.query.where);
-        }
-    }
-    if (printerFilters.length > 0) {
-        query += " and Printer.";
-        for (let filter in printerFilters) {
-            query += printerFilters[filter];
-            query += ' and Printer.';
-            console.log(filter);
-        }
-        query = query.substr(0, query.length - 13);
-    }
+            let query = 'SELECT Printer.*, Employee.*, Max(PageCounts.PageCount) FROM Printer JOIN Employee on Printer.EmployeeID = Employee.employeeId LEFT JOIN PageCounts ON Printer.ICN = PageCounts.ICN WHERE Printer.EmployeeID != 400';
+            if (req.query.remove) {
+                let splice = parseInt(req.query.remove);
+                printerFilters.splice(splice, 1);
 
-    if (req.query.sortby === 'ICN') {
-        query += ' Order BY ICN';
-    }
-    else if (req.query.sortby === 'EmployeeID') {
-        query += ' ORDER BY EmployeeID';
-    }
-    else if (req.query.sortby === 'Make') {
-        query += ' ORDER BY Make';
-    }
-    else if (req.query.sortby === 'Model') {
-        query += ' ORDER BY Model';
-    }
-    else if (req.query.sortby === 'firstName') {
-        query += ' ORDER BY firstName';
-    }
-    else if (req.query.sortby === 'lastName') {
-        query += ' ORDER BY lastName';
-    }
-    else if (req.query.sortby === 'dateAcquired') {
-        query += ' ORDER BY DateAcquired';
-    }
-    else if (req.query.sortby === 'LesOlsonID') {
-        query += ' ORDER BY LesOlsonID';
-    }
-    else {
-        query += ' GROUP BY ICN Order BY ICN';
-    }
-    console.log(query);
+            }
+            if (req.query.not) {
+                if (printerFilters[req.query.not].includes('!='))
+                    printerFilters[req.query.not] = printerFilters[req.query.not].replace('!=', '=');
+                else
+                    printerFilters[req.query.not] = printerFilters[req.query.not].replace('=', '!=');
+            }
+            if (req.query.where) {
+                let check = true;
+                for (let i = 0; i < printerFilters.length; i++) {
+                    if (printerFilters[i] === req.query.where) {
+                        check = false;
+                    }
+                }
+                if (check) {
+                    printerFilters.push(req.query.where);
+                }
+            }
+            if (printerFilters.length > 0) {
+                query += " and Printer.";
+                for (let filter in printerFilters) {
+                    query += printerFilters[filter];
+                    query += ' and Printer.';
+                    console.log(filter);
+                }
+                query = query.substr(0, query.length - 13);
+            }
 
-
-    database.query(query)
+            if (req.query.sortby === 'ICN') {
+                query += ' Order BY ICN';
+            }
+            else if (req.query.sortby === 'EmployeeID') {
+                query += ' ORDER BY EmployeeID';
+            }
+            else if (req.query.sortby === 'Make') {
+                query += ' ORDER BY Make';
+            }
+            else if (req.query.sortby === 'Model') {
+                query += ' ORDER BY Model';
+            }
+            else if (req.query.sortby === 'firstName') {
+                query += ' ORDER BY firstName';
+            }
+            else if (req.query.sortby === 'lastName') {
+                query += ' ORDER BY lastName';
+            }
+            else if (req.query.sortby === 'dateAcquired') {
+                query += ' ORDER BY DateAcquired';
+            }
+            else if (req.query.sortby === 'LesOlsonID') {
+                query += ' ORDER BY LesOlsonID';
+            }
+            else {
+                query += ' GROUP BY ICN Order BY ICN';
+            }
+            console.log(query);
+            return database.query(query);
+        })
         .then(rows => {
             printers = rows;
+            actionButton.href = 'showOptions?table=printer';
+            actionButton.name = 'Show Options';
+            return database.query('UPDATE Filters SET printerFilters = "' + printerFilters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
-            res.render('printerTable', {
+            res.render('oneTableToRuleThemAll', {
                 title: 'Printers',
-                table: 'printerTable',
-                printers: printers,
+                table: 'printer',
+                showOptions,
+                actionButton,
+                items: printers,
                 filters: printerFilters,
                 user: JSON.parse(vault.read(req)),
                 download: 'printers',
@@ -1252,7 +1272,7 @@ router.get('/printer', function (req, res, next) {
                 categories.push(monthNames[date.getMonth()] + ' ' + date.getFullYear());
             }
             let sizeDifference = averagePrintCount.length - data.length;
-            if(sizeDifference < 0){
+            if (sizeDifference < 0) {
                 sizeDifference = 0;
             }
             for (let i = sizeDifference; i < averagePrintCount.length; i++) {
@@ -2487,6 +2507,9 @@ router.get('/showOptions', function (req, res, next) {
     else if (table === 'peripheral') {
         properTable = 'Peripheral';
     }
+    else if (table === 'printer') {
+        properTable = 'Printer';
+    }
     database.query('SELECT * FROM Filters WHERE User = \'' + user.netId + '\'')
         .then(rows => {
             let showOptions = JSON.parse(rows[0][table + 'ShowOptions']);
@@ -2543,6 +2566,21 @@ router.get('/updateInventory', function (req, res, next) {
         })
 
 });
+
+router.get('/email', function (req, res, next) {
+    let employeeID = req.Equery.EmployeeID;
+    axios.get(location + '/card?EmployeeID=' + employeeID)
+        .then(function (response) {
+            console.log(response);
+        })
+        .then(() => {
+            res.redirect(location + '/card?EmployeeID=' + employeeID);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+});
+
 
 router.post('/showOptions', function (req, res, next) {
     let database = new Database(config.getConfig());

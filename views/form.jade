@@ -19,9 +19,9 @@ block content
                             select#employee.selectpicker(name='employeeId', onchange="alert(\"You just changed who this was assigned to. Please update the Type.\")")
                                 each employee in employees
                                     if(employee.EmployeeID === computer.EmployeeID)
-                                        option(value=employee.EmployeeID name='#{employee.FirstName} #{employee.LastName}' selected) #{employee.FirstName} #{employee.LastName}
+                                        option(value=employee.EmployeeID name='#{employee.LastName} #{employee.FirstName}' selected) #{employee.LastName}, #{employee.FirstName}
                                     else
-                                        option(value=employee.EmployeeID name='#{employee.FirstName} #{employee.LastName}')  #{employee.FirstName} #{employee.LastName}
+                                        option(value=employee.EmployeeID name='#{employee.LastName} #{employee.FirstName}')  #{employee.LastName}, #{employee.FirstName}
 
                     .row
                         .col-25
