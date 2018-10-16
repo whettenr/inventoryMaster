@@ -3,13 +3,14 @@ extends layout
 block content
     link(rel='stylesheet', href='#{location}/stylesheets/table.css')
     br
-    if(sortby)
-        div
-            | Sort By: #{sortby} #{order}
-    #filters
-        include filters
+    #extras
+        if(sortby)
+            div
+                | Sort By: #{sortby} #{order}
+        #filters
+            include filters
 
-    #count= "Count: " + Object.keys(items).length
+        #count= "Count: " + Object.keys(items).length
     div(style='overflow-x:auto;')
         table#table
             tbody
@@ -48,8 +49,7 @@ block content
                                                 div= computer[key]
 
     script.
-        $("#count").css('margin-left', window.getComputedStyle(document.getElementById('table'), null).getPropertyValue('margin-left'));
-        $("#filters").css('margin-left', window.getComputedStyle(document.getElementById('table'), null).getPropertyValue('margin-left'));
+        $("#extras").css('margin-left', window.getComputedStyle(document.getElementById('table'), null).getPropertyValue('margin-left'));
 
         function surplus(ICN) {
             $.ajax({
