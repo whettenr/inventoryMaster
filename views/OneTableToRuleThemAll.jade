@@ -32,6 +32,9 @@ block content
                                     if(key === 'ICN')
                                         a(href='#{location}/#{table}?#{key}=' + computer[key])
                                             div= computer[key]
+                                    else if(key === 'FirstName' || key === 'LastName')
+                                        a(href='#{location}/#{table}Table?where=EmployeeID=' + computer['EmployeeID'])
+                                            div= computer[key]
                                     else
                                         a(href='#{location}/#{table}Table?where=#{key}=\'#{computer[key]}\'')
                                             if(key === 'HomeCheckout')
