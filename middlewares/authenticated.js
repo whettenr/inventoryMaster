@@ -92,7 +92,7 @@ module.exports = function (req, res, next) {
                         "HomeCheckout": false,
                         "Touch": false,
                         "ScreenResolution": false,
-                        "Rotation": true,
+                        "RotationGroup": true,
                         "Notes": true,
                         "History": false,
                         "ProcessorType": false,
@@ -100,6 +100,7 @@ module.exports = function (req, res, next) {
                         "Memory": false,
                         "HardDrive": false,
                         "VCName": false,
+                        "MAX(Inventory.CurrentDate)": true,
                         "Surplussing": false
                     };
                     let defaultMonitorShowOptions = {
@@ -114,6 +115,7 @@ module.exports = function (req, res, next) {
                         "HomeCheckout": false,
                         "Notes": true,
                         "History": false,
+                        "MAX(Inventory.CurrentDate)": true,
                         "Surplussing": false
                     };
                     let defaultPrinterShowOptions = {
@@ -128,6 +130,7 @@ module.exports = function (req, res, next) {
                         "HomeCheckout": false,
                         "Notes": true,
                         "History": false,
+                        "MAX(Inventory.CurrentDate)": true,
                         "Surplussing": false
                     };
                     let defaultPeripheralShowOptions = {
@@ -143,6 +146,7 @@ module.exports = function (req, res, next) {
                         "HomeCheckout": false,
                         "Notes": true,
                         "History": false,
+                        "MAX(Inventory.CurrentDate)": true,
                         "Surplussing": false
                     };
                     let database = new Database(config.getConfig());

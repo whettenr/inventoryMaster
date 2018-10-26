@@ -213,7 +213,7 @@ router.get('/computerTable', function (req, res, next) {
             }
         })
         .then(() => {
-            let query = 'SELECT * FROM Computer LEFT JOIN Employee on Computer.EmployeeID = Employee.EmployeeID LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Computer.EmployeeID != 400';
+            let query = 'SELECT Computer.*, Hardware.*, Employee.*, MAX(Inventory.CurrentDate) FROM Computer LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID LEFT JOIN Employee ON Computer.EmployeeID = Employee.EmployeeID LEFT JOIN Inventory ON Computer.ICN = Inventory.ICN WHERE Computer.EmployeeID != 400';
             if (req.query.remove) {
                 let splice = parseInt(req.query.remove);
                 filters.splice(splice, 1);
@@ -255,6 +255,8 @@ router.get('/computerTable', function (req, res, next) {
                 }
                 query = query.substr(0, query.length - 5);
             }
+            query += ' GROUP BY ICN, Hardware.ProcessorType, Hardware.ProcessorSpeed, Hardware.Memory, Hardware.HardDrive, Hardware.VCName, Hardware.VCMemory, Hardware.ScreenResolution, Hardware.Touch';
+
             if (req.query.sortby === 'ICN') {
                 query += ' Order BY ICN';
             }
@@ -344,6 +346,13 @@ router.get('/computerTable', function (req, res, next) {
                 else {
                     computer.Warranty = 'None';
                 }
+                if (computer['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(computer['MAX(Inventory.CurrentDate)'] + ' MST');
+                    computer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                }
+                else {
+                    computer['MAX(Inventory.CurrentDate)'] = 'Never';
+                }
             }
             return database.query('UPDATE Filters SET filters = "' + filters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
@@ -385,7 +394,7 @@ router.get('/monitorTable', function (req, res, next) {
             }
             actionButton.href = 'showOptions?table=monitor';
             actionButton.name = 'Show Options';
-            let query = 'SELECT * FROM Monitor LEFT JOIN Employee on Monitor.EmployeeID = Employee.employeeId WHERE Monitor.EmployeeID != 400';
+            let query = 'SELECT Monitor.*, Employee.*, MAX(Inventory.CurrentDate) FROM Monitor LEFT JOIN Employee on Monitor.EmployeeID = Employee.employeeId LEFT JOIN Inventory ON Monitor.ICN = Inventory.ICN WHERE Monitor.EmployeeID != 400';
             if (req.query.remove) {
                 let splice = parseInt(req.query.remove);
                 monitorFilters.splice(splice, 1);
@@ -418,6 +427,7 @@ router.get('/monitorTable', function (req, res, next) {
                 query = query.substr(0, query.length - 13);
             }
 
+            query += ' GROUP BY ICN';
             if (req.query.sortby === 'ICN') {
                 query += ' Order BY ICN';
             }
@@ -448,6 +458,7 @@ router.get('/monitorTable', function (req, res, next) {
         .then(rows => {
             monitors = rows;
             return database.query('UPDATE Filters SET monitorFilters = "' + monitorFilters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
+            //TODO: Loop through monitors and update the dates on the current date
         })
         .then(() => {
             database.close();
@@ -2558,12 +2569,43 @@ router.get('/undoFinnaSurplus', function (req, res, next) {
 router.get('/updateInventory', function (req, res, next) {
     let ICN = req.query.ICN;
     let database = new Database(config.getConfig());
-    database.query('INSERT INTO Inventory (ICN) VALUES(?)', [ICN])
+    let date = new Date();
+    let query = 'SELECT * FROM Inventory WHERE ICN = ' + ICN + ' AND CurrentDate LIKE "' + date.getFullYear() + '%"';
+    let deleted = false;
+    let inventoried = {};
+    let all = {};
+    database.query('SELECT * FROM Inventory WHERE ICN = ? ORDER BY CurrentDate', [ICN])
+        .then(rows => {
+            inventoried = rows;
+            return database.query(query);
+        })
+        .then(rows => {
+            if (rows.length) {
+                deleted = true;
+                return (database.query('DELETE FROM Inventory WHERE ICN = ' + ICN + ' AND CurrentDate LIKE "' + date.getFullYear() + '%"'));
+            }
+            console.log(rows);
+            return database.query('INSERT INTO Inventory (ICN) VALUES(?)', [ICN]);
+        })
         .then(rows => {
             database.close();
-            let date = new Date();
-            res.send(monthNames[date.getMonth()] + ' ' + date.getFullYear());
+            console.log(rows);
+            if (deleted) {
+                if (inventoried.length > 1) {
+                    let oldDate = new Date(inventoried[inventoried.length - 2].CurrentDate);
+                    res.send(monthNames[oldDate.getMonth()] + ' ' + oldDate.getFullYear());
+                }
+                else {
+                    res.send('Never');
+                }
+            }
+            else {
+                res.send(monthNames[date.getMonth()] + ' ' + date.getFullYear());
+            }
         })
+        .catch(err => {
+            console.log(err);
+        });
 
 });
 

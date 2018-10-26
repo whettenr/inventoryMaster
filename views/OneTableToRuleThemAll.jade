@@ -20,10 +20,17 @@ block content
                             td
                                 if(order === 'asc')
                                     a(href='#{location}/#{table}Table?sortby=#{key}&order=dsc')
-                                        div=key
+                                        if(key === 'MAX(Inventory.CurrentDate)')
+                                            div= 'Inventory'
+                                        else
+                                            //.replace(/([A-Z])/g, ' $1')
+                                            div=key
                                 else
                                     a(href='#{location}/#{table}Table?sortby=#{key}&order=asc')
-                                        div=key
+                                        if(key === 'MAX(Inventory.CurrentDate)')
+                                            div= 'Inventory'
+                                        else
+                                            div=key
                 each computer in items
                     tr
                         each showOption, key in showOptions
@@ -35,6 +42,8 @@ block content
                                     else if(key === 'FirstName' || key === 'LastName')
                                         a(href='#{location}/#{table}Table?where=EmployeeID=' + computer['EmployeeID'])
                                             div= computer[key]
+                                    else if(key === 'MAX(Inventory.CurrentDate)')
+                                        div= computer[key]
                                     else
                                         a(href='#{location}/#{table}Table?where=#{key}=\'#{computer[key]}\'')
                                             if(key === 'HomeCheckout')
