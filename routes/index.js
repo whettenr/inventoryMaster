@@ -583,6 +583,17 @@ router.get('/peripheralTable', function (req, res, next) {
         })
         .then(rows => {
             peripherals = rows;
+            for(peripheral of peripherals){
+                if (peripheral['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(peripheral['MAX(Inventory.CurrentDate)'] + ' MST');
+                    peripheral['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                    peripheral.inventoryFilter = 'Inventory.CurrentDate <= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + daysInThisMonth(date) + '\' AND ' + 'Inventory.CurrentDate >= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-01\'';
+                }
+                else {
+                    peripheral['MAX(Inventory.CurrentDate)'] = 'Never';
+                    peripheral.inventoryFilter = 'Inventory.CurrentDate IS NULL';
+                }
+            }
             return database.query('UPDATE Filters SET peripheralFilters = "' + peripheralFilters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
