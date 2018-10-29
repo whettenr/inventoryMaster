@@ -466,8 +466,18 @@ router.get('/monitorTable', function (req, res, next) {
         })
         .then(rows => {
             monitors = rows;
+            for(monitor of monitors){
+                if (monitor['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(monitor['MAX(Inventory.CurrentDate)'] + ' MST');
+                    monitor['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                    monitor.inventoryFilter = 'Inventory.CurrentDate <= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + daysInThisMonth(date) + '\' AND ' + 'Inventory.CurrentDate >= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-01\'';
+                }
+                else {
+                    monitor['MAX(Inventory.CurrentDate)'] = 'Never';
+                    monitor.inventoryFilter = 'Inventory.CurrentDate IS NULL';
+                }
+            }
             return database.query('UPDATE Filters SET monitorFilters = "' + monitorFilters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
-            //TODO: Loop through monitors and update the dates on the current date
         })
         .then(() => {
             database.close();
@@ -504,7 +514,7 @@ router.get('/peripheralTable', function (req, res, next) {
             if (rows[0].peripheralFilters !== "") {
                 peripheralFilters = rows[0].peripheralFilters.split(',');
             }
-            let query = 'SELECT * FROM Peripheral LEFT JOIN Employee on Peripheral.EmployeeID = Employee.EmployeeID WHERE Peripheral.EmployeeID != 400';
+            let query = 'SELECT Peripheral.*, Employee.*, MAX(Inventory.CurrentDate) FROM Peripheral LEFT JOIN Employee on Peripheral.EmployeeID = Employee.EmployeeID LEFT JOIN Inventory ON Peripheral.ICN = Inventory.ICN WHERE Peripheral.EmployeeID != 400';
             if (req.query.remove) {
                 let splice = parseInt(req.query.remove);
                 peripheralFilters.splice(splice, 1);
@@ -538,6 +548,8 @@ router.get('/peripheralTable', function (req, res, next) {
                 }
                 query = query.substr(0, query.length - 16);
             }
+
+            query += ' GROUP BY ICN';
 
             if (req.query.sortby === 'ICN') {
                 query += ' Order BY ICN';
