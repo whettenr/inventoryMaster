@@ -639,7 +639,7 @@ router.get('/printerTable', function (req, res, next) {
             if (rows[0].printerFilters !== "") {
                 printerFilters = rows[0].printerFilters.split(',');
             }
-            let query = 'SELECT Printer.*, Employee.*, Max(PageCounts.PageCount) FROM Printer JOIN Employee on Printer.EmployeeID = Employee.employeeId LEFT JOIN PageCounts ON Printer.ICN = PageCounts.ICN WHERE Printer.EmployeeID != 400';
+            let query = 'SELECT Printer.*, Employee.*, MAX(Inventory.CurrentDate), Max(PageCounts.PageCount) FROM Printer JOIN Employee on Printer.EmployeeID = Employee.employeeId LEFT JOIN PageCounts ON Printer.ICN = PageCounts.ICN LEFT JOIN Inventory ON Printer.ICN = Inventory.ICN WHERE Printer.EmployeeID != 400';
             if (req.query.remove) {
                 let splice = parseInt(req.query.remove);
                 printerFilters.splice(splice, 1);
@@ -665,13 +665,17 @@ router.get('/printerTable', function (req, res, next) {
             if (printerFilters.length > 0) {
                 query += " and Printer.";
                 for (let filter in printerFilters) {
+                    if(printerFilters[filter].includes('CurrentDate')){
+                        query = query.substr(0, query.length - 13);
+                        query += ' and ';
+                    }
                     query += printerFilters[filter];
                     query += ' and Printer.';
                     console.log(filter);
                 }
                 query = query.substr(0, query.length - 13);
             }
-
+            query += ' GROUP BY ICN';
             if (req.query.sortby === 'ICN') {
                 query += ' Order BY ICN';
             }
@@ -697,7 +701,7 @@ router.get('/printerTable', function (req, res, next) {
                 query += ' ORDER BY LesOlsonID';
             }
             else {
-                query += ' GROUP BY ICN Order BY ICN';
+                query += ' Order BY ICN';
             }
             console.log(query);
             return database.query(query);
@@ -706,6 +710,17 @@ router.get('/printerTable', function (req, res, next) {
             printers = rows;
             actionButton.href = 'showOptions?table=printer';
             actionButton.name = 'Show Options';
+            for(printer of printers){
+                if (printer['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(printer['MAX(Inventory.CurrentDate)'] + ' MST');
+                    printer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                    printer.inventoryFilter = 'Inventory.CurrentDate <= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + daysInThisMonth(date) + '\' AND ' + 'Inventory.CurrentDate >= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-01\'';
+                }
+                else {
+                    printer['MAX(Inventory.CurrentDate)'] = 'Never';
+                    printer.inventoryFilter = 'Inventory.CurrentDate IS NULL';
+                }
+            }
             return database.query('UPDATE Filters SET printerFilters = "' + printerFilters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
