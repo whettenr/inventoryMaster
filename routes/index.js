@@ -60,6 +60,10 @@ function getCurrentDate() {
     return newDate;
 }
 
+function daysInThisMonth(date) {
+    return new Date(date.getFullYear(), date.getMonth()+1, 0).getDate();
+}
+
 
 // router.set('trust proxy', 1);
 
@@ -242,13 +246,16 @@ router.get('/computerTable', function (req, res, next) {
                 query += " and ";
                 for (let filter in filters) {
                     if (filters[filter].includes('EmployeeID') || filters[filter].includes('RotationGroup')) {
-                        query += 'Employee.'
+                        query += 'Employee.';
                     }
                     else if (filters[filter].includes('Processor') || filters[filter].includes('Memory') || filters[filter].includes('HardDrive') || filters[filter].includes('VCName') || filters[filter].includes('Touch') || filters[filter].includes('ScreenResolution')) {
-                        query += 'Hardware.'
+                        query += 'Hardware.';
+                    }
+                    else if(filters[filter].includes('CurrentDate')){
+                        console.log('inventory query');
                     }
                     else {
-                        query += 'Computer.'
+                        query += 'Computer.';
                     }
                     query += filters[filter].replace('%20', ' ').replace('%27', '\'').replace('%20', ' ').replace('%27', '\'');
                     query += ' and ';
@@ -349,9 +356,11 @@ router.get('/computerTable', function (req, res, next) {
                 if (computer['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(computer['MAX(Inventory.CurrentDate)'] + ' MST');
                     computer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                    computer.inventoryFilter = 'Inventory.CurrentDate <= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + daysInThisMonth(date) + '\' AND ' + 'Inventory.CurrentDate >= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-01\'';
                 }
                 else {
                     computer['MAX(Inventory.CurrentDate)'] = 'Never';
+                    computer.inventoryFilter = 'Inventory.CurrentDate IS NULL';
                 }
             }
             return database.query('UPDATE Filters SET filters = "' + filters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
@@ -2622,7 +2631,6 @@ router.get('/email', function (req, res, next) {
             console.log(error);
         });
 });
-
 
 router.post('/showOptions', function (req, res, next) {
     let database = new Database(config.getConfig());

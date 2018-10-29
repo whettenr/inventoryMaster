@@ -43,7 +43,8 @@ block content
                                         a(href='#{location}/#{table}Table?where=EmployeeID=' + computer['EmployeeID'])
                                             div= computer[key]
                                     else if(key === 'MAX(Inventory.CurrentDate)')
-                                        div= computer[key]
+                                        a(href='#{location}/#{table}Table?where=#{computer.inventoryFilter}')
+                                            div= computer[key]
                                     else
                                         a(href='#{location}/#{table}Table?where=#{key}=\'#{computer[key]}\'')
                                             if(key === 'HomeCheckout')
