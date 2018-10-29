@@ -429,6 +429,10 @@ router.get('/monitorTable', function (req, res, next) {
             if (monitorFilters.length > 0) {
                 query += " and Monitor.";
                 for (let filter in monitorFilters) {
+                    if(monitorFilters[filter].includes('CurrentDate')){
+                        query = query.substr(0, query.length - 13);
+                        query += ' and ';
+                    }
                     query += monitorFilters[filter];
                     query += ' and Monitor.';
                     console.log(filter);
@@ -542,6 +546,10 @@ router.get('/peripheralTable', function (req, res, next) {
             if (peripheralFilters.length > 0) {
                 query += " and Peripheral.";
                 for (let filter in peripheralFilters) {
+                    if(peripheralFilters[filter].includes('CurrentDate')){
+                        query = query.substr(0, query.length - 16);
+                        query += ' and ';
+                    }
                     query += peripheralFilters[filter];
                     query += ' and Peripheral.';
                     console.log(filter);
