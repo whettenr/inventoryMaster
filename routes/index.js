@@ -2637,7 +2637,7 @@ router.get('/updateInventory', function (req, res, next) {
         .then(rows => {
             if (rows.length) {
                 deleted = true;
-                return (database.query('DELETE FROM Inventory WHERE ICN = ' + ICN + ' AND CurrentDate LIKE "' + date.getFullYear() + '%"'));
+                return (database.query('DELETE FROM Inventory WHERE ICN = ' + ICN + ' AND CurrentDate > "' + date.getFullYear() + '-01-01"'));
             }
             console.log(rows);
             return database.query('INSERT INTO Inventory (ICN) VALUES(?)', [ICN]);
