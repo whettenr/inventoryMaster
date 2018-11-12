@@ -149,6 +149,7 @@ module.exports = function (req, res, next) {
                         "MAX(Inventory.CurrentDate)": true,
                         "Surplussing": false
                     };
+                    let test = config.getConfig();
                     let database = new Database(config.getConfig());
                     database.query('SELECT * FROM Filters WHERE user = \'' + user.netId + '\'')
                         .then(rows => {

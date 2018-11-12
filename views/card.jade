@@ -83,139 +83,175 @@ block content
             h4 Computers:
             if(!employee)
                 h3.left= Object.keys(computers).length
-        table.table
-            tr
-                th
-                    | ICN
-                th
-                    | Make
-                th
-                    | Model
-                th
-                    | Type
-                th
-                    | Date Acquired
-                th
-                    | Inventory
-                if(employee && employee.EmployeeID === 300)
-                    th= "Surplus"
-            each computer in computers
+        .test
+            table.table
                 tr
-                    td
-                        a(href='#{location}/computer?ICN=' + computer.ICN)= computer.ICN
-                    td= computer.Make
-                    td= computer.Model
-                    td= computer.Type
-                    td= computer.DateAcquired
-                    td
-                        .byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
+                    th
+                        | ICN
+                    th
+                        | Make
+                    th
+                        | Model
+                    th
+                        | Type
+                    th
+                        | Date Acquired
+                    th
+                        | Inventory
                     if(employee && employee.EmployeeID === 300)
-                        if(computer.Surplussing === 0)
-                            td
-                                button.byu-button.navy(onclick='surplus(#{computer.ICN}, "Computer")' id='surplusButton#{computer.ICN}') Surplus
-                        else
-                            td
-                                button.byu-button.whitenavy(onclick='undo(#{computer.ICN}, "Computer")' id='surplusButton#{computer.ICN}') Undo
+                        th= "Surplus"
+                each computer in computers
+                    tr.test2
+                        td
+                            a(href='#{location}/computer?ICN=' + computer.ICN)= computer.ICN
+                        td= computer.Make
+                        td= computer.Model
+                        td= computer.Type
+                        td= computer.DateAcquired
+                        td
+                            .byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
+                        if(employee && employee.EmployeeID === 300)
+                            if(computer.Surplussing === 0)
+                                td
+                                    button.byu-button.navy(onclick='surplus(#{computer.ICN}, "Computer")' id='surplusButton#{computer.ICN}') Surplus
+                            else
+                                td
+                                    button.byu-button.whitenavy(onclick='undo(#{computer.ICN}, "Computer")' id='surplusButton#{computer.ICN}') Undo
+                    .miniCard
+                        div.flex
+                            .column
+                                div
+                                    | ICN:
+                                    a(href='#{location}/computer?ICN=' + computer.ICN)= computer.ICN
+                                div
+                                    | Make: #{computer.Make}
+                                div
+                                    | Model: #{computer.Model}
+                            .column
+                                div
+                                    | Type: #{computer.Type}
+                                div
+                                    | Acquired: #{computer.DateAcquired}
+                        div(style='text-align: center;')
+                            | Inventory:
+                            span.byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
+                        br
+
 
     if(Object.keys(monitors).length)
         .titles
             h4 Monitors:
             if(!employee)
                 h3.left= Object.keys(monitors).length
-        table.table
-            tr
-                th
-                    | ICN
-                th
-                    | Make
-                th
-                    | Model
-                th
-                    | Date Acquired
-                th
-                    | Inventory
-                if(employee && employee.EmployeeID === 300)
-                    th= "Surplus"
-            each monitor in monitors
+        .test
+            table.table
                 tr
-                    td
-                        a(href="#{location}/monitor?ICN=" + monitor.ICN)= monitor.ICN
-                    td= monitor.Make
-                    td= monitor.Model
-                    td= monitor.DateAcquired
-                    td
-                        .byu-button.navy(onclick='inventory(#{monitor.ICN}, this);')= monitor['MAX(Inventory.CurrentDate)']
+                    th
+                        | ICN
+                    th
+                        | Make
+                    th
+                        | Model
+                    th
+                        | Date Acquired
+                    th
+                        | Inventory
                     if(employee && employee.EmployeeID === 300)
-                        if(monitor.Surplussing === 0)
-                            td
-                                button.byu-button.navy(onclick='surplus(#{monitor.ICN}, Monitor)' id='surplusButton#{monitor.ICN}') Surplus
-                        else
-                            td
-                                button.byu-button.whitenavy(onclick='undo(#{monitor.ICN}, Monitor)' id='surplusButton#{monitor.ICN}') Undo
+                        th= "Surplus"
+                each monitor in monitors
+                    tr
+                        td
+                            a(href="#{location}/monitor?ICN=" + monitor.ICN)= monitor.ICN
+                        td= monitor.Make
+                        td= monitor.Model
+                        td= monitor.DateAcquired
+                        td
+                            .byu-button.navy(onclick='inventory(#{monitor.ICN}, this);')= monitor['MAX(Inventory.CurrentDate)']
+                        if(employee && employee.EmployeeID === 300)
+                            if(monitor.Surplussing === 0)
+                                td
+                                    button.byu-button.navy(onclick='surplus(#{monitor.ICN}, Monitor)' id='surplusButton#{monitor.ICN}') Surplus
+                            else
+                                td
+                                    button.byu-button.whitenavy(onclick='undo(#{monitor.ICN}, Monitor)' id='surplusButton#{monitor.ICN}') Undo
+                    .miniCard
+                        .flex
+                            .column
+                                div
+                                    a(href="#{location}/monitor?ICN=" + monitor.ICN)= monitor.ICN
+                                div= monitor.Make
+                                div= monitor.Model
+                            .column
+                                div= monitor.DateAcquired
+                                div
+                                    .byu-button.navy(onclick='inventory(#{monitor.ICN}, this);')= monitor['MAX(Inventory.CurrentDate)']
+                    br
     if(Object.keys(printers).length)
         .titles
             h4 Printers:
             if(!employee)
                 h3.left= Object.keys(printers).length
-        table.table
-            tr
-                th
-                    | ICN
-                th
-                    | Make
-                th
-                    | Model
-                th
-                    | Date Acquired
-                th
-                    | Inventory
-            each printer in printers
+        .test
+            table.table
                 tr
-                    td
-                        a(href="#{location}/printer?ICN=" + printer.ICN)= printer.ICN
-                    td= printer.Make
-                    td= printer.Model
-                    td= printer.DateAcquired
-                    td
-                        .byu-button.navy(onclick='inventory(#{printer.ICN}, this);')= printer['MAX(Inventory.CurrentDate)']
+                    th
+                        | ICN
+                    th
+                        | Make
+                    th
+                        | Model
+                    th
+                        | Date Acquired
+                    th
+                        | Inventory
+                each printer in printers
+                    tr
+                        td
+                            a(href="#{location}/printer?ICN=" + printer.ICN)= printer.ICN
+                        td= printer.Make
+                        td= printer.Model
+                        td= printer.DateAcquired
+                        td
+                            .byu-button.navy(onclick='inventory(#{printer.ICN}, this);')= printer['MAX(Inventory.CurrentDate)']
     if(Object.keys(peripherals).length)
         .titles
             h4 Peripherals:
             if(!employee)
                 h3.left= Object.keys(peripherals).length
-        table.table
-            tr
-                th
-                    | ICN
-                th
-                    | Item
-                th
-                    | Make
-                th
-                    | Model
-                th
-                    | Date Acquired
-                th
-                    | Inventory
-                if(employee && employee.EmployeeID === 300)
-                    th= "Surplus"
-            each peripheral in peripherals
+        .test
+            table.table
                 tr
-                    td
-                        a(href="#{location}/peripheral?ICN=" + peripheral.ICN)= peripheral.ICN
-                    td= peripheral.Item
-                    td= peripheral.Make
-                    td= peripheral.Model
-                    td= peripheral.DateAcquired
-                    td
-                        .byu-button.navy(onclick='inventory(#{peripheral.ICN}, this);')= peripheral['MAX(Inventory.CurrentDate)']
+                    th
+                        | ICN
+                    th
+                        | Item
+                    th
+                        | Make
+                    th
+                        | Model
+                    th
+                        | Date Acquired
+                    th
+                        | Inventory
                     if(employee && employee.EmployeeID === 300)
-                        if(peripheral.Surplussing === 0)
-                            td
-                                button.byu-button.navy(onclick='surplus(#{peripheral.ICN}, Peripheral)' id='surplusButton#{peripheral.ICN}') Surplus
-                        else
-                            td
-                                button.byu-button.whitenavy(onclick='undo(#{peripheral.ICN}, Peripheral)' id='surplusButton#{peripheral.ICN}') Undo
+                        th= "Surplus"
+                each peripheral in peripherals
+                    tr
+                        td
+                            a(href="#{location}/peripheral?ICN=" + peripheral.ICN)= peripheral.ICN
+                        td= peripheral.Item
+                        td= peripheral.Make
+                        td= peripheral.Model
+                        td= peripheral.DateAcquired
+                        td
+                            .byu-button.navy(onclick='inventory(#{peripheral.ICN}, this);')= peripheral['MAX(Inventory.CurrentDate)']
+                        if(employee && employee.EmployeeID === 300)
+                            if(peripheral.Surplussing === 0)
+                                td
+                                    button.byu-button.navy(onclick='surplus(#{peripheral.ICN}, Peripheral)' id='surplusButton#{peripheral.ICN}') Surplus
+                            else
+                                td
+                                    button.byu-button.whitenavy(onclick='undo(#{peripheral.ICN}, Peripheral)' id='surplusButton#{peripheral.ICN}') Undo
     br
     script.
         function surplus(ICN, table) {
