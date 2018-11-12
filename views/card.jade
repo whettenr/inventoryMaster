@@ -119,7 +119,7 @@ block content
                                     button.byu-button.whitenavy(onclick='undo(#{computer.ICN}, "Computer")' id='surplusButton#{computer.ICN}') Undo
                     .miniCard
                         div.flex
-                            .column
+                            .column-left
                                 div
                                     | ICN:
                                     a(href='#{location}/computer?ICN=' + computer.ICN)= computer.ICN
@@ -127,15 +127,18 @@ block content
                                     | Make: #{computer.Make}
                                 div
                                     | Model: #{computer.Model}
-                            .column
                                 div
                                     | Type: #{computer.Type}
                                 div
                                     | Acquired: #{computer.DateAcquired}
-                        div(style='text-align: center;')
-                            | Inventory:
-                            span.byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
-                        br
+                            .column-right
+                                br
+                                br
+                                div
+                                    | Update Inventory:
+                                br
+                                .byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
+                    br
 
 
     if(Object.keys(monitors).length)
@@ -176,13 +179,15 @@ block content
                                     button.byu-button.whitenavy(onclick='undo(#{monitor.ICN}, Monitor)' id='surplusButton#{monitor.ICN}') Undo
                     .miniCard
                         .flex
-                            .column
+                            .column-left
                                 div
                                     a(href="#{location}/monitor?ICN=" + monitor.ICN)= monitor.ICN
                                 div= monitor.Make
                                 div= monitor.Model
-                            .column
                                 div= monitor.DateAcquired
+                            .column-right
+                                br
+                                br
                                 div
                                     .byu-button.navy(onclick='inventory(#{monitor.ICN}, this);')= monitor['MAX(Inventory.CurrentDate)']
                     br

@@ -72,7 +72,7 @@ a {
 }
 
 .test {
-    overflow-x: scroll;
+    /*overflow-x: scroll;*/
 }
 
 .miniCard {
@@ -88,9 +88,14 @@ a {
     line-height: 200%;
 }
 
-.column {
-    flex: 50%;
+.column-left {
+    flex: 65%;
     padding: 10px;
+}
+.column-right {
+    flex: 35%;
+    padding: 10px;
+    line-height: 100%;
 }
 .full {
     flex: 100%;
