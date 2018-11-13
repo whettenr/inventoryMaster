@@ -27,7 +27,7 @@ html
 
             byu-search(slot="search", action="submit-form", method="get", placeholder="search")
                 form(method="get" action="#{location}/search")
-                    input(type="search" name="searchTerms" autofocus="autofocus")
+                    input(type="search" name="searchTerms")
             byu-user-info(slot="user")
                 a(slot="login", href="#{location}/cas") Sign In
                 a(slot="logout", href="#{location}/logout") Sign Out
@@ -62,4 +62,10 @@ html
                 else
                     a(href="#{location}/card?EmployeeID=300") JSB Storage
         script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+        script.
+            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                // some code..
+                console.log('ding dong');
+                document.querySelector('input').autofocus = true;
+            }
         block content
