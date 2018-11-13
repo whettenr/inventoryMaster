@@ -121,7 +121,7 @@ block content
                         div.flex
                             .column-left
                                 div
-                                    | ICN:
+                                    | ICN:&nbsp;
                                     a(href='#{location}/computer?ICN=' + computer.ICN)= computer.ICN
                                 div
                                     | Make: #{computer.Make}
@@ -181,15 +181,21 @@ block content
                         .flex
                             .column-left
                                 div
+                                    | ICN:&nbsp;
                                     a(href="#{location}/monitor?ICN=" + monitor.ICN)= monitor.ICN
-                                div= monitor.Make
-                                div= monitor.Model
-                                div= monitor.DateAcquired
+                                div
+                                    | Make: #{monitor.Make}
+                                div
+                                    | Model: #{monitor.Model}
+                                div
+                                    | Acquired: #{monitor.DateAcquired}
                             .column-right
                                 br
                                 br
                                 div
-                                    .byu-button.navy(onclick='inventory(#{monitor.ICN}, this);')= monitor['MAX(Inventory.CurrentDate)']
+                                    | Update Inventory:
+                                br
+                                .byu-button.navy(onclick='inventory(#{monitor.ICN}, this);')= monitor['MAX(Inventory.CurrentDate)']
                     br
     if(Object.keys(printers).length)
         .titles
@@ -218,6 +224,27 @@ block content
                         td= printer.DateAcquired
                         td
                             .byu-button.navy(onclick='inventory(#{printer.ICN}, this);')= printer['MAX(Inventory.CurrentDate)']
+                    .miniCard
+                        .flex
+                            .column-left
+                                div
+                                    | ICN:&nbsp;
+                                    a(href="#{location}/printer?ICN=" + printer.ICN)= printer.ICN
+
+                                div
+                                    | Make: #{printer.Make}
+                                div
+                                    | Model: #{printer.Model}
+                                div
+                                    | Acquired: #{printer.DateAcquired}
+                            .column-right
+                                br
+                                br
+                                div
+                                    | Update Inventory:
+                                br
+                                .byu-button.navy(onclick='inventory(#{printer.ICN}, this);')= printer['MAX(Inventory.CurrentDate)']
+                    br
     if(Object.keys(peripherals).length)
         .titles
             h4 Peripherals:
@@ -257,6 +284,28 @@ block content
                             else
                                 td
                                     button.byu-button.whitenavy(onclick='undo(#{peripheral.ICN}, Peripheral)' id='surplusButton#{peripheral.ICN}') Undo
+                    .miniCard
+                        .flex
+                            .column-left
+                                div
+                                    | ICN:&nbsp;
+                                    a(href="#{location}/peripheral?ICN=" + peripheral.ICN)= peripheral.ICN
+                                div
+                                    | Item: #{peripheral.Item}
+                                div
+                                    | Make: #{peripheral.Make}
+                                div
+                                    | Model: #{peripheral.Model}
+                                div
+                                    | Acquired: #{peripheral.DateAcquired}
+                            .column-right
+                                br
+                                br
+                                div
+                                    | Update Inventory:
+                                br
+                                .byu-button.navy(onclick='inventory(#{peripheral.ICN}, this);')= peripheral['MAX(Inventory.CurrentDate)']
+                    br
     br
     script.
         function surplus(ICN, table) {
