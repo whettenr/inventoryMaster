@@ -826,17 +826,24 @@ router.get('/card', function (req, res, next) {
     let printerRows = {};
     let peripheralRows = {};
     let employees;
-    let surplussing = req.query.surplussing;
+    let surplussing;
+    if(!req.query.surplussing || req.query.surplussing === ''){
+        surplussing = 'false';
+    }
+    else{
+        surplussing = req.query.surplussing;
+    }
 
     let database = new Database(config.getConfig());
 
     database.query('SELECT * FROM Employee WHERE EmployeeID = ' + employeeId)
         .then(rows => {
             employeeRows = rows;
-            let query = 'SELECT Computer.*, MAX(Inventory.CurrentDate) FROM Computer LEFT JOIN Inventory ON Computer.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId + ' GROUP BY Computer.ICN;';
+            let query = 'SELECT Computer.*, MAX(Inventory.CurrentDate) FROM Computer LEFT JOIN Inventory ON Computer.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId;
             if (surplussing === 'true') {
-                query += ' AND Surplussing = true;';
+                query += ' AND Surplussing = true';
             }
+            query += ' GROUP BY Computer.ICN;';
             return database.query(query);
         })
         .then(rows => {
@@ -850,10 +857,11 @@ router.get('/card', function (req, res, next) {
                     computer['MAX(Inventory.CurrentDate)'] = 'Never';
                 }
             }
-            let query = 'SELECT Monitor.*, MAX(Inventory.CurrentDate) FROM Monitor LEFT JOIN Inventory ON Monitor.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId + ' GROUP BY Monitor.ICN;';
+            let query = 'SELECT Monitor.*, MAX(Inventory.CurrentDate) FROM Monitor LEFT JOIN Inventory ON Monitor.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId;
             if (surplussing === 'true') {
-                query += ' AND Surplussing = true;';
+                query += ' AND Surplussing = true';
             }
+            query += ' GROUP BY Monitor.ICN;';
             return database.query(query);
         })
         .then(rows => {
@@ -867,7 +875,12 @@ router.get('/card', function (req, res, next) {
                     monitor['MAX(Inventory.CurrentDate)'] = 'Never';
                 }
             }
-            return database.query('SELECT Printer.*, MAX(Inventory.CurrentDate) FROM Printer LEFT JOIN Inventory ON Printer.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId + ' GROUP BY Printer.ICN;');
+            let query = 'SELECT Printer.*, MAX(Inventory.CurrentDate) FROM Printer LEFT JOIN Inventory ON Printer.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId;
+            if (surplussing === 'true') {
+                query += ' AND Surplussing = true';
+            }
+            query  += ' GROUP BY Printer.ICN;';
+            return database.query(query);
         })
         .then(rows => {
             printerRows = rows;
@@ -880,10 +893,11 @@ router.get('/card', function (req, res, next) {
                     printer['MAX(Inventory.CurrentDate)'] = 'Never';
                 }
             }
-            let query = 'SELECT Peripheral.*, MAX(Inventory.CurrentDate) FROM Peripheral LEFT JOIN Inventory ON Peripheral.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId + ' GROUP BY Peripheral.ICN;';
+            let query = 'SELECT Peripheral.*, MAX(Inventory.CurrentDate) FROM Peripheral LEFT JOIN Inventory ON Peripheral.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId;
             if (surplussing === 'true') {
-                query += ' AND Surplussing = true;';
+                query += ' AND Surplussing = true';
             }
+            query += ' GROUP BY Peripheral.ICN;';
             return database.query(query);
         })
         .then(rows => {
