@@ -48,6 +48,37 @@ const monthNames = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 ];
 
+function formatDate(rows) {
+    for (let computer of rows) {
+        if (computer.DateAcquired) {
+            let date = new Date(computer.DateAcquired + ' MST');
+            computer.DateAcquiredFilter = computer.DateAcquired.substr(0, computer.DateAcquired.length - 3) + '%';
+            computer.DateAcquired = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+        }
+        else {
+            computer.DateAcquired = 'None';
+        }
+        if (computer.Warranty) {
+            let date = new Date(computer.Warranty + ' MST');
+            computer.WarrantyFilter = computer.Warranty.substr(0, computer.Warranty.length - 3) + '%';
+            computer.Warranty = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+        }
+        else {
+            computer.Warranty = 'None';
+        }
+        if (computer['MAX(Inventory.CurrentDate)']) {
+            let date = new Date(computer['MAX(Inventory.CurrentDate)'] + ' MST');
+            computer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+            computer.inventoryFilter = 'Inventory.CurrentDate <= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + daysInThisMonth(date) + '\' AND ' + 'Inventory.CurrentDate >= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-01\'';
+        }
+        else {
+            computer['MAX(Inventory.CurrentDate)'] = 'Never';
+            computer.inventoryFilter = 'Inventory.CurrentDate IS NULL';
+        }
+    }
+    return rows;
+}
+
 function getCurrentDate() {
     let date = new Date();
     let month = date.getMonth() + 1;
@@ -61,7 +92,7 @@ function getCurrentDate() {
 }
 
 function daysInThisMonth(date) {
-    return new Date(date.getFullYear(), date.getMonth()+1, 0).getDate();
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }
 
 
@@ -251,7 +282,7 @@ router.get('/computerTable', function (req, res, next) {
                     else if (filters[filter].includes('Processor') || filters[filter].includes('Memory') || filters[filter].includes('HardDrive') || filters[filter].includes('VCName') || filters[filter].includes('Touch') || filters[filter].includes('ScreenResolution')) {
                         query += 'Hardware.';
                     }
-                    else if(filters[filter].includes('CurrentDate')){
+                    else if (filters[filter].includes('CurrentDate')) {
                         console.log('inventory query');
                     }
                     else {
@@ -429,7 +460,7 @@ router.get('/monitorTable', function (req, res, next) {
             if (monitorFilters.length > 0) {
                 query += " and Monitor.";
                 for (let filter in monitorFilters) {
-                    if(monitorFilters[filter].includes('CurrentDate')){
+                    if (monitorFilters[filter].includes('CurrentDate')) {
                         query = query.substr(0, query.length - 13);
                         query += ' and ';
                     }
@@ -470,7 +501,7 @@ router.get('/monitorTable', function (req, res, next) {
         })
         .then(rows => {
             monitors = rows;
-            for(monitor of monitors){
+            for (monitor of monitors) {
                 if (monitor['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(monitor['MAX(Inventory.CurrentDate)'] + ' MST');
                     monitor['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
@@ -546,7 +577,7 @@ router.get('/peripheralTable', function (req, res, next) {
             if (peripheralFilters.length > 0) {
                 query += " and Peripheral.";
                 for (let filter in peripheralFilters) {
-                    if(peripheralFilters[filter].includes('CurrentDate')){
+                    if (peripheralFilters[filter].includes('CurrentDate')) {
                         query = query.substr(0, query.length - 16);
                         query += ' and ';
                     }
@@ -591,7 +622,7 @@ router.get('/peripheralTable', function (req, res, next) {
         })
         .then(rows => {
             peripherals = rows;
-            for(peripheral of peripherals){
+            for (peripheral of peripherals) {
                 if (peripheral['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(peripheral['MAX(Inventory.CurrentDate)'] + ' MST');
                     peripheral['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
@@ -665,7 +696,7 @@ router.get('/printerTable', function (req, res, next) {
             if (printerFilters.length > 0) {
                 query += " and Printer.";
                 for (let filter in printerFilters) {
-                    if(printerFilters[filter].includes('CurrentDate')){
+                    if (printerFilters[filter].includes('CurrentDate')) {
                         query = query.substr(0, query.length - 13);
                         query += ' and ';
                     }
@@ -710,7 +741,7 @@ router.get('/printerTable', function (req, res, next) {
             printers = rows;
             actionButton.href = 'showOptions?table=printer';
             actionButton.name = 'Show Options';
-            for(printer of printers){
+            for (printer of printers) {
                 if (printer['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(printer['MAX(Inventory.CurrentDate)'] + ' MST');
                     printer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
@@ -2494,7 +2525,11 @@ router.get('/updatePageCounts', function (req, res, next) {
 
 router.get('/search', function (req, res, next) {
     console.log(req.query.searchTerms);
-    let searchTerms = "%" + req.query.searchTerms + "%";
+    let searchTerms = req.query.searchTerms;
+    if(searchTerms[searchTerms.length -1] === ' '){
+        searchTerms = searchTerms.substr(0, searchTerms.length -1);
+    }
+    searchTerms = "%" + searchTerms + "%";
     let database = new Database(config.getConfig());
     let employeeRows = {};
     let computerRows = {};
@@ -2504,23 +2539,27 @@ router.get('/search', function (req, res, next) {
     database.query("SELECT * FROM Employee WHERE FirstName LIKE ? OR LastName LIKE ? OR `Employee Notes` LIKE ?", [searchTerms, searchTerms, searchTerms])
         .then(rows => {
             employeeRows = rows;
-            return database.query("SELECT * FROM Computer JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Computer.ICN LIKE ? OR Computer.SerialNumber LIKE ? OR Computer.Make LIKE ? OR Computer.Model LIKE ? OR Computer.Type LIKE ? OR Computer.Notes LIKE ? OR Computer.History LIKE ? OR Hardware.ProcessorType LIKE ? OR Hardware.ProcessorSpeed LIKE ? OR Hardware.HardDrive LIKE ? OR Hardware.VCName LIKE ?", [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            return database.query("SELECT Computer.*, Hardware.*, MAX(Inventory.CurrentDate) FROM Computer JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID JOIN Inventory ON Computer.ICN = Inventory.ICN WHERE Computer.ICN LIKE ? OR Computer.SerialNumber LIKE ? OR Computer.Make LIKE ? OR Computer.Model LIKE ? OR Computer.Type LIKE ? OR Computer.Notes LIKE ? OR Computer.History LIKE ? OR Hardware.ProcessorType LIKE ? OR Hardware.ProcessorSpeed LIKE ? OR Hardware.HardDrive LIKE ? OR Hardware.VCName LIKE ? GROUP BY ICN", [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             console.log(rows);
             computerRows = rows;
-            return database.query('SELECT * FROM Monitor WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Notes LIKE ? OR History LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            computerRows = formatDate(computerRows);
+            return database.query('SELECT Monitor.*, MAX(Inventory.CurrentDate) FROM Monitor JOIN Inventory ON Monitor.ICN = Inventory.ICN WHERE Monitor.ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Notes LIKE ? OR History LIKE ? GROUP BY ICN', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             monitorRows = rows;
-            return database.query('SELECT * FROM Printer WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR LesOlsonID LIKE ? OR Model LIKE ? OR Notes LIKE ? OR History LIKE ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            monitorRows = formatDate(monitorRows);
+            return database.query('SELECT Printer.*, MAX(Inventory.CurrentDate) FROM Printer JOIN Inventory ON Printer.ICN = Inventory.ICN WHERE Printer.ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR LesOlsonID LIKE ? OR Model LIKE ? OR Notes LIKE ? OR History LIKE ? GROUP BY ICN', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             printerRows = rows;
-            return database.query('SELECT * FROM Peripheral WHERE ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Item LIKE ? OR Notes LIKE ? OR History Like ?', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            printerRows = formatDate(printerRows);
+            return database.query('SELECT Peripheral.*, MAX(Inventory.CurrentDate) FROM Peripheral JOIN Inventory ON Peripheral.ICN = Inventory.ICN WHERE Peripheral.ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Item LIKE ? OR Notes LIKE ? OR History Like ? GROUP BY ICN', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             peripheralRows = rows;
+            peripheralRows = formatDate(peripheralRows);
             return database.close();
         })
         .then(() => {
@@ -2557,7 +2596,8 @@ router.get('/search', function (req, res, next) {
         });
 
 
-});
+})
+;
 
 router.get('/showOptions', function (req, res, next) {
     let database = new Database(config.getConfig());

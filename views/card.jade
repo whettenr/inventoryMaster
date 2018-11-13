@@ -78,6 +78,31 @@ block content
                         a(href='#{location}/employeesTable?where=dateSwitched=#{employee.DateSwitched}')
                             div= employee.DateSwitched
                     td= employee.Notes
+                .miniCard
+                    .flex
+                        .column-left
+                            div
+                                | Employee ID:&nbsp;
+                                a(href='#{location}/card?EmployeeID=' + employee.EmployeeID)= employee.EmployeeID
+                            div
+                                | First Name:&nbsp;
+                                span= employee.FirstName
+                            div
+                                | Last Name:&nbsp;
+                                span= employee.LastName
+                            div
+                                | Office Location:&nbsp;
+                                span= employee.Office
+                            div
+                                | Building:&nbsp;
+                                span= employee.Building
+                            div
+                                | Rotation:&nbsp;
+                                span= employee.RotationGroup
+                            div
+                                | Date Switched:&nbsp;
+                                span= employee.DateSwitched
+
     if(Object.keys(computers).length)
         .titles
             h4 Computers:
@@ -138,7 +163,7 @@ block content
                                     | Update Inventory:
                                 br
                                 .byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
-                    br
+
 
 
     if(Object.keys(monitors).length)
@@ -196,7 +221,7 @@ block content
                                     | Update Inventory:
                                 br
                                 .byu-button.navy(onclick='inventory(#{monitor.ICN}, this);')= monitor['MAX(Inventory.CurrentDate)']
-                    br
+
     if(Object.keys(printers).length)
         .titles
             h4 Printers:
@@ -244,7 +269,7 @@ block content
                                     | Update Inventory:
                                 br
                                 .byu-button.navy(onclick='inventory(#{printer.ICN}, this);')= printer['MAX(Inventory.CurrentDate)']
-                    br
+
     if(Object.keys(peripherals).length)
         .titles
             h4 Peripherals:
@@ -305,13 +330,13 @@ block content
                                     | Update Inventory:
                                 br
                                 .byu-button.navy(onclick='inventory(#{peripheral.ICN}, this);')= peripheral['MAX(Inventory.CurrentDate)']
-                    br
+
     br
     script.
         function surplus(ICN, table) {
             $.ajax({
                 type: "GET",
-                url: "#{location}/finnaSurplus?table="+ table + "&ICN=" + ICN,
+                url: "#{location}/finnaSurplus?table=" + table + "&ICN=" + ICN,
                 data: {format: 'html'}
             }).done(function (data) {
                 $("#surplusButton" + ICN).html('Undo');
@@ -334,7 +359,7 @@ block content
             });
         }
 
-        function inventory(ICN, id){
+        function inventory(ICN, id) {
             $.ajax({
                 type: "GET",
                 url: "#{location}/updateInventory?ICN=" + ICN,
