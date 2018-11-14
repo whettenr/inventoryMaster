@@ -2553,23 +2553,23 @@ router.get('/search', function (req, res, next) {
     database.query("SELECT * FROM Employee WHERE FirstName LIKE ? OR LastName LIKE ? OR `Employee Notes` LIKE ?", [searchTerms, searchTerms, searchTerms])
         .then(rows => {
             employeeRows = rows;
-            return database.query("SELECT Computer.*, Hardware.*, MAX(Inventory.CurrentDate) FROM Computer JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID JOIN Inventory ON Computer.ICN = Inventory.ICN WHERE Computer.ICN LIKE ? OR Computer.SerialNumber LIKE ? OR Computer.Make LIKE ? OR Computer.Model LIKE ? OR Computer.Type LIKE ? OR Computer.Notes LIKE ? OR Computer.History LIKE ? OR Hardware.ProcessorType LIKE ? OR Hardware.ProcessorSpeed LIKE ? OR Hardware.HardDrive LIKE ? OR Hardware.VCName LIKE ? GROUP BY ICN", [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            return database.query("SELECT Computer.*, Hardware.*, MAX(Inventory.CurrentDate) FROM Computer LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID JOIN Inventory ON Computer.ICN = Inventory.ICN WHERE Computer.ICN LIKE ? OR Computer.SerialNumber LIKE ? OR Computer.Make LIKE ? OR Computer.Model LIKE ? OR Computer.Type LIKE ? OR Computer.Notes LIKE ? OR Computer.History LIKE ? OR Hardware.ProcessorType LIKE ? OR Hardware.ProcessorSpeed LIKE ? OR Hardware.HardDrive LIKE ? OR Hardware.VCName LIKE ? GROUP BY ICN", [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             console.log(rows);
             computerRows = rows;
             computerRows = formatDate(computerRows);
-            return database.query('SELECT Monitor.*, MAX(Inventory.CurrentDate) FROM Monitor JOIN Inventory ON Monitor.ICN = Inventory.ICN WHERE Monitor.ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Notes LIKE ? OR History LIKE ? GROUP BY ICN', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            return database.query('SELECT Monitor.*, MAX(Inventory.CurrentDate) FROM Monitor LEFT JOIN Inventory ON Monitor.ICN = Inventory.ICN WHERE Monitor.ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Notes LIKE ? OR History LIKE ? GROUP BY ICN', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             monitorRows = rows;
             monitorRows = formatDate(monitorRows);
-            return database.query('SELECT Printer.*, MAX(Inventory.CurrentDate) FROM Printer JOIN Inventory ON Printer.ICN = Inventory.ICN WHERE Printer.ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR LesOlsonID LIKE ? OR Model LIKE ? OR Notes LIKE ? OR History LIKE ? GROUP BY ICN', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            return database.query('SELECT Printer.*, MAX(Inventory.CurrentDate) FROM Printer LEFT JOIN Inventory ON Printer.ICN = Inventory.ICN WHERE Printer.ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR LesOlsonID LIKE ? OR Model LIKE ? OR Notes LIKE ? OR History LIKE ? GROUP BY ICN', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             printerRows = rows;
             printerRows = formatDate(printerRows);
-            return database.query('SELECT Peripheral.*, MAX(Inventory.CurrentDate) FROM Peripheral JOIN Inventory ON Peripheral.ICN = Inventory.ICN WHERE Peripheral.ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Item LIKE ? OR Notes LIKE ? OR History Like ? GROUP BY ICN', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
+            return database.query('SELECT Peripheral.*, MAX(Inventory.CurrentDate) FROM Peripheral LEFT JOIN Inventory ON Peripheral.ICN = Inventory.ICN WHERE Peripheral.ICN LIKE ? OR SerialNumber LIKE ? OR Make LIKE ? OR Model LIKE ? OR Item LIKE ? OR Notes LIKE ? OR History Like ? GROUP BY ICN', [searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms, searchTerms])
         })
         .then(rows => {
             peripheralRows = rows;
