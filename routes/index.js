@@ -406,6 +406,7 @@ router.get('/computerTable', function (req, res, next) {
             return database.query('UPDATE Filters SET filters = "' + filters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
+            showOptions.PictureURL = true;
             res.render('OneTableToRuleThemAll', {
                 title: 'Computers',
                 table: 'computer',
@@ -576,6 +577,13 @@ router.get('/peripheralTable', function (req, res, next) {
             if (req.query.not) {
                 if (peripheralFilters[req.query.not].includes('!='))
                     peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('!=', '=');
+                else if (peripheralFilters[req.query.not].includes('!(')){
+                    peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('!(', '(');
+                }
+                else if (peripheralFilters[req.query.not].includes('(')){
+                    peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('(', '!(');
+                }
+
                 else
                     peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('=', '!=');
             }
@@ -695,6 +703,13 @@ router.get('/printerTable', function (req, res, next) {
             if (req.query.not) {
                 if (printerFilters[req.query.not].includes('!='))
                     printerFilters[req.query.not] = printerFilters[req.query.not].replace('!=', '=');
+                else if (printerFilters[req.query.not].includes('!(')){
+                    printerFilters[req.query.not] = printerFilters[req.query.not].replace('!(', '(');
+                }
+                else if (printerFilters[req.query.not].includes('(')){
+                    printerFilters[req.query.not] = printerFilters[req.query.not].replace('(', '!(');
+                }
+
                 else
                     printerFilters[req.query.not] = printerFilters[req.query.not].replace('=', '!=');
             }

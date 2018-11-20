@@ -79,9 +79,10 @@ a {
     /*border: 1px solid #000;*/
     display: none;
     width: 90%;
-    margin: auto;
-    /*text-align: center;*/
+    text-align: left;
     background-color: lightgray;
+    max-width: 400px;
+    margin: 20px;
 }
 .flex{
     display: flex;

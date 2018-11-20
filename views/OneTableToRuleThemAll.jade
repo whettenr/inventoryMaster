@@ -124,8 +124,9 @@ block content
                                     .byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
 
     script.
-        $("#extras").css('margin-left', window.getComputedStyle(document.querySelector('.table'), null).getPropertyValue('margin-left'));
-
+        if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            $("#extras").css('margin-left', window.getComputedStyle(document.querySelector('.table'), null).getPropertyValue('margin-left'));
+        }
         function surplus(ICN) {
             $.ajax({
                 type: "GET",
