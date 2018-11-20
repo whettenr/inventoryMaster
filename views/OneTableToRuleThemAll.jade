@@ -4,33 +4,41 @@ block content
     link(rel='stylesheet', href='#{location}/stylesheets/table.css')
     br
     #extras
-        if(sortby)
-            div
-                | Sort By: #{sortby} #{order}
         #filters
             include filters
 
         #count= "Count: " + Object.keys(items).length
     div(style='overflow-x:auto;')
-        table#table
+        table.table
             tbody
                 tr#myHeader
                     each showOption, key in showOptions
                         if(showOption)
                             td
-                                if(order === 'asc')
-                                    a(href='#{location}/#{table}Table?sortby=#{key}&order=dsc')
-                                        if(key === 'MAX(Inventory.CurrentDate)')
-                                            div= 'Inventory'
-                                        else
-                                            //.replace(/([A-Z])/g, ' $1')
-                                            div=key
+                                if(sortby === key)
+                                    if(order === 'asc')
+                                        a(href='#{location}/#{table}Table?sortby=#{key}&order=desc')
+                                            if(key === 'MAX(Inventory.CurrentDate)')
+                                                span= 'Inventory'
+                                            else
+                                                //.replace(/([A-Z])/g, ' $1')
+                                                span=key
+                                        if(sortby === key)
+                                            span &nbsp;&#9650
+                                    else
+                                        a(href='#{location}/#{table}Table?sortby=#{key}&order=asc')
+                                            if(key === 'MAX(Inventory.CurrentDate)')
+                                                span= 'Inventory'
+                                            else
+                                                span=key
+                                        if(sortby === key)
+                                            span &nbsp;&#9660;
                                 else
                                     a(href='#{location}/#{table}Table?sortby=#{key}&order=asc')
                                         if(key === 'MAX(Inventory.CurrentDate)')
-                                            div= 'Inventory'
+                                            span= 'Inventory'
                                         else
-                                            div=key
+                                            span=key
                 each computer in items
                     tr
                         each showOption, key in showOptions
@@ -41,6 +49,12 @@ block content
                                             div= computer[key]
                                     else if(key === 'FirstName' || key === 'LastName')
                                         a(href='#{location}/#{table}Table?where=EmployeeID=' + computer['EmployeeID'])
+                                            div= computer[key]
+                                    else if(key === 'DateAcquired')
+                                        a(href='#{location}/#{table}Table?where=#{computer.DateAcquiredFilter}')
+                                            div= computer[key]
+                                    else if(key === 'Warranty')
+                                        a(href='#{location}/#{table}Table?where=#{computer.WarrantyFilter}')
                                             div= computer[key]
                                     else if(key === 'MAX(Inventory.CurrentDate)')
                                         a(href='#{location}/#{table}Table?where=#{computer.inventoryFilter}')
@@ -60,9 +74,57 @@ block content
                                                     button.byu-button.whitenavy(onclick='undo(#{computer.ICN})' id='surplusButton#{computer.ICN}') Undo
                                             else
                                                 div= computer[key]
+                    .miniCard
+                        div.flex
+                            .column-left
+                                each showOption, key in showOptions
+                                    if(showOption)
+                                        if(key === 'ICN')
+                                            div
+                                                | #{key}:&nbsp;
+                                                a(href='#{location}/#{table}?#{key}=' + computer[key]) #{computer[key]}
+                                        else if(key === 'FirstName' || key === 'LastName')
+                                            div
+                                                | #{key}:&nbsp;
+                                                a(href='#{location}/#{table}Table?where=EmployeeID=' + computer['EmployeeID']) #{computer[key]}
+                                        else if(key === 'MAX(Inventory.CurrentDate)')
+                                            div
+                                                | Inventory:&nbsp;
+                                                a(href='#{location}/#{table}Table?where=#{computer.inventoryFilter}') #{computer[key]}
+                                        else
+                                            if(key === 'HomeCheckout')
+                                                if(computer[key] === 'on')
+                                                    a(href='#{location}/#{table}Table?where=#{key}=\'#{computer[key]}\'')
+                                                        i(class='material-icons')= 'home'
+                                            else if(key === 'Touch')
+                                                if(computer[key] === 'on')
+                                                    a(href='#{location}/#{table}Table?where=#{key}=\'#{computer[key]}\'')
+                                                        i(class='material-icons')= 'touch_app'
+                                            else if(key === 'Surplussing')
+                                                if(computer[key] === 0)
+                                                    button.byu-button.navy(onclick='surplus(#{computer.ICN})' id='surplusButton#{computer.ICN}') Surplus
+                                                else
+                                                    button.byu-button.whitenavy(onclick='undo(#{computer.ICN})' id='surplusButton#{computer.ICN}') Undo
+                                            else
+                                                div
+                                                    | #{key}:&nbsp;
+                                                    a(href='#{location}/#{table}Table?where=#{key}=\'#{computer[key]}\'') #{computer[key]}
+                            .column-right
+                                if(table === 'employee')
+                                    br
+                                    br
+                                a(href='#{location}/card?EmployeeID=' + computer.EmployeeID)
+                                    img(src='#{computer.PictureURL}')
+                                br
+                                br
+                                if(table !== 'employee')
+                                    div
+                                        | Update Inventory:
+                                    br
+                                    .byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
 
     script.
-        $("#extras").css('margin-left', window.getComputedStyle(document.getElementById('table'), null).getPropertyValue('margin-left'));
+        $("#extras").css('margin-left', window.getComputedStyle(document.querySelector('.table'), null).getPropertyValue('margin-left'));
 
         function surplus(ICN) {
             $.ajax({

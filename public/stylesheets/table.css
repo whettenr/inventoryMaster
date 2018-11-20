@@ -113,4 +113,13 @@ a {
     .table {
         display: none;
     }
+    .column-left {
+        max-width: 60%;
+    }
+    img {
+        max-width: 90%
+    }
+    #extras {
+        padding-left: 20px;
+    }
 }

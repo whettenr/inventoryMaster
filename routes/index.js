@@ -134,7 +134,7 @@ function checkUser(user) {
 
 }
 
-router.get('/employeesTable', function (req, res, next) {
+router.get('/employeeTable', function (req, res, next) {
     let database = new Database(config.getConfig());
     if (req.query.clear) {
         employeeFilters = [];
@@ -170,32 +170,31 @@ router.get('/employeesTable', function (req, res, next) {
         query = query.substr(0, query.length - 5);
     }
 
-
-    if (req.query.sortby === 'employeeId') {
-        query += ' Order BY EmployeeID';
+    let order = "";
+    if (req.query.sortby) {
+        query += ` Order BY ${req.query.sortby}`;
     }
-    else if (req.query.sortby === 'firstName') {
-        query += ' ORDER BY FirstName';
-    }
-    else if (req.query.sortby === 'lastName') {
-        query += ' ORDER BY LastName';
-    }
-    else if (req.query.sortby === 'rotationGroup') {
-        query += ' ORDER BY RotationGroup';
-    }
-    else if (req.query.sortby === 'dateSwitched') {
-        query += ' ORDER BY DateSwitched';
-    }
-    else if (req.query.sortby === 'office') {
-        query += ' ORDER BY Office';
-    }
-    else {
-        query += ' Order BY EmployeeID';
+    if(req.query.order){
+        query += ` ${req.query.order}`;
+        order = req.query.order;
     }
 
     let employees = {};
 
     finalQuery = query;
+
+    let employeeShowOptions = {
+        EmployeeID: true,
+        FirstName: true,
+        LastName: true,
+        Category: true,
+        Office: true,
+        Building: true,
+        UserName: true,
+        Email: true,
+        RotationGroup: true,
+        DateSwitched: true
+    };
 
     database.query(query)
         .then(rows => {
@@ -216,18 +215,21 @@ router.get('/employeesTable', function (req, res, next) {
             }
         })
         .then(() => {
-            res.render('index', {
+            res.render('OneTableToRuleThemAll', {
                 title: 'Employees',
-                table: 'employeesTable',
-                employees: employees,
+                table: 'employee',
+                items: employees,
+                showOptions: employeeShowOptions,
                 filters: employeeFilters,
                 user: JSON.parse(vault.read(req)),
+                order,
+                sortby: req.query.sortby,
                 download: 'employees',
                 location
             });
         })
         .catch(err => {
-            throw(err);
+            console.log(err);
         })
 });
 
@@ -257,6 +259,13 @@ router.get('/computerTable', function (req, res, next) {
             if (req.query.not) {
                 if (filters[req.query.not].includes('!='))
                     filters[req.query.not] = filters[req.query.not].replace('!=', '=');
+                else if (filters[req.query.not].includes('!(')){
+                    filters[req.query.not] = filters[req.query.not].replace('!(', '(');
+                }
+                else if (filters[req.query.not].includes('(')){
+                    filters[req.query.not] = filters[req.query.not].replace('(', '!(');
+                }
+
                 else
                     filters[req.query.not] = filters[req.query.not].replace('=', '!=');
             }
@@ -345,7 +354,7 @@ router.get('/computerTable', function (req, res, next) {
             if (req.query.order === 'asc') {
                 query += ' ASC';
             }
-            else if (req.query.order === 'dsc') {
+            else if (req.query.order === 'desc') {
                 query += ' DESC';
             }
             console.log(query);
@@ -370,7 +379,7 @@ router.get('/computerTable', function (req, res, next) {
             for (let computer of computers) {
                 if (computer.DateAcquired) {
                     let date = new Date(computer.DateAcquired + ' MST');
-                    computer.DateAcquiredFilter = computer.DateAcquired.substr(0, computer.DateAcquired.length - 3) + '%';
+                    computer.DateAcquiredFilter = 'DateAcquired LIKE \''+computer.DateAcquired.substr(0, computer.DateAcquired.length - 3) + '%\'';
                     computer.DateAcquired = monthNames[date.getMonth()] + ' ' + date.getFullYear();
                 }
                 else {
@@ -378,7 +387,7 @@ router.get('/computerTable', function (req, res, next) {
                 }
                 if (computer.Warranty) {
                     let date = new Date(computer.Warranty + ' MST');
-                    computer.WarrantyFilter = computer.Warranty.substr(0, computer.Warranty.length - 3) + '%';
+                    computer.WarrantyFilter = 'Warranty LIKE \''+ computer.Warranty.substr(0, computer.Warranty.length - 3) + '%\'';
                     computer.Warranty = monthNames[date.getMonth()] + ' ' + date.getFullYear();
                 }
                 else {
@@ -387,7 +396,7 @@ router.get('/computerTable', function (req, res, next) {
                 if (computer['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(computer['MAX(Inventory.CurrentDate)'] + ' MST');
                     computer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
-                    computer.inventoryFilter = 'Inventory.CurrentDate <= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + daysInThisMonth(date) + '\' AND ' + 'Inventory.CurrentDate >= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-01\'';
+                    computer.inventoryFilter = '(Inventory.CurrentDate <= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + daysInThisMonth(date) + '\' AND ' + 'Inventory.CurrentDate >= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-01\')';
                 }
                 else {
                     computer['MAX(Inventory.CurrentDate)'] = 'Never';
@@ -443,6 +452,13 @@ router.get('/monitorTable', function (req, res, next) {
             if (req.query.not) {
                 if (monitorFilters[req.query.not].includes('!='))
                     monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('!=', '=');
+                else if (monitorFilters[req.query.not].includes('!(')){
+                    monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('!(', '(');
+                }
+                else if (monitorFilters[req.query.not].includes('(')){
+                    monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('(', '!(');
+                }
+
                 else
                     monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('=', '!=');
             }
@@ -819,6 +835,7 @@ router.get('/otherSlots', function (req, res, next) {
 });
 
 router.get('/card', function (req, res, next) {
+    let user = JSON.parse(vault.read(req));
     let employeeId = parseInt(req.query.EmployeeID);
     let employeeRows = {};
     let computerRows = {};
@@ -827,6 +844,10 @@ router.get('/card', function (req, res, next) {
     let peripheralRows = {};
     let employees;
     let surplussing;
+    let computerShowOptions = {};
+    let monitorShowOptions = {};
+    let printerShowOptions = {};
+    let peripheralShowOptions = {};
     if(!req.query.surplussing || req.query.surplussing === ''){
         surplussing = 'false';
     }
@@ -835,11 +856,18 @@ router.get('/card', function (req, res, next) {
     }
 
     let database = new Database(config.getConfig());
-
-    database.query('SELECT * FROM Employee WHERE EmployeeID = ' + employeeId)
+    let filterQuery = 'SELECT * FROM Filters WHERE user = \'' + user.netId + '\'';
+    database.query(filterQuery)
+        .then(rows => {
+            computerShowOptions = JSON.parse(rows[0].computerShowOptions);
+            monitorShowOptions = JSON.parse(rows[0].monitorShowOptions);
+            printerShowOptions = JSON.parse(rows[0].printerShowOptions);
+            peripheralShowOptions = JSON.parse(rows[0].peripheralShowOptions);
+            return database.query('SELECT * FROM Employee WHERE EmployeeID = ' + employeeId);
+        })
         .then(rows => {
             employeeRows = rows;
-            let query = 'SELECT Computer.*, MAX(Inventory.CurrentDate) FROM Computer LEFT JOIN Inventory ON Computer.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId;
+            let query = 'SELECT Computer.*, MAX(Inventory.CurrentDate), Employee.*, Hardware.* FROM Computer LEFT JOIN Inventory ON Computer.ICN = Inventory.ICN LEFT JOIN Employee ON Computer.EmployeeID = Employee.EmployeeID LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Employee.EmployeeID = ' + employeeId;
             if (surplussing === 'true') {
                 query += ' AND Surplussing = true';
             }
@@ -857,7 +885,7 @@ router.get('/card', function (req, res, next) {
                     computer['MAX(Inventory.CurrentDate)'] = 'Never';
                 }
             }
-            let query = 'SELECT Monitor.*, MAX(Inventory.CurrentDate) FROM Monitor LEFT JOIN Inventory ON Monitor.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId;
+            let query = 'SELECT Monitor.*, MAX(Inventory.CurrentDate), Employee.* FROM Monitor LEFT JOIN Inventory ON Monitor.ICN = Inventory.ICN LEFT JOIN Employee ON Monitor.EmployeeID = Employee.EmployeeID WHERE Employee.EmployeeID = ' + employeeId;
             if (surplussing === 'true') {
                 query += ' AND Surplussing = true';
             }
@@ -875,7 +903,7 @@ router.get('/card', function (req, res, next) {
                     monitor['MAX(Inventory.CurrentDate)'] = 'Never';
                 }
             }
-            let query = 'SELECT Printer.*, MAX(Inventory.CurrentDate) FROM Printer LEFT JOIN Inventory ON Printer.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId;
+            let query = 'SELECT Printer.*, MAX(Inventory.CurrentDate), Employee.* FROM Printer LEFT JOIN Inventory ON Printer.ICN = Inventory.ICN LEFT JOIN Employee ON Printer.EmployeeID = Employee.EmployeeID WHERE Employee.EmployeeID = ' + employeeId;
             if (surplussing === 'true') {
                 query += ' AND Surplussing = true';
             }
@@ -893,7 +921,7 @@ router.get('/card', function (req, res, next) {
                     printer['MAX(Inventory.CurrentDate)'] = 'Never';
                 }
             }
-            let query = 'SELECT Peripheral.*, MAX(Inventory.CurrentDate) FROM Peripheral LEFT JOIN Inventory ON Peripheral.ICN = Inventory.ICN WHERE EmployeeID = ' + employeeId;
+            let query = 'SELECT Peripheral.*, MAX(Inventory.CurrentDate), Employee.* FROM Peripheral LEFT JOIN Inventory ON Peripheral.ICN = Inventory.ICN LEFT JOIN Employee ON Peripheral.EmployeeID = Employee.EmployeeID WHERE Employee.EmployeeID = ' + employeeId;
             if (surplussing === 'true') {
                 query += ' AND Surplussing = true';
             }
@@ -921,6 +949,10 @@ router.get('/card', function (req, res, next) {
                 monitors: monitorRows,
                 printers: printerRows,
                 peripherals: peripheralRows,
+                computerShowOptions,
+                monitorShowOptions,
+                printerShowOptions,
+                peripheralShowOptions,
                 surplussing,
                 location,
                 user: JSON.parse(vault.read(req)),
@@ -930,9 +962,6 @@ router.get('/card', function (req, res, next) {
         .catch(err => {
             console.log(err);
         });
-
-
-    // res.render('card')
 });
 
 router.get('/getModelOptions', function (req, res, next) {
@@ -2089,7 +2118,7 @@ router.get('/download/computers', function (req, res, next) {
             if (req.query.order === 'asc') {
                 query += ' ASC';
             }
-            else if (req.query.order === 'dsc') {
+            else if (req.query.order === 'desc') {
                 query += ' DESC';
             }
             console.log(query);
@@ -2230,7 +2259,7 @@ router.get('/logout', function (req, res) {
 });
 
 router.get('/', function (req, res, next) {
-    res.redirect(location + '/employeesTable');
+    res.redirect(location + '/employeeTable');
 });
 
 router.get('/jsbSurplus', function (req, res, next) {
