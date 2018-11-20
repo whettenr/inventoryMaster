@@ -1,0 +1,54 @@
+mixin createTable(showOptions, computers, table)
+    table.table
+        tbody
+            tr#myHeader
+                each showOption, key in showOptions
+                    if(showOption && key !== 'FirstName' && key !== 'LastName')
+                        td
+                            if(key === 'MAX(Inventory.CurrentDate)')
+                                div= 'Inventory'
+                            else
+                                //.replace(/([A-Z])/g, ' $1')
+                                div=key
+
+            each computer in computers
+                tr
+                    each showOption, key in showOptions
+                        if(showOption && key !== 'FirstName' && key !== 'LastName')
+                            td
+                                if(key === 'ICN')
+                                    a(href='#{location}/#{table}?#{key}=' + computer[key])
+                                        div= computer[key]
+                                else if(key === 'FirstName' || key === 'LastName')
+                                    div= computer[key]
+                                else if(key === 'MAX(Inventory.CurrentDate)')
+                                    div
+                                        .byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
+                                else
+                                    if(key === 'HomeCheckout')
+                                        if(computer[key] === 'on')
+                                            i(class='material-icons')= 'home'
+                                    else if(key === 'Touch')
+                                        if(computer[key] === 'on')
+                                            i(class='material-icons')= 'touch_app'
+                                    else if(key === 'Surplussing')
+                                        if(computer[key] === 0)
+                                            button.byu-button.navy(onclick='surplus(#{computer.ICN})' id='surplusButton#{computer.ICN}') Surplus
+                                        else
+                                            button.byu-button.whitenavy(onclick='undo(#{computer.ICN})' id='surplusButton#{computer.ICN}') Undo
+                                    else
+                                        div= computer[key]
+                .miniCard
+                    div.flex
+                        .column-left
+                            each showOption, key in showOptions
+                                if(showOption && key !== 'FirstName' && key !== 'LastName' && key !== 'MAX(Inventory.CurrentDate)')
+                                    div
+                                        | #{key}: #{computer[key]}
+                        .column-right
+                            br
+                            br
+                            div
+                                | Update Inventory:
+                            br
+                            .byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
