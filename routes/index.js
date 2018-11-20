@@ -406,7 +406,6 @@ router.get('/computerTable', function (req, res, next) {
             return database.query('UPDATE Filters SET filters = "' + filters.toString().replace('"', '\\"') + '" WHERE user = \'' + user.netId + '\'');
         })
         .then(() => {
-            showOptions.PictureURL = true;
             res.render('OneTableToRuleThemAll', {
                 title: 'Computers',
                 table: 'computer',
