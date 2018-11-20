@@ -2586,8 +2586,11 @@ router.get('/search', function (req, res, next) {
     if(searchTerms[searchTerms.length -1] === ' '){
         searchTerms = searchTerms.substr(0, searchTerms.length -1);
     }
+    let user = JSON.parse(vault.read(req));
+    let filterQuery = 'SELECT * FROM Filters WHERE user = \'' + user.netId + '\'';
     searchTerms = "%" + searchTerms + "%";
     let database = new Database(config.getConfig());
+    let showOptions = {};
     let employeeRows = {};
     let computerRows = {};
     let monitorRows = {};
@@ -2617,6 +2620,10 @@ router.get('/search', function (req, res, next) {
         .then(rows => {
             peripheralRows = rows;
             peripheralRows = formatDate(peripheralRows);
+            return database.query(filterQuery);
+        })
+        .then(rows => {
+            showOptions = JSON.parse(rows[0]);
             return database.close();
         })
         .then(() => {
@@ -2640,6 +2647,10 @@ router.get('/search', function (req, res, next) {
                     employees: employeeRows,
                     computers: computerRows,
                     monitors: monitorRows,
+                    computerShowOptions: showOptions.computerShowOptions,
+                    monitorShowOptions: showOptions.monitorShowOptions,
+                    peripheralShowOptions: showOptions.peripheralShowOptions,
+                    printerShowOptions: showOptions.printerShowOptions,
                     printers: printerRows,
                     peripherals: peripheralRows,
                     location,
