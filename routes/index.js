@@ -2623,7 +2623,7 @@ router.get('/search', function (req, res, next) {
             return database.query(filterQuery);
         })
         .then(rows => {
-            showOptions = JSON.parse(rows[0]);
+            showOptions = rows[0];
             return database.close();
         })
         .then(() => {
@@ -2647,10 +2647,10 @@ router.get('/search', function (req, res, next) {
                     employees: employeeRows,
                     computers: computerRows,
                     monitors: monitorRows,
-                    computerShowOptions: showOptions.computerShowOptions,
-                    monitorShowOptions: showOptions.monitorShowOptions,
-                    peripheralShowOptions: showOptions.peripheralShowOptions,
-                    printerShowOptions: showOptions.printerShowOptions,
+                    computerShowOptions: JSON.parse(showOptions.computerShowOptions),
+                    monitorShowOptions: JSON.parse(showOptions.monitorShowOptions),
+                    peripheralShowOptions: JSON.parse(showOptions.peripheralShowOptions),
+                    printerShowOptions: JSON.parse(showOptions.printerShowOptions),
                     printers: printerRows,
                     peripherals: peripheralRows,
                     location,
