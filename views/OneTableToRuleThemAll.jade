@@ -48,7 +48,7 @@ block content
                                         a(href='#{location}/#{table}?#{key}=' + computer[key])
                                             div= computer[key]
                                     else if(key === 'EmployeeID')
-                                        a(href='#{location}/card?EmployeeID=' + employee.EmployeeID)
+                                        a(href='#{location}/card?EmployeeID=' + computer.EmployeeID)
                                             div=computer[key]
                                     else if(key === 'FirstName' || key === 'LastName')
                                         a(href='#{location}/#{table}Table?where=EmployeeID=' + computer['EmployeeID'])
@@ -89,7 +89,7 @@ block content
                                         else if(key === 'EmployeeID')
                                             div
                                                 | #{key}:&nbsp;
-                                                a(href='#{location}/card?EmployeeID=' + employee.EmployeeID) #{computer[key]}
+                                                a(href='#{location}/card?EmployeeID=' + computer.EmployeeID) #{computer[key]}
                                         else if(key === 'FirstName' || key === 'LastName')
                                             div
                                                 | #{key}:&nbsp;
