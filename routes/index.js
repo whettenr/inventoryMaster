@@ -3023,5 +3023,48 @@ router.get('/test', function (req, res, next) {
     res.redirect('/');
 });
 
+router.get('/accordian', function (req, res, next) {
+    let database = new Database(config.getConfig());
+    let computers = {};
+    let monitors = {};
+    let printers = {};
+    let employees = {};
+    let peripherals = {};
+    database.query('select * from Employee;')
+        .then(rows => {
+            employees = rows;
+            return database.query('select Computer.*, MAX(Inventory.CurrentDate) from Computer join Inventory on Computer.ICN = Inventory.ICN where CurrentDate < \'2017-12-31\' group by ICN;');
+        })
+        .then(rows => {
+            computers = rows;
+            return database.query('select * from Monitor;');
+        })
+        .then(rows => {
+            monitors = rows;
+            return database.query('select * from Printer');
+        })
+        .then(rows => {
+            printers = rows;
+            return database.query('select * from Peripheral');
+        })
+        .then(rows => {
+            peripherals = rows;
+            return database.close();
+        })
+        .then(()=> {
+            res.render('Accordian', {
+                location,
+                employees,
+                computers,
+                monitors,
+                printers,
+                peripherals,
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+
+});
 
 module.exports = router;

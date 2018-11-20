@@ -1,0 +1,21 @@
+link(rel='stylesheet', href='#{location}/stylesheets/accordian.css')
+h1
+    | CSS + HTML only Accordion Element
+ul
+    each employee in employees
+        li
+            input(type="checkbox" checked)
+            i
+            h2= employee.FirstName + ' ' + employee.LastName
+            each computer in computers
+                if(computer.EmployeeID === employee.EmployeeID)
+                    p= computer.ICN
+            each computer in monitors
+                if(computer.EmployeeID === employee.EmployeeID)
+                    p= computer.ICN
+            each computer in printers
+                if(computer.EmployeeID === employee.EmployeeID)
+                    p= computer.ICN
+            each computer in peripherals
+                if(computer.EmployeeID === employee.EmployeeID)
+                    p= computer.ICN
