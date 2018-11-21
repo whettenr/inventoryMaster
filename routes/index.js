@@ -3033,10 +3033,17 @@ router.get('/accordian', function (req, res, next) {
     database.query('select * from Employee;')
         .then(rows => {
             employees = rows;
-            return database.query('select Computer.*, MAX(Inventory.CurrentDate) from Computer join Inventory on Computer.ICN = Inventory.ICN where CurrentDate < \'2017-12-31\' group by ICN;');
+            return database.query('select Computer.*, MAX(Inventory.CurrentDate) from Computer join Inventory on Computer.ICN = Inventory.ICN group by ICN;');
         })
         .then(rows => {
             computers = rows;
+            let date = new Date();
+            for(computer of computers){
+                let computerDate = new Date(computer['MAX(Inventory.CurrentDate)']);
+                if(computerDate.getFullYear() === date.getFullYear()){
+                    computer.Inventoried = true;
+                }
+            }
             return database.query('select * from Monitor;');
         })
         .then(rows => {
