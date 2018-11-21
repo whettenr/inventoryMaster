@@ -21,9 +21,6 @@ html {
   height: 100%;
   /*perspective: 900;*/
   overflow-y: scroll;
-  background-color: #dce7eb;
-  font-family: "Titillium Web", sans-serif;
-  color: rgba(48, 69, 92, 0.8);
 }
 
 .accordion {
