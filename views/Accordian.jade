@@ -2,8 +2,8 @@ link(rel='stylesheet', href='#{location}/stylesheets/accordian.css')
 h1
     | CSS + HTML only Accordion Element
 ul
-    each employee in employees
-        li
+    each employee, key in employees
+        li(id='#{key}')
             input(type="checkbox" checked)
             i
             h2= employee.FirstName + ' ' + employee.LastName
@@ -20,3 +20,10 @@ ul
                 each computer in peripherals
                     if(computer.EmployeeID === employee.EmployeeID && !computer.Inventoried)
                         p= computer.ICN
+script.
+    let stuffs = document.querySelectorAll('.stuff');
+    for(let stuff of stuffs){
+        if(stuff.innerHTML === ''){
+            stuff.parentElement.display = 'none';
+        }
+    }
