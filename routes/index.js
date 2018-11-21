@@ -95,6 +95,14 @@ function daysInThisMonth(date) {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }
 
+function checkInventoried(items) {
+    let date = new Date();
+    for(computer of items){
+        let computerDate = new Date(computer['MAX(Inventory.CurrentDate)']);
+        computer.Inventoried = computerDate.getFullYear() === date.getFullYear();
+    }
+}
+
 
 // router.set('trust proxy', 1);
 
@@ -3037,25 +3045,22 @@ router.get('/accordian', function (req, res, next) {
         })
         .then(rows => {
             computers = rows;
-            let date = new Date();
-            for(computer of computers){
-                let computerDate = new Date(computer['MAX(Inventory.CurrentDate)']);
-                if(computerDate.getFullYear() === date.getFullYear()){
-                    computer.Inventoried = true;
-                }
-            }
-            return database.query('select * from Monitor;');
+            checkInventoried(computers);
+            return database.query('select Monitor.*, MAX(Inventory.CurrentDate) from Monitor join Inventory on Monitor.ICN = Inventory.ICN group by ICN;');
         })
         .then(rows => {
             monitors = rows;
-            return database.query('select * from Printer');
+            checkInventoried(monitors);
+            return database.query('select Printer.*, MAX(Inventory.CurrentDate) from Printer join Inventory on Printer.ICN = Inventory.ICN group by ICN');
         })
         .then(rows => {
             printers = rows;
-            return database.query('select * from Peripheral');
+            checkInventoried(printers);
+            return database.query('select Peripheral.*, MAX(Inventory.CurrentDate) from Peripheral join Inventory on Peripheral.ICN = Inventory.ICN group by ICN');
         })
         .then(rows => {
             peripherals = rows;
+            checkInventoried(peripherals);
             return database.close();
         })
         .then(()=> {
