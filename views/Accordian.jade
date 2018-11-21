@@ -1,29 +1,32 @@
-link(rel='stylesheet', href='#{location}/stylesheets/accordian.css')
-h1
-    | CSS + HTML only Accordion Element
-ul
-    each employee, key in employees
-        li(id='#{key}')
-            input(type="checkbox" checked)
-            i
-            h2= employee.FirstName + ' ' + employee.LastName
-            .stuff
-                each computer in computers
-                    if(computer.EmployeeID === employee.EmployeeID && !computer.Inventoried)
-                        p= computer.ICN
-                each computer in monitors
-                    if(computer.EmployeeID === employee.EmployeeID && !computer.Inventoried)
-                        p= computer.ICN
-                each computer in printers
-                    if(computer.EmployeeID === employee.EmployeeID && !computer.Inventoried)
-                        p= computer.ICN
-                each computer in peripherals
-                    if(computer.EmployeeID === employee.EmployeeID && !computer.Inventoried)
-                        p= computer.ICN
-script.
-    let stuffs = document.querySelectorAll('.stuff');
-    for(let stuff of stuffs){
-        if(stuff.innerHTML === ''){
-            stuff.parentElement.style.display = 'none';
+extends layout
+block content
+    link(rel='stylesheet', href='#{location}/stylesheets/accordian.css')
+    h1
+        | CSS + HTML only Accordion Element
+    .accordion
+        ul
+            each employee, key in employees
+                li(id='#{key}')
+                    input(type="checkbox" checked)
+                    i
+                    h2= employee.FirstName + ' ' + employee.LastName
+                    .stuff
+                        each computer in computers
+                            if(computer.EmployeeID === employee.EmployeeID && !computer.Inventoried)
+                                p= computer.ICN
+                        each computer in monitors
+                            if(computer.EmployeeID === employee.EmployeeID && !computer.Inventoried)
+                                p= computer.ICN
+                        each computer in printers
+                            if(computer.EmployeeID === employee.EmployeeID && !computer.Inventoried)
+                                p= computer.ICN
+                        each computer in peripherals
+                            if(computer.EmployeeID === employee.EmployeeID && !computer.Inventoried)
+                                p= computer.ICN
+    script.
+        let stuffs = document.querySelectorAll('.stuff');
+        for(let stuff of stuffs){
+            if(stuff.innerHTML === ''){
+                stuff.parentElement.style.display = 'none';
+            }
         }
-    }
