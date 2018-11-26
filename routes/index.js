@@ -1577,6 +1577,8 @@ router.get('/newPeripheral', function (req, res, next) {
         })
         .then(rows => {
             modelOptions = rows;
+            modelOptions[modelOptions.length] = {Model: 'None'};
+            modelOptions[modelOptions.length] = {Model: 'Add a New Option'};
             return database.query('SELECT DISTINCT Item FROM Peripheral ORDER BY Item')
         })
         .then(rows => {
@@ -1609,7 +1611,7 @@ router.get('/newComputer', function (req, res, next) {
     let employee = {};
     let employees = {};
     let makeOptions = {};
-    let modelOptions = {0: {Model: "Please choose a Make"}};
+    let modelOptions = {0: {Model: "Please choose a Make"}, 1: {Model: "Add a New Option"}};
     let typeOptions = {};
     let processorTypeOptions = {};
     let processorSpeedOptions = {};
