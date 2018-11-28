@@ -1,0 +1,153 @@
+extends layout
+
+block content
+    link(rel='stylesheet', href='#{location}/stylesheets/item.css')
+    style.
+        .sendToStorage {
+            display: none;
+        }
+    body
+        .container
+            include itemInfo
+            form(action='#{location}/newPrinter', method='post' id='form')
+                br
+                .row
+                    .col-25
+                        label(for='icn') ICN:
+                    .col-75
+                        input#icn(type='text', name='icn', placeholder='ICN' value='#{ICN}')
+                .row
+                    .col-25
+                        label(for='employee') Employee:
+                    .col-75
+                        select#employee.selectpicker(name='employeeId', placeholder='Employee' onchange="alert(\"You just changed who this was assigned to. Please update the Type.\")")
+                            each employee in employees
+                                if(employee.EmployeeID === EmployeeID)
+                                    option(value=employee.EmployeeID name='#{employee.FirstName} #{employee.LastName}' selected) #{employee.FirstName} #{employee.LastName}
+                                else
+                                    option(value=employee.EmployeeID name='#{employee.FirstName} #{employee.LastName}')  #{employee.FirstName} #{employee.LastName}
+                .row
+                    .col-25
+                        label(for='make') Make:
+                    .col-75
+                        select#make.custom-select.sources(name='make', placeholder='Make' onchange='refreshModelOptions()')
+                            each makeOption in makeOptions
+                                if(makeOption.Make === 'None')
+                                    option(value=makeOption.Make selected) #{makeOption.Make}
+                                else
+                                    option(value=makeOption.Make) #{makeOption.Make}
+                .row
+                    .col-25
+                        label(for='model') Model:
+                    .col-75
+                        select#model.custom-select.sources(name='model', placeholder='Model' onchange='checkModel()')
+                            each modelOption in modelOptions
+                                if(modelOption.Model === 'None')
+                                    option(value=modelOption.Model selected) #{modelOption.Model}
+                                else
+                                    option(value=modelOption.Model) #{modelOption.Model}
+                .row
+                    .col-25
+                        label(for='serialNumber') Serial Number:
+                    .col-75
+                        input#serialNumber(type='text', name='serialNumber', placeholder='Serial Number')
+                .row
+                    .col-25
+                        label(for='dateAcquired') Date Acquired:
+                    .col-75
+                        input#dateAcquired(type='date' name='dateAcquired', placeholder='Date Acquired' value='#{date}')
+                .row
+                    .col-25
+                        label(for='warranty') Warranty:
+                    .col-75
+                        input#warranty(type='date', name='warranty', placeholder='Warranty')
+                .row
+                    .col-25
+                        label(for='notes') Notes:
+                    .col-75
+                        textarea#notes(name='notes', placeholder='Write something..', style='height:200px')
+    script.
+        let employee = "#{employee.FirstName} #{employee.LastName}";
+        let date = new Date();
+        function goBack() {
+            $("#cardInfo").css('display', 'block');
+            $("#computerInfo").css('display', 'none');
+        }
+        function showMain() {
+            $("#mainInfo").css('display', 'block');
+            $("#otherInfo").css('display', 'none');
+            $("#hardwareInfo").css('display', 'none');
+            $("#historyInfo").css('display', 'none');
+
+        }
+        function showOther() {
+            $("#mainInfo").css('display', 'none');
+            $("#otherInfo").css('display', 'block');
+            $("#hardwareInfo").css('display', 'none');
+            $("#historyInfo").css('display', 'none');
+
+        }
+        function showHardware() {
+            $("#mainInfo").css('display', 'none');
+            $("#otherInfo").css('display', 'none');
+            $("#hardwareInfo").css('display', 'block');
+            $("#historyInfo").css('display', 'none');
+
+        }
+        function showHistory() {
+            $("#mainInfo").css('display', 'none');
+            $("#otherInfo").css('display', 'none');
+            $("#hardwareInfo").css('display', 'none');
+            $("#historyInfo").css('display', 'block');
+        }
+
+        function surplus() {
+            $("#employee").val('300');
+            alert("You just changed who this was assigned to. Please update the Type.");
+        }
+
+        function refreshModelOptions() {
+            if ($("#make").val() === 'Add a New Option') {
+                let add = prompt("New Make:");
+                if (add !== null && add !== "") {
+                    console.log(add);
+                    $("#make").append(new Option(add, add));
+                    $("#make").val(add);
+                }
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "#{location}/getModelOptions?type=Monitor&make=" + $("#make").val(),
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#model").html(data);
+                });
+            }
+        }
+        function checkModel(){
+            if($("#model").val() === 'Add a New Option'){
+                let add = prompt("New Model:");
+                if (add !== null && add !== "") {
+                    console.log(add);
+                    $("#model").append(new Option(add, add));
+                    $("#model").val(add);
+                }
+            }
+        }
+        function changeEmployee(){
+            console.log('changeEMployee');
+            let history = $("#history").val();
+            $("#history").val(history + date.toDateString() + ' Reassigned from ' + employee + ' to ' + $("#employee option:selected").attr('name') + ' by McKay Court \n');
+        }
+        function changeMake(){
+            let history = $("#history").val();
+            $("#history").val(history + date.toDateString() + ' Changed from ')
+        }
+        function go(){
+            if(employee !== $("#employee option:selected").attr('name')){
+                changeEmployee();
+            }
+            $("#form").submit();
+
+        }
