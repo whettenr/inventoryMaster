@@ -1758,6 +1758,60 @@ router.get('/newMonitor', function (req, res, next) {
         });
 });
 
+router.get('/newPrinter', function (req, res, next) {
+    let ICN = 0;
+    let EmployeeID = parseInt(req.query.EmployeeID);
+    let makeOptions = {};
+    let modelOptions = {};
+    let employees = {};
+    let employee = {};
+
+    let database = new Database(config.getConfig());
+
+    database.query('SELECT DISTINCT Make FROM Printer')
+        .then(rows => {
+            makeOptions = rows;
+            makeOptions[makeOptions.length] = {Make: 'None'};
+            makeOptions[makeOptions.length] = {Make: 'Add a New Option'};
+            return database.query('Select * FROM Employee ORDER BY LastName');
+        })
+        .then(rows => {
+            employees = rows;
+            return database.query('Select * FROM Employee WHERE EmployeeID = ' + EmployeeID)
+        })
+        .then(rows => {
+            employee = rows[0];
+            return database.query('SELECT DISTINCT Model FROM Printer');
+        })
+        .then(rows => {
+            modelOptions = rows;
+            modelOptions[modelOptions.length] = {Model: 'None'};
+            modelOptions[modelOptions.length] = {Model: 'Add a New Option'};
+            return database.query('SELECT * FROM Printer ORDER BY ICN DESC LIMIT 1');
+        })
+        .then(rows => {
+            ICN = rows[0].ICN + 1;
+            return database.close();
+        })
+        .then(() => {
+            res.render('newPrinter', {
+                title: employee.FirstName + ' ' + employee.LastName + '\'s New Printer',
+                ICN,
+                makeOptions,
+                modelOptions,
+                employees,
+                employee,
+                date: getCurrentDate(),
+                EmployeeID,
+                user: JSON.parse(vault.read(req)),
+                location
+            })
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
 router.get('/download/rotation', function (req, res, next) {
     let rotation = req.query.rotation;
     let Rows = {};
@@ -2674,8 +2728,7 @@ router.get('/search', function (req, res, next) {
         });
 
 
-})
-;
+});
 
 router.get('/showOptions', function (req, res, next) {
     let database = new Database(config.getConfig());
@@ -2871,6 +2924,27 @@ router.post('/newMonitor', function (req, res, next) {
     }
 
     database.query('INSERT INTO Monitor (ICN, EmployeeID, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, HomeCheckout, History) VALUES (?)', [[req.body.icn, req.body.employeeId, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, req.body.homeCheckout, ""]])
+        .then(rows => {
+            if (rows)
+                console.log(rows);
+            return database.close();
+        })
+        .then(() => {
+            res.redirect(location + '/card?EmployeeID=' + req.body.employeeId);
+
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
+router.post('/newPrinter', function (req, res, next) {
+    let database = new Database(config.getConfig());
+    if (!req.body.homeCheckout) {
+        req.body.homeCheckout = 'off';
+    }
+
+    database.query('INSERT INTO Printer (ICN, EmployeeID, Make, Model, Notes, SerialNumber, DateAcquired, Warranty, History) VALUES (?)', [[req.body.icn, req.body.employeeId, req.body.make, req.body.model, req.body.notes, req.body.serialNumber, req.body.dateAcquired, req.body.warranty, ""]])
         .then(rows => {
             if (rows)
                 console.log(rows);

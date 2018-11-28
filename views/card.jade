@@ -18,7 +18,7 @@ block content
                     div(class='dropdown-content')
                         div(onclick='newComputer(#{employee.EmployeeID})') New Computer
                         div(onclick='newMonitor(#{employee.EmployeeID})') New Monitor
-                        div(href='/computerTable') New Printer
+                        a(href='#{location}/newPrinter?EmployeeID=#{employee.EmployeeID}') New Printer
                         div(onclick='newPeripheral(#{employee.EmployeeID})') New Peripheral
             .mobileButtons
                 div.mobileButton.byu-button.royal(onclick='newComputer(#{employee.EmployeeID})') New Computer

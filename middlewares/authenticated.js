@@ -127,7 +127,6 @@ module.exports = function (req, res, next) {
                         "SerialNumber": false,
                         "DateAcquired": true,
                         "Warranty": true,
-                        "HomeCheckout": false,
                         "Notes": true,
                         "History": false,
                         "MAX(Inventory.CurrentDate)": true,
