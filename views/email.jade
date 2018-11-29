@@ -1,12 +1,219 @@
 include createTableForEmail.jade
-link(rel='stylesheet', href='#{location}/stylesheets/card.css')
-link(rel='stylesheet', href='#{location}/stylesheets/table.css')
-link(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
-link(rel='stylesheet', href='#{location}/stylesheets/style.css')
-link(type="text/css", rel="stylesheet", href="https://cdn.byu.edu/theme-fonts/latest/ringside/fonts.css", media="all")
-link(rel="stylesheet", href="https://cdn.byu.edu/byu-theme-style-helpers/latest/buttons.css")
-link(rel="stylesheet" href="https://cdn.byu.edu/byu-theme-components/1.x.x/byu-theme-components.min.css")
-script(async src="https://cdn.byu.edu/byu-theme-components/1.x.x/byu-theme-components.min.js")
+//link(rel='stylesheet', href='#{location}/stylesheets/card.css')
+//link(rel='stylesheet', href='#{location}/stylesheets/table.css')
+//link(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
+//link(rel='stylesheet', href='#{location}/stylesheets/style.css')
+//link(type="text/css", rel="stylesheet", href="https://cdn.byu.edu/theme-fonts/latest/ringside/fonts.css", media="all")
+//link(rel="stylesheet", href="https://cdn.byu.edu/byu-theme-style-helpers/latest/buttons.css")
+//link(rel="stylesheet" href="https://cdn.byu.edu/byu-theme-components/1.x.x/byu-theme-components.min.css")
+//script(async src="https://cdn.byu.edu/byu-theme-components/1.x.x/byu-theme-components.min.js")
+style.
+    .cardDadCss {
+        /*display: none; !* Hidden by default *!*/
+        position: fixed; /* Stay in place */
+        /*z-index: 1; !* Sit on top *!*/
+        padding-top: 100px; /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        /*background-color: rgb(0,0,0); !* Fallback color *!*/
+        /*background-color: rgba(0,0,0,0.4); !* Black w/ opacity *!*/
+    }
+
+    #card {
+        width: 50%;
+        margin: auto;
+        border-style: solid;
+        border-width: 5px;
+        border-radius: 25px;
+        background-color: white; /* Fallback color */
+        /*background-color: rgba(0,0,0,0.4); !* Black w/ opacity *!*/
+    }
+
+    .add {
+        /*float: right;*/
+        /*text-align: right;*/
+        margin-right: 25px;
+        background-color: #0057B8;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 125px;
+    }
+
+    .pic {
+        float: right;
+        padding-right: 25px;
+        padding-top: 25px;
+    }
+
+    .left {
+        /*padding-left: 25px;*/
+    }
+
+    .right {
+        float: right;
+        /*padding-right: 25px;*/
+    }
+
+    .close {
+        border-style: solid;
+        border-width: 1px;
+        float: right;
+        text-align: center;
+        margin-right: 25px;
+        margin-top: 25px;
+        padding: 2px;
+        /*border-radius: 25px;*/
+        background-color: red;
+        cursor: pointer;
+    }
+
+    .center {
+        text-align: center;
+    }
+
+    .titles {
+        margin: auto;
+        width: 50%;
+    }
+
+    #table {
+        border-spacing: 0 20px;
+        margin: auto;
+        /*width: 50%;*/
+    }
+
+    #table td, #table th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        border-right: 0;
+        border-left: 0;
+    }
+
+    #table td:last-child {
+        border-right: 1px solid #ddd;
+    }
+
+    #table td:first-child {
+        border-left: 1px solid #ddd;
+    }
+
+    tr {
+        height: 50px;
+        z-index: 1;
+    }
+
+    a {
+        z-index: 2;
+    }
+
+    .divButton {
+        text-decoration: underline;
+    }
+
+    .divButton:hover {
+        color: #66B200;
+        cursor: pointer;
+    }
+
+    #table th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        border-top: 0;
+    }
+
+    .table {
+        border-spacing: 0 20px;
+        margin: auto;
+        width: 50%;
+        overflow-x: auto;
+    }
+
+    .table td, .table th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        border-right: 0;
+        border-left: 0;
+    }
+
+    .table td:last-child {
+        border-right: 1px solid #ddd;
+    }
+
+    .table td:first-child {
+        border-left: 1px solid #ddd;
+    }
+
+    .table th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        border-top: 0;
+    }
+
+    .test {
+        /*overflow-x: scroll;*/
+    }
+
+    .miniCard {
+        /*border: 1px solid #000;*/
+        display: none;
+        width: 90%;
+        text-align: left;
+        background-color: lightgray;
+        max-width: 400px;
+        margin: 20px;
+    }
+
+    .flex {
+        display: flex;
+        line-height: 200%;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    .column-left {
+        flex: 65%;
+        padding: 10px;
+    }
+
+    .column-right {
+        flex: 35%;
+        padding: 10px;
+        line-height: 100%;
+    }
+
+    .full {
+        flex: 100%;
+    }
+
+    @media only screen and (max-width: 800px) {
+        .test2 {
+            font-size: 10px;
+        }
+
+        .miniCard {
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .table {
+            display: none;
+        }
+
+        .column-left {
+            max-width: 60%;
+        }
+
+        img {
+            max-width: 90%
+        }
+
+        #extras {
+            padding-left: 20px;
+        }
+    }
 
 if(employee)
     .titles
@@ -27,7 +234,7 @@ table.table
                     if(key === 'MAX(Inventory.CurrentDate)')
                         div= 'Inventory'
                     else if(key === 'order')
-                        div(style='display: none;')=key
+                        //div(style='display: none;')=key
                     else
                         //.replace(/([A-Z])/g, ' $1')
                         div=key

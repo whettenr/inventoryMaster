@@ -2962,6 +2962,13 @@ router.get('/email', function (req, res, next) {
             return database.close();
         })
         .then(() => {
+            let total = {...computerRows, ...monitorRows, ...printerRows, ...peripheralRows};
+            total.sort((a,b) => {
+                return a.order > b.order;
+            });
+            console.log(total);
+        })
+        .then(() => {
             // do something with someRows and otherRows
             res.render('email', {
                 employee: employeeRows[0],
