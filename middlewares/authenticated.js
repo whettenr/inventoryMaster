@@ -177,7 +177,10 @@ module.exports = function (req, res, next) {
     }
     else {
         let cookie = vault.read(req);
-        if (cookie === "") {
+        if(req.path === '/email'){
+            next();
+        }
+        else if (cookie === "") {
             let parameters = '';
             let query = req.query;
             let goTo = req.originalUrl;

@@ -2836,17 +2836,153 @@ router.get('/updateInventory', function (req, res, next) {
 });
 
 router.get('/email', function (req, res, next) {
-    let employeeID = req.Equery.EmployeeID;
-    axios.get(location + '/card?EmployeeID=' + employeeID)
-        .then(function (response) {
-            console.log(response);
+    // let user = JSON.parse(vault.read(req));
+    let employeeId = parseInt(req.query.EmployeeID);
+    let employeeRows = {};
+    let computerRows = {};
+    let monitorRows = {};
+    let printerRows = {};
+    let peripheralRows = {};
+    let currentDate = new Date();
+    let surplussing;
+    let showOptions = {ICN: true, SerialNumber: true, Item: true, Make: true, Model: true, "MAX(Inventory.CurrentDate)": true, order: true};
+    let peripheralShowOptions = {ICN: true, SerialNumber: true, Item: true, Make: true, Model: true, "MAX(Inventory.CurrentDate)": true, order: true};
+    if(!req.query.surplussing || req.query.surplussing === ''){
+        surplussing = 'false';
+    }
+    else{
+        surplussing = req.query.surplussing;
+    }
+
+    let database = new Database(config.getConfig());
+    // let filterQuery = 'SELECT * FROM Filters WHERE user = \'' + user.netId + '\'';
+    database.query('SELECT * FROM Employee WHERE EmployeeID = ' + employeeId)
+        .then(rows => {
+            employeeRows = rows;
+            let query = 'SELECT Computer.*, MAX(Inventory.CurrentDate), Employee.*, Hardware.* FROM Computer LEFT JOIN Inventory ON Computer.ICN = Inventory.ICN LEFT JOIN Employee ON Computer.EmployeeID = Employee.EmployeeID LEFT JOIN Hardware ON Computer.HardwareID = Hardware.HardwareID WHERE Employee.EmployeeID = ' + employeeId;
+            if (surplussing === 'true') {
+                query += ' AND Surplussing = true';
+            }
+            query += ' GROUP BY Computer.ICN;';
+            return database.query(query);
+        })
+        .then(rows => {
+            computerRows = rows;
+            for (let computer of computerRows) {
+                if (computer['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(computer['MAX(Inventory.CurrentDate)']);
+                    computer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                    if(date.getFullYear() === currentDate.getFullYear()){
+                        computer.order = 1;
+                    }
+                    else {
+                        computer.order = 0;
+                    }
+                }
+                else {
+                    computer['MAX(Inventory.CurrentDate)'] = 'Never';
+                    computer.order = 0;
+                }
+            }
+            let query = 'SELECT Monitor.*, MAX(Inventory.CurrentDate), Employee.* FROM Monitor LEFT JOIN Inventory ON Monitor.ICN = Inventory.ICN LEFT JOIN Employee ON Monitor.EmployeeID = Employee.EmployeeID WHERE Employee.EmployeeID = ' + employeeId;
+            if (surplussing === 'true') {
+                query += ' AND Surplussing = true';
+            }
+            query += ' GROUP BY Monitor.ICN;';
+            return database.query(query);
+        })
+        .then(rows => {
+            monitorRows = rows;
+            for (let monitor of monitorRows) {
+                if (monitor['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(monitor['MAX(Inventory.CurrentDate)']);
+                    monitor['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                    if(date.getFullYear() === currentDate.getFullYear()){
+                        monitor.order = 1;
+                    }
+                    else {
+                        monitor.order = 0;
+                    }
+                }
+                else {
+                    monitor['MAX(Inventory.CurrentDate)'] = 'Never';
+                    monitor.order = 0;
+                }
+            }
+            let query = 'SELECT Printer.*, MAX(Inventory.CurrentDate), Employee.* FROM Printer LEFT JOIN Inventory ON Printer.ICN = Inventory.ICN LEFT JOIN Employee ON Printer.EmployeeID = Employee.EmployeeID WHERE Employee.EmployeeID = ' + employeeId;
+            if (surplussing === 'true') {
+                query += ' AND Surplussing = true';
+            }
+            query  += ' GROUP BY Printer.ICN;';
+            return database.query(query);
+        })
+        .then(rows => {
+            printerRows = rows;
+            for (let printer of printerRows) {
+                if (printer['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(printer['MAX(Inventory.CurrentDate)']);
+                    printer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                    if(date.getFullYear() === currentDate.getFullYear()){
+                        printer.order = 1;
+                    }
+                    else {
+                        printer.order = 0;
+                    }
+                }
+                else {
+                    printer['MAX(Inventory.CurrentDate)'] = 'Never';
+                    printer.order = 0;
+                }
+            }
+            let query = 'SELECT Peripheral.*, MAX(Inventory.CurrentDate), Employee.* FROM Peripheral LEFT JOIN Inventory ON Peripheral.ICN = Inventory.ICN LEFT JOIN Employee ON Peripheral.EmployeeID = Employee.EmployeeID WHERE Employee.EmployeeID = ' + employeeId;
+            if (surplussing === 'true') {
+                query += ' AND Surplussing = true';
+            }
+            query += ' GROUP BY Peripheral.ICN;';
+            return database.query(query);
+        })
+        .then(rows => {
+            peripheralRows = rows;
+            for (let peripheral of peripheralRows) {
+                if (peripheral['MAX(Inventory.CurrentDate)']) {
+                    let date = new Date(peripheral['MAX(Inventory.CurrentDate)']);
+                    peripheral['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                    if(date.getFullYear() === currentDate.getFullYear()){
+                        peripheral.order = 1;
+                    }
+                    else {
+                        peripheral.order = 0;
+                    }
+                }
+                else {
+                    peripheral['MAX(Inventory.CurrentDate)'] = 'Never';
+                    peripheral.order = 0;
+                }
+            }
+            return database.close();
         })
         .then(() => {
-            res.redirect(location + '/card?EmployeeID=' + employeeID);
+            // do something with someRows and otherRows
+            res.render('email', {
+                employee: employeeRows[0],
+                computers: computerRows,
+                monitors: monitorRows,
+                printers: printerRows,
+                peripherals: peripheralRows,
+                computerShowOptions: showOptions,
+                monitorShowOptions: showOptions,
+                printerShowOptions: showOptions,
+                peripheralShowOptions,
+                surplussing,
+                location,
+                // user: JSON.parse(vault.read(req)),
+                title: employeeRows[0].FirstName + ' ' + employeeRows[0].LastName + "'s Stuff"
+            })
         })
-        .catch(function (error) {
-            console.log(error);
+        .catch(err => {
+            console.log(err);
         });
+
 });
 
 router.post('/showOptions', function (req, res, next) {
