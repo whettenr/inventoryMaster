@@ -2845,6 +2845,7 @@ router.get('/email', function (req, res, next) {
     let peripheralRows = {};
     let currentDate = new Date();
     let surplussing;
+    let inventoried = 0;
     let total = [];
     let showOptions = {Item: true, ICN: true, Make: true, Model: true,  SerialNumber: true};
     let peripheralShowOptions = {ICN: true, SerialNumber: true, Item: true, Make: true, Model: true, "MAX(Inventory.CurrentDate)": true, order: true};
@@ -2975,31 +2976,40 @@ router.get('/email', function (req, res, next) {
             let found = false;
             for(let row of total) {
                 if(row.order === 1 && !found){
-                    total.splice(i, 0, {Item:'Already Inventoried:'});
+                    total.splice(i, 0, {Item:'Items assigned to you that we have already inventoried:'});
                     total.splice(i +1, 0, {Item:'Item', ICN: 'ICN', Make: 'Make', Model: 'Model', SerialNumber: 'SerialNumber'});
                     found = true;
+                }
+                if(row.order === 1) {
+                    inventoried++;
                 }
                 i++;
             }
         })
         .then(() => {
             // do something with someRows and otherRows
-            res.render('email', {
-                employee: employeeRows[0],
-                computers: computerRows,
-                monitors: monitorRows,
-                printers: printerRows,
-                peripherals: peripheralRows,
-                total,
-                computerShowOptions: showOptions,
-                monitorShowOptions: showOptions,
-                printerShowOptions: showOptions,
-                peripheralShowOptions,
-                surplussing,
-                location,
-                // user: JSON.parse(vault.read(req)),
-                title: employeeRows[0].FirstName + ' ' + employeeRows[0].LastName + "'s Stuff"
-            })
+            if(inventoried === total.length - 1 || inventoried === 0){
+                res.status(500);
+                res.render('error', { error: 'Everything has been inventoried' });
+            }
+            else{
+                res.render('email', {
+                    employee: employeeRows[0],
+                    computers: computerRows,
+                    monitors: monitorRows,
+                    printers: printerRows,
+                    peripherals: peripheralRows,
+                    total,
+                    computerShowOptions: showOptions,
+                    monitorShowOptions: showOptions,
+                    printerShowOptions: showOptions,
+                    peripheralShowOptions,
+                    surplussing,
+                    location,
+                    // user: JSON.parse(vault.read(req)),
+                    title: employeeRows[0].FirstName + ' ' + employeeRows[0].LastName + "'s Stuff"
+                })
+            }
         })
         .catch(err => {
             console.log(err);

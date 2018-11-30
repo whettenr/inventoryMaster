@@ -48,18 +48,9 @@ if(employee)
     p
         | #{employee.FirstName} #{employee.LastName},
     p
-        | We are doing inventory again and although we have tried to get the items that stay in your office we need to know if you are still in possession of the items we haven't been able to inventory ourselves.
-    p
-        | We will continue to send you friendly, loving, potentially obnoxious reminders until we hear back from you.
-    p
-        | Thank you for your understanding and support.
-    p
-        | Sincerely,
-    p
-        | Religious Education Computer Support
+        | Each year we are required to inventory all equipment in Religious Education.  We have not been able to verify the following items assigned to you.  Please verify that you have the following items in your possession.
+
 table.table
-    tr(style='border-style: none;')
-        td(style='border-style: none;') Needs to be Inventoried:
     tr#myHeader
         each showOption, key in computerShowOptions
             if(showOption && key !== 'FirstName' && key !== 'LastName')
@@ -73,3 +64,11 @@ table.table
                         div=key
     if(Object.keys(computers).length)
         +createTable(computerShowOptions, total, 'computer', true)
+p
+    | We will continue to send you friendly, loving, potentially obnoxious reminders until we hear back from you.
+p
+    | Thank you for your understanding and support.
+p
+    | Sincerely,
+p
+    | Religious Education Computer Support

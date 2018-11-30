@@ -1,6 +1,6 @@
 mixin createTable(showOptions, computers, table)
     each computer in computers
-        if(computer.Item !== 'Already Inventoried:')
+        if(computer.Item !== 'Items assigned to you that we have already inventoried:')
             tr
                 each showOption, key in showOptions
                     if(showOption && key !== 'FirstName' && key !== 'LastName')
