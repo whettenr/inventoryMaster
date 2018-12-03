@@ -2845,7 +2845,9 @@ router.get('/email', function (req, res, next) {
     let peripheralRows = {};
     let currentDate = new Date();
     let surplussing;
-    let showOptions = {ICN: true, SerialNumber: true, Item: true, Make: true, Model: true, "MAX(Inventory.CurrentDate)": true, order: true};
+    let inventoried = 0;
+    let total = [];
+    let showOptions = {Item: true, ICN: true, Make: true, Model: true,  SerialNumber: true};
     let peripheralShowOptions = {ICN: true, SerialNumber: true, Item: true, Make: true, Model: true, "MAX(Inventory.CurrentDate)": true, order: true};
     if(!req.query.surplussing || req.query.surplussing === ''){
         surplussing = 'false';
@@ -2869,6 +2871,7 @@ router.get('/email', function (req, res, next) {
         .then(rows => {
             computerRows = rows;
             for (let computer of computerRows) {
+                computer.Item = 'Computer';
                 if (computer['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(computer['MAX(Inventory.CurrentDate)']);
                     computer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
@@ -2894,6 +2897,7 @@ router.get('/email', function (req, res, next) {
         .then(rows => {
             monitorRows = rows;
             for (let monitor of monitorRows) {
+                monitor.Item = 'Monitor';
                 if (monitor['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(monitor['MAX(Inventory.CurrentDate)']);
                     monitor['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
@@ -2919,6 +2923,7 @@ router.get('/email', function (req, res, next) {
         .then(rows => {
             printerRows = rows;
             for (let printer of printerRows) {
+                printer.Item = 'Printer';
                 if (printer['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(printer['MAX(Inventory.CurrentDate)']);
                     printer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
@@ -2962,22 +2967,49 @@ router.get('/email', function (req, res, next) {
             return database.close();
         })
         .then(() => {
+            total = [...computerRows, ...monitorRows, ...printerRows, ...peripheralRows];
+            total.sort(function (a,b) {
+                return a.order - b.order;
+            });
+            // console.log(total);
+            let i = 0;
+            let found = false;
+            for(let row of total) {
+                if(row.order === 1 && !found){
+                    total.splice(i, 0, {Item:'Items assigned to you that we have already inventoried:'});
+                    total.splice(i +1, 0, {Item:'Item', ICN: 'ICN', Make: 'Make', Model: 'Model', SerialNumber: 'SerialNumber'});
+                    found = true;
+                }
+                if(row.order === 1) {
+                    inventoried++;
+                }
+                i++;
+            }
+        })
+        .then(() => {
             // do something with someRows and otherRows
-            res.render('email', {
-                employee: employeeRows[0],
-                computers: computerRows,
-                monitors: monitorRows,
-                printers: printerRows,
-                peripherals: peripheralRows,
-                computerShowOptions: showOptions,
-                monitorShowOptions: showOptions,
-                printerShowOptions: showOptions,
-                peripheralShowOptions,
-                surplussing,
-                location,
-                // user: JSON.parse(vault.read(req)),
-                title: employeeRows[0].FirstName + ' ' + employeeRows[0].LastName + "'s Stuff"
-            })
+            if(inventoried === total.length - 1 || inventoried === 0){
+                res.status(500);
+                res.render('error', { error: 'Everything has been inventoried' });
+            }
+            else{
+                res.render('email', {
+                    employee: employeeRows[0],
+                    computers: computerRows,
+                    monitors: monitorRows,
+                    printers: printerRows,
+                    peripherals: peripheralRows,
+                    total,
+                    computerShowOptions: showOptions,
+                    monitorShowOptions: showOptions,
+                    printerShowOptions: showOptions,
+                    peripheralShowOptions,
+                    surplussing,
+                    location,
+                    // user: JSON.parse(vault.read(req)),
+                    title: employeeRows[0].FirstName + ' ' + employeeRows[0].LastName + "'s Stuff"
+                })
+            }
         })
         .catch(err => {
             console.log(err);

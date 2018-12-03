@@ -1,24 +1,55 @@
 include createTableForEmail.jade
-link(rel='stylesheet', href='#{location}/stylesheets/card.css')
-link(rel='stylesheet', href='#{location}/stylesheets/table.css')
-link(rel="stylesheet", href="https://fonts.googleapis.com/icon?family=Material+Icons")
-link(rel='stylesheet', href='#{location}/stylesheets/style.css')
-link(type="text/css", rel="stylesheet", href="https://cdn.byu.edu/theme-fonts/latest/ringside/fonts.css", media="all")
-link(rel="stylesheet", href="https://cdn.byu.edu/byu-theme-style-helpers/latest/buttons.css")
-link(rel="stylesheet" href="https://cdn.byu.edu/byu-theme-components/1.x.x/byu-theme-components.min.css")
-script(async src="https://cdn.byu.edu/byu-theme-components/1.x.x/byu-theme-components.min.js")
+style.
+    tr {
+        height: 50px;
+        z-index: 1;
+    }
+    td {
+        border: 1px solid black;
+
+    }
+
+    a {
+        z-index: 2;
+    }
+
+    h3 {
+        width: 50%;
+    }
+
+    .table {
+        border-spacing: 0;
+        width: 50%;
+        overflow-x: auto;
+    }
+
+    .table td, .table th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        border-right: 0;
+        border-left: 0;
+    }
+
+    .table td:last-child {
+        border-right: 1px solid #ddd;
+    }
+
+    .table td:first-child {
+        border-left: 1px solid #ddd;
+    }
+
+    .table th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        border-top: 0;
+    }
 
 if(employee)
-    .titles
-        if(employee.PictureURL)
-            img.pic(src='#{employee.PictureURL}' onerror='javascript:this.src="images/default.png"')
-        h1.left
-            a(href='#{location}/employee?EmployeeID=#{employee.EmployeeID}') #{employee.FirstName} #{employee.LastName}
-        h3.left Office: #{employee.Office} #{employee.Building}
-        h3.left Category: #{employee.Category}
-        h3.left Rotation Group: #{employee.RotationGroup}
-        br
-    br
+    p
+        | #{employee.FirstName} #{employee.LastName},
+    p
+        | Each year we are required to inventory all equipment in Religious Education.  We have not been able to verify the following items assigned to you.  Please verify that you have the following items in your possession.
+
 table.table
     tr#myHeader
         each showOption, key in computerShowOptions
@@ -27,249 +58,17 @@ table.table
                     if(key === 'MAX(Inventory.CurrentDate)')
                         div= 'Inventory'
                     else if(key === 'order')
-                        div(style='display: none;')=key
+                        div=key
                     else
                         //.replace(/([A-Z])/g, ' $1')
                         div=key
     if(Object.keys(computers).length)
-        +createTable(computerShowOptions, computers, 'computer', true, 'asc')
-
-
-    if(Object.keys(monitors).length)
-        +createTable(monitorShowOptions, monitors, 'monitor')
-
-    if(Object.keys(printers).length)
-        +createTable(printerShowOptions, printers, 'printer')
-
-    if(Object.keys(peripherals).length)
-        +createTable(peripheralShowOptions, peripherals, 'peripheral')
-
-br
-script.
-    function surplus(ICN, table) {
-        $.ajax({
-            type: "GET",
-            url: "#{location}/finnaSurplus?table=" + table + "&ICN=" + ICN,
-            data: {format: 'html'}
-        }).done(function (data) {
-            $("#surplusButton" + ICN).html('Undo');
-            $("#surplusButton" + ICN).attr("onclick", "undo(" + ICN + ", '" + table + "')");
-            $("#surplusButton" + ICN).removeClass("navy");
-            $("#surplusButton" + ICN).addClass("whitenavy");
-        });
-    }
-
-    function undo(ICN, table) {
-        $.ajax({
-            type: "GET",
-            url: "#{location}/undoFinnaSurplus?table=" + table + "&ICN=" + ICN,
-            data: {format: 'html'}
-        }).done(function (data) {
-            $("#surplusButton" + ICN).html('Surplus');
-            $("#surplusButton" + ICN).attr("onclick", "surplus(" + ICN + ", '" + table + "')");
-            $("#surplusButton" + ICN).removeClass("whitenavy");
-            $("#surplusButton" + ICN).addClass("navy");
-        });
-    }
-
-    function inventory(ICN, id) {
-        $.ajax({
-            type: "GET",
-            url: "#{location}/updateInventory?ICN=" + ICN,
-            data: {format: 'html'}
-        }).done(function (data) {
-            console.log(id);
-            id.innerHTML = data;
-        });
-    }
-    function getComputerInfo(ICN, EmployeeID) {
-        window.location.href = '#{location}/computer?EmployeeID=' + EmployeeID + '&ICN=' + ICN;
-        console.log(ICN);
-        $.ajax({
-            type: "GET",
-            url: "#{location}/computer?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
-            data: {format: 'html'}
-        }).done(function (data) {
-            $("#computerInfo").html(data);
-            $("#computerInfo").css('display', 'block');
-            $("#cardInfo").css('display', 'none');
-
-
-        });
-    }
-    function getMonitorInfo(ICN, EmployeeID) {
-        window.location.href = "#{location}/monitor?ICN=" + ICN + '&EmployeeID=' + EmployeeID;
-        console.log(ICN);
-        $.ajax({
-            type: "GET",
-            url: "#{location}/monitor?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
-            data: {format: 'html'}
-        }).done(function (data) {
-            $("#computerInfo").html(data);
-            $("#computerInfo").css('display', 'block');
-            $("#cardInfo").css('display', 'none');
-
-
-        });
-    }
-    function getPrinterInfo(ICN, EmployeeID) {
-        window.location.href = "#{location}/printer?ICN=" + ICN + '&EmployeeID=' + EmployeeID;
-        console.log(ICN);
-        $.ajax({
-            type: "GET",
-            url: "#{location}/printer?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
-            data: {format: 'html'}
-        }).done(function (data) {
-            $("#computerInfo").html(data);
-            $("#computerInfo").css('display', 'block');
-            $("#cardInfo").css('display', 'none');
-
-
-        });
-    }
-    function getPeripheralInfo(ICN, EmployeeID) {
-        window.location.href = "#{location}/peripheral?ICN=" + ICN + '&EmployeeID=' + EmployeeID;
-        console.log(ICN);
-        $.ajax({
-            type: "GET",
-            url: "#{location}/peripheral?ICN=" + ICN + '&EmployeeID=' + EmployeeID,
-            data: {format: 'html'}
-        }).done(function (data) {
-            $("#computerInfo").html(data);
-            $("#computerInfo").css('display', 'block');
-            $("#cardInfo").css('display', 'none');
-
-
-        });
-    }
-    function newComputer(EmployeeID) {
-        window.location.href = "#{location}/newComputer?EmployeeID=" + EmployeeID;
-        $.ajax({
-            type: "GET",
-            url: "#{location}/newComputer?EmployeeID=" + EmployeeID,
-            data: {format: 'html'}
-        }).done(function (data) {
-            $("#computerInfo").html(data);
-            $("#computerInfo").css('display', 'block');
-            $("#cardInfo").css('display', 'none');
-
-
-        });
-    }
-
-    function newPeripheral(EmployeeID) {
-        window.location.href = "#{location}/newPeripheral?EmployeeID=" + EmployeeID;
-        $.ajax({
-            type: "GET",
-            url: "#{location}/newPeripheral?EmployeeID=" + EmployeeID,
-            data: {format: 'html'}
-        }).done(function (data) {
-            $("#computerInfo").html(data);
-            $("#computerInfo").css('display', 'block');
-            $("#cardInfo").css('display', 'none');
-
-
-        });
-    }
-    function newMonitor(EmployeeID) {
-        window.location.href = "#{location}/newMonitor?EmployeeID=" + EmployeeID;
-        $.ajax({
-            type: "GET",
-            url: "#{location}/newMonitor?EmployeeID=" + EmployeeID,
-            data: {format: 'html'}
-        }).done(function (data) {
-            $("#computerInfo").html(data);
-            $("#computerInfo").css('display', 'block');
-            $("#cardInfo").css('display', 'none');
-        });
-    }
-    function getCard(employeeID) {
-        window.location.href = '#{location}/card?EmployeeID=' + employeeID;
-        console.log(employeeID);
-        $.ajax({
-            type: "GET",
-            url: "#{location}/card?employeeId=" + employeeID,
-            data: {format: 'html'}
-        }).done(function (data) {
-            $("#cardDad").addClass("cardDadCss");
-            $("#cardDad").html(data);
-            $("#cardDad").css('display', 'block');
-        });
-    }
-
-    function sortTable(n) {
-        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-        table = document.querySelector(".table");
-        switching = true;
-        //Set the sorting direction to ascending:
-        dir = "asc";
-        /*Make a loop that will continue until
-        no switching has been done:*/
-        while (switching) {
-            //start by saying: no switching is done:
-            switching = false;
-            rows = table.rows;
-            /*Loop through all table rows (except the
-            first, which contains table headers):*/
-            for (i = 1; i < (rows.length - 1); i++) {
-                //start by saying there should be no switching:
-                shouldSwitch = false;
-                /*Get the two elements you want to compare,
-                one from current row and one from the next:*/
-                x = rows[i].getElementsByTagName("TD")[n];
-                y = rows[i + 1].getElementsByTagName("TD")[n];
-                /*check if the two rows should switch place,
-                based on the direction, asc or desc:*/
-                if (dir == "asc") {
-                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                        //if so, mark as a switch and break the loop:
-                        shouldSwitch = true;
-                        break;
-                    }
-                } else if (dir == "desc") {
-                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                        //if so, mark as a switch and break the loop:
-                        shouldSwitch = true;
-                        break;
-                    }
-                }
-            }
-            if (shouldSwitch) {
-                /*If a switch has been marked, make the switch
-                and mark that a switch has been done:*/
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-                //Each time a switch is done, increase this count by 1:
-                switchcount++;
-            } else {
-                /*If no switching has been done AND the direction is "asc",
-                set the direction to "desc" and run the while loop again.*/
-                if (switchcount == 0 && dir == "asc") {
-                    dir = "desc";
-                    switching = true;
-                }
-            }
-        }
-    }
-
-    function begin() {
-        sortTable(6);
-        let table = document.querySelector('.table');
-        let rows = table.rows;
-        let i = 0;
-        let insert = 0;
-        for(let row of rows){
-            let cells = row.cells;
-            console.log(cells[6].innerHTML);
-            if(cells[6].innerHTML === '1' && insert === 0){
-                console.log('insert at ' + i);
-                insert = i;
-                let newRow = table.insertRow(i);
-                var cell1 = newRow.insertCell(0);
-                cell1.innerHTML = "Already Inventoried:";
-                cell1.style.borderStyle = 'none';
-            };
-            i++;
-        }
-    }
-    window.onload = begin();
+        +createTable(computerShowOptions, total, 'computer', true)
+p
+    | We will continue to send you friendly, loving, potentially obnoxious reminders until we hear back from you.
+p
+    | Thank you for your understanding and support.
+p
+    | Sincerely,
+p
+    | Religious Education Computer Support
