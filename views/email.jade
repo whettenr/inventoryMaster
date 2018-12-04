@@ -43,8 +43,6 @@ style.
         padding-bottom: 12px;
         border-top: 0;
     }
-br
-br
 if(employee)
     p
         | #{employee.FirstName} #{employee.LastName},
@@ -62,7 +60,8 @@ table.table
                         //.replace(/([A-Z])/g, ' $1')
                         div=key
     +createTable(computerShowOptions, notInventoriedArr, 'computer', true)
-
+br
+br
 p
     | For your information these are the items assigned to you that we have already inventoried:
 
