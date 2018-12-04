@@ -2846,6 +2846,8 @@ router.get('/email', function (req, res, next) {
     let currentDate = new Date();
     let surplussing;
     let inventoried = 0;
+    let inventoriedArr = [];
+    let notInventoriedArr = [];
     let total = [];
     let showOptions = {Item: true, ICN: true, Make: true, Model: true,  SerialNumber: true};
     let peripheralShowOptions = {ICN: true, SerialNumber: true, Item: true, Make: true, Model: true, "MAX(Inventory.CurrentDate)": true, order: true};
@@ -2968,27 +2970,24 @@ router.get('/email', function (req, res, next) {
         })
         .then(() => {
             total = [...computerRows, ...monitorRows, ...printerRows, ...peripheralRows];
-            total.sort(function (a,b) {
-                return a.order - b.order;
-            });
-            // console.log(total);
-            let i = 0;
-            let found = false;
             for(let row of total) {
-                if(row.order === 1 && !found){
-                    total.splice(i, 0, {Item:'Items assigned to you that we have already inventoried:'});
-                    total.splice(i +1, 0, {Item:'Item', ICN: 'ICN', Make: 'Make', Model: 'Model', SerialNumber: 'SerialNumber'});
-                    found = true;
+                if(row.order === 1){
+                    inventoriedArr.push(row);
                 }
-                if(row.order === 1) {
-                    inventoried++;
+                else {
+                    notInventoriedArr.push(row);
                 }
-                i++;
             }
+            inventoriedArr.sort(function (a,b) {
+                return a.ICN - b.ICN;
+            });
+            notInventoriedArr.sort(function (a,b) {
+                return a.ICN - b.ICN;
+            });
         })
         .then(() => {
             // do something with someRows and otherRows
-            if(inventoried === total.length - 1 || inventoried === 0){
+            if(!notInventoriedArr.length){
                 res.status(500);
                 res.render('error', { error: 'Everything has been inventoried' });
             }
@@ -3000,6 +2999,8 @@ router.get('/email', function (req, res, next) {
                     printers: printerRows,
                     peripherals: peripheralRows,
                     total,
+                    inventoriedArr,
+                    notInventoriedArr,
                     computerShowOptions: showOptions,
                     monitorShowOptions: showOptions,
                     printerShowOptions: showOptions,

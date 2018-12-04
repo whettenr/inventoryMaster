@@ -1,33 +1,29 @@
 mixin createTable(showOptions, computers, table)
     each computer in computers
-        if(computer.Item !== 'Items assigned to you that we have already inventoried:')
-            tr
-                each showOption, key in showOptions
-                    if(showOption && key !== 'FirstName' && key !== 'LastName')
-                        td
-                            if(key === 'ICN')
-                                div= computer[key]
-                            else if(key === 'FirstName' || key === 'LastName')
-                                div= computer[key]
-                            else if(key === 'MAX(Inventory.CurrentDate)')
-                                div
-                                    .byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
-                            else
-                                if(key === 'HomeCheckout')
-                                    if(computer[key] === 'on')
-                                        i(class='material-icons')= 'home'
-                                else if(key === 'Touch')
-                                    if(computer[key] === 'on')
-                                        i(class='material-icons')= 'touch_app'
-                                else if(key === 'Surplussing')
-                                    if(computer[key] === 0)
-                                        button.byu-button.navy(onclick='surplus(#{computer.ICN})' id='surplusButton#{computer.ICN}') Surplus
-                                    else
-                                        button.byu-button.whitenavy(onclick='undo(#{computer.ICN})' id='surplusButton#{computer.ICN}') Undo
-                                else if(key === 'order')
-                                    = computer[key]
+        tr
+            each showOption, key in showOptions
+                if(showOption && key !== 'FirstName' && key !== 'LastName')
+                    td
+                        if(key === 'ICN')
+                            div= computer[key]
+                        else if(key === 'FirstName' || key === 'LastName')
+                            div= computer[key]
+                        else if(key === 'MAX(Inventory.CurrentDate)')
+                            div
+                                .byu-button.navy(onclick='inventory(#{computer.ICN}, this);')= computer['MAX(Inventory.CurrentDate)']
+                        else
+                            if(key === 'HomeCheckout')
+                                if(computer[key] === 'on')
+                                    i(class='material-icons')= 'home'
+                            else if(key === 'Touch')
+                                if(computer[key] === 'on')
+                                    i(class='material-icons')= 'touch_app'
+                            else if(key === 'Surplussing')
+                                if(computer[key] === 0)
+                                    button.byu-button.navy(onclick='surplus(#{computer.ICN})' id='surplusButton#{computer.ICN}') Surplus
                                 else
-                                    div= computer[key]
-        else
-            tr(style='border-style: none;')
-                td(style='border-style: none;')= computer.Item
+                                    button.byu-button.whitenavy(onclick='undo(#{computer.ICN})' id='surplusButton#{computer.ICN}') Undo
+                            else if(key === 'order')
+                                = computer[key]
+                            else
+                                div= computer[key]
