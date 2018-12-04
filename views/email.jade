@@ -62,20 +62,21 @@ table.table
     +createTable(computerShowOptions, notInventoriedArr, 'computer', true)
 br
 br
-p
-    | These items assigned to you have already been inventoried:
+if(inventoriedArr.length)
+    p
+        | These items assigned to you have already been inventoried:
 
-table.table
-    tr
-        each showOption, key in computerShowOptions
-            if(showOption && key !== 'FirstName' && key !== 'LastName')
-                td
-                    if(key === 'MAX(Inventory.CurrentDate)')
-                        div= 'Inventory'
-                    else
-                        //.replace(/([A-Z])/g, ' $1')
-                        div=key
-    +createTable(computerShowOptions, inventoriedArr, 'computer', true)
+    table.table
+        tr
+            each showOption, key in computerShowOptions
+                if(showOption && key !== 'FirstName' && key !== 'LastName')
+                    td
+                        if(key === 'MAX(Inventory.CurrentDate)')
+                            div= 'Inventory'
+                        else
+                            //.replace(/([A-Z])/g, ' $1')
+                            div=key
+        +createTable(computerShowOptions, inventoriedArr, 'computer', true)
 p
     | We will continue to send you friendly reminders until we hear back from you.
 p
