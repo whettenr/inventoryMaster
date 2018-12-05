@@ -43,12 +43,11 @@ style.
         padding-bottom: 12px;
         border-top: 0;
     }
-
 if(employee)
     p
         | #{employee.FirstName} #{employee.LastName},
     p
-        | Each year we are required to inventory all equipment in Religious Education.  We have not been able to verify the following items assigned to you.  Please verify that you have the following items in your possession:
+        | Each year we are required to inventory all equipment in Religious Education.  We have not been able to verify the following items assigned to you.  Please let us know that you have the following items in your possession:
 
 table.table
     tr
@@ -61,23 +60,25 @@ table.table
                         //.replace(/([A-Z])/g, ' $1')
                         div=key
     +createTable(computerShowOptions, notInventoriedArr, 'computer', true)
+br
+br
+if(inventoriedArr.length)
+    p
+        | These items assigned to you have already been inventoried:
 
+    table.table
+        tr
+            each showOption, key in computerShowOptions
+                if(showOption && key !== 'FirstName' && key !== 'LastName')
+                    td
+                        if(key === 'MAX(Inventory.CurrentDate)')
+                            div= 'Inventory'
+                        else
+                            //.replace(/([A-Z])/g, ' $1')
+                            div=key
+        +createTable(computerShowOptions, inventoriedArr, 'computer', true)
 p
-    | For your information these are the items assigned to you that we have already inventoried:
-
-table.table
-    tr
-        each showOption, key in computerShowOptions
-            if(showOption && key !== 'FirstName' && key !== 'LastName')
-                td
-                    if(key === 'MAX(Inventory.CurrentDate)')
-                        div= 'Inventory'
-                    else
-                        //.replace(/([A-Z])/g, ' $1')
-                        div=key
-    +createTable(computerShowOptions, inventoriedArr, 'computer', true)
-p
-    | We will continue to send you friendly, loving, potentially obnoxious reminders until we hear back from you.
+    | We will continue to send you friendly reminders until we hear back from you.
 p
     | Thank you for your understanding and support.
 p
