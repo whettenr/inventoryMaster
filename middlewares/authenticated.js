@@ -124,17 +124,17 @@ module.exports = function (req, res, next) {
                         "FirstName": true,
                         "LastName": true,
                         "Make": true,
-                        "Model": true,
+                        "Model": false,
                         "Building": true,
                         "Office": true,
                         "SerialNumber": false,
                         "DateAcquired": true,
-                        "Warranty": true,
-                        "Notes": true,
+                        "Warranty": false,
+                        "Notes": false,
                         "History": false,
                         "MAX(Inventory.CurrentDate)": true,
                         "Max(PageCounts.PageCount)": true,
-                        "AddPageCount": true,
+                        "AddPageCount": false,
                         "Surplussing": false
                     };
                     let defaultPeripheralShowOptions = {
