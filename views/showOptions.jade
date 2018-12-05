@@ -5,12 +5,20 @@ block content
             form#form(action='#{location}/showOptions' method='post')
                 each showOption, i in showOptions
                     if(showOption)
-                        div.byu-button.navy(onclick='change(#{i})' id=i+'Div')= i
-                            input(type='hidden' id=i name=i value='#{showOption}')
+                        if(i === 'Max(PageCounts.PageCount)')
+                            div.byu-button.navy(onclick='change("pageCount")' id='pageCountDiv') Page Count
+                            input(type='hidden' id='pageCount' name=i value='#{showOption}')
+                        else
+                            div.byu-button.navy(onclick='change(#{i})' id=i+'Div')= i
+                                input(type='hidden' id=i name=i value='#{showOption}')
                         br
                     else
-                        div.byu-button.whitenavy(onclick='change(#{i})' id=i+'Div')= i
-                            input(type='hidden' id=i name=i value='#{showOption}')
+                        if(i === 'Max(PageCounts.PageCount)')
+                            div.byu-button.whitenavy(onclick='change("pageCount")' id='pageCountDiv') Page Count
+                            input(type='hidden' id='pageCount' name=i value='#{showOption}')
+                        else
+                            div.byu-button.whitenavy(onclick='change(#{i})' id=i+'Div')= i
+                                input(type='hidden' id=i name=i value='#{showOption}')
                         br
                 input(type='hidden' name='table' value='#{table}')
                 div(style='max-width: 100px;')
@@ -21,8 +29,12 @@ block content
             $("#form").submit();
         }
         function change(id){
-            let showOptionDiv = $("#" + id.id + 'Div');
-            let showOption = $("#" + id.id);
+            let trueId = id;
+            if(id.id){
+                trueId = id.id;
+            }
+            let showOptionDiv = $("#" + trueId + 'Div');
+            let showOption = $("#" + trueId);
             if(showOption.val() === 'true'){
                 showOption.val('false');
                 console.log("in like the flin");

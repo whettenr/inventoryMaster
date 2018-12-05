@@ -120,16 +120,21 @@ module.exports = function (req, res, next) {
                     };
                     let defaultPrinterShowOptions = {
                         "ICN": true,
+                        "LesOlsonID": true,
                         "FirstName": true,
                         "LastName": true,
                         "Make": true,
                         "Model": true,
+                        "Building": true,
+                        "Office": true,
                         "SerialNumber": false,
                         "DateAcquired": true,
                         "Warranty": true,
                         "Notes": true,
                         "History": false,
                         "MAX(Inventory.CurrentDate)": true,
+                        "Max(PageCounts.PageCount)": true,
+                        "AddPageCount": true,
                         "Surplussing": false
                     };
                     let defaultPeripheralShowOptions = {

@@ -37,6 +37,8 @@ block content
                                     a(href='#{location}/#{table}Table?sortby=#{key}&order=asc')
                                         if(key === 'MAX(Inventory.CurrentDate)')
                                             span= 'Inventory'
+                                        else if(key === 'Max(PageCounts.PageCount)')
+                                            span= 'Latest Page Count'
                                         else
                                             span=key
                 each computer in items
@@ -62,6 +64,10 @@ block content
                                     else if(key === 'MAX(Inventory.CurrentDate)')
                                         a(href='#{location}/#{table}Table?where=#{computer.inventoryFilter}')
                                             div= computer[key]
+                                    else if(key === 'Max(PageCounts.PageCount)')
+                                        div(id=computer.ICN + 'PageCountMax')= computer[key]
+                                    else if(key === 'AddPageCount')
+                                        input(type='text' id=computer.ICN + 'PageCount')
                                     else
                                         a(href='#{location}/#{table}Table?where=#{key}=\'#{computer[key]}\'')
                                             if(key === 'HomeCheckout')
@@ -159,3 +165,25 @@ block content
                 $("#surplusButton" + ICN).addClass("navy");
             });
         }
+
+        function updatePageCount(ID) {
+            let pageCount = $("#" + ID).val();
+            let type = 'BW';
+            let ICN = ID.substr(0,5);
+            $.ajax({
+                type: "POST",
+                url: "#{location}/updatePageCount?ICN=" + ICN + '&PageCount=' + pageCount + '&Type=' + type,
+                data: {format: 'html'}
+            }).done(function (data) {
+                console.log(data);
+                $('#' + ID + 'Max').html(data);
+
+            });
+        }
+
+        $("input").keyup(function (event) {
+            if (event.keyCode === 13) {
+                updatePageCount(event.delegateTarget.id);
+                event.delegateTarget.value = '';
+            }
+        });

@@ -3266,6 +3266,30 @@ router.post('/employee', function (req, res, next) {
     // res.render('home', {title: 'Welcome', user: 'McKay'})
 });
 
+router.post('/updatePageCount', function (req, res, next) {
+    let database = new Database(config.getConfig());
+    let ICN = req.query.ICN;
+    let PageCount = req.query.PageCount;
+    let Type = req.query.Type;
+    database.query('SELECT MAX(PageCount) FROM PageCounts WHERE ICN = ' + ICN)
+        .then(rows => {
+            if(rows[0]['MAX(PageCount)'] <= parseInt(PageCount)){
+                return database.query('INSERT INTO PageCounts (ICN, PageCount, Date, Type) VALUES (?,?, ?, ?)', [ICN, PageCount, getCurrentDate(), Type]);
+            }
+            else {
+                PageCount = 'Needs to be higher than ' + rows[0]['MAX(PageCount)'];
+                return null;
+            }
+        })
+        .then(() => {
+            res.send(PageCount);
+        })
+        .catch(err => {
+            console.log(err);
+            res.send(err.code);
+        })
+});
+
 router.get('/test', function (req, res, next) {
     let test = {
         test1: 'test1',
