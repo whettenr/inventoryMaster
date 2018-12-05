@@ -517,7 +517,7 @@ router.get('/monitorTable', function (req, res, next) {
             else if (req.query.sortby === 'lastName') {
                 query += ' ORDER BY lastName';
             }
-            else {
+            else if(req.query.sortby){
                 query += ' ORDER BY ';
                 query += req.query.sortby;
             }
@@ -652,7 +652,7 @@ router.get('/peripheralTable', function (req, res, next) {
             else if (req.query.sortby === 'Item') {
                 query += ' ORDER BY Item';
             }
-            else {
+            else if(req.query.sortby){
                 query += ' ORDER BY ';
                 query += req.query.sortby;
             }
@@ -783,7 +783,7 @@ router.get('/printerTable', function (req, res, next) {
             else if (req.query.sortby === 'LesOlsonID') {
                 query += ' ORDER BY LesOlsonID';
             }
-            else {
+            else if(req.query.sortby){
                 query += ' ORDER BY ';
                 query += req.query.sortby;
             }
