@@ -518,7 +518,14 @@ router.get('/monitorTable', function (req, res, next) {
                 query += ' ORDER BY lastName';
             }
             else {
-                query += ' Order BY ICN';
+                query += ' ORDER BY ';
+                query += req.query.sortby;
+            }
+            if (req.query.order === 'asc') {
+                query += ' ASC';
+            }
+            else if (req.query.order === 'desc') {
+                query += ' DESC';
             }
             console.log(query);
             return database.query(query);
@@ -646,7 +653,14 @@ router.get('/peripheralTable', function (req, res, next) {
                 query += ' ORDER BY Item';
             }
             else {
-                query += ' Order BY ICN';
+                query += ' ORDER BY ';
+                query += req.query.sortby;
+            }
+            if (req.query.order === 'asc') {
+                query += ' ASC';
+            }
+            else if (req.query.order === 'desc') {
+                query += ' DESC';
             }
             console.log(query);
             return database.query(query);
@@ -770,7 +784,14 @@ router.get('/printerTable', function (req, res, next) {
                 query += ' ORDER BY LesOlsonID';
             }
             else {
-                query += ' Order BY ICN';
+                query += ' ORDER BY ';
+                query += req.query.sortby;
+            }
+            if (req.query.order === 'asc') {
+                query += ' ASC';
+            }
+            else if (req.query.order === 'desc') {
+                query += ' DESC';
             }
             console.log(query);
             return database.query(query);
@@ -797,6 +818,8 @@ router.get('/printerTable', function (req, res, next) {
                 title: 'Printers',
                 table: 'printer',
                 showOptions,
+                sortby: req.query.sortby,
+                order: req.query.order,
                 actionButton,
                 items: printers,
                 filters: printerFilters,
