@@ -91,6 +91,12 @@ function getCurrentDate() {
     return newDate;
 }
 
+function getCurrentFormatedDate() {
+    let date = new Date();
+    let month = monthNames[date.getMonth()];
+    return `${month} ${date.getFullYear()}`;
+}
+
 function daysInThisMonth(date) {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }
@@ -715,7 +721,7 @@ router.get('/printerTable', function (req, res, next) {
             if (rows[0].printerFilters !== "") {
                 printerFilters = rows[0].printerFilters.split(',');
             }
-            let query = 'SELECT Printer.*, Employee.*, MAX(Inventory.CurrentDate), Max(PageCounts.PageCount) FROM Printer JOIN Employee on Printer.EmployeeID = Employee.employeeId LEFT JOIN PageCounts ON Printer.ICN = PageCounts.ICN LEFT JOIN Inventory ON Printer.ICN = Inventory.ICN WHERE Printer.EmployeeID != 400';
+            let query = 'SELECT Printer.*, Employee.*, MAX(Inventory.CurrentDate), Max(PageCounts.PageCount), MAX(PageCounts.Date) FROM Printer JOIN Employee on Printer.EmployeeID = Employee.employeeId LEFT JOIN PageCounts ON Printer.ICN = PageCounts.ICN LEFT JOIN Inventory ON Printer.ICN = Inventory.ICN WHERE Printer.EmployeeID != 400';
             if (req.query.remove) {
                 let splice = parseInt(req.query.remove);
                 printerFilters.splice(splice, 1);
@@ -804,6 +810,8 @@ router.get('/printerTable', function (req, res, next) {
                 if (printer['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(printer['MAX(Inventory.CurrentDate)'] + ' MST');
                     printer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
+                    let pageCountDate = new Date(printer['MAX(PageCounts.Date)'] + ' MST');
+                    printer['MAX(PageCounts.Date)'] = monthNames[pageCountDate.getMonth()] + ' ' + pageCountDate.getFullYear();
                     printer.inventoryFilter = 'Inventory.CurrentDate <= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-' + daysInThisMonth(date) + '\' AND ' + 'Inventory.CurrentDate >= \'' + date.getFullYear() + '-' + ("0" + (date.getMonth() + 1)).slice(-2) + '-01\'';
                 }
                 else {
@@ -3305,7 +3313,7 @@ router.post('/updatePageCount', function (req, res, next) {
             }
         })
         .then(() => {
-            res.send(PageCount);
+            res.send({PageCount, date: getCurrentFormatedDate()});
         })
         .catch(err => {
             console.log(err);

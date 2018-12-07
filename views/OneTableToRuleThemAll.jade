@@ -66,6 +66,8 @@ block content
                                             div= computer[key]
                                     else if(key === 'Max(PageCounts.PageCount)')
                                         div(id=computer.ICN + 'PageCountMax')= computer[key]
+                                    else if(key === 'MAX(PageCounts.Date)')
+                                        div(id=computer.ICN + 'DateMax')= computer[key]
                                     else if(key === 'AddPageCount')
                                         input(type='text' id=computer.ICN + 'PageCount')
                                     else
@@ -176,7 +178,8 @@ block content
                 data: {format: 'html'}
             }).done(function (data) {
                 console.log(data);
-                $('#' + ID + 'Max').html(data);
+                $('#' + ID + 'Max').html(data.PageCount);
+                $('#' + ICN + 'DateMax').html(data.date);
 
             });
         }

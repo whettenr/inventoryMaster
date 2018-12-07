@@ -1,0 +1,73 @@
+html {
+    font-family: "HCo Ringside Narrow SSm", Arial, sans-serif;
+}
+
+.container {
+    overflow: hidden;
+    height: 1270px;
+    width: 1000px;
+    margin: auto;
+}
+
+.book {
+    background-color: #002e5d;
+    height: 400px;
+    width: 1000px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: -90px;
+}
+
+.odd {
+    border-top: 4px solid white;
+    transform: skewY(-5deg);
+    height: 500px;
+    margin-bottom: -180px;
+    background-color: #32538d;
+}
+
+.even {
+    border-top: 4px solid white;
+    transform: skewY(5deg);
+    height: 400px;
+}
+
+.text {
+    margin-top: 10px;
+    margin-left: 20px;
+    color: white;
+    margin-right: 150px;
+
+}
+
+.textOdd {
+    transform: skewY(5deg);
+    margin-top: 30px;
+    margin-left: 150px;
+    margin-right: 0;
+}
+
+.textEven {
+    transform: skewY(-5deg);
+}
+
+img {
+    box-shadow: -5px 5px 5px black;
+    margin-left: 150px;
+    margin-top: 30px;
+    display: block;
+    height: 250px;
+}
+
+.even > img {
+    transform: skewY(-5deg);
+    margin-top: 60px;
+}
+
+.odd > img {
+    transform: skewY(5deg);
+    float: right;
+    margin-top: 60px;
+    margin-right: 100px;
+    margin-left: 20px;
+}
