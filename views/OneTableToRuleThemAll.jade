@@ -177,10 +177,8 @@ block content
                 url: "#{location}/updatePageCount?ICN=" + ICN + '&PageCount=' + pageCount + '&Type=' + type,
                 data: {format: 'html'}
             }).done(function (data) {
-                console.log(data);
                 $('#' + ID + 'Max').html(data.PageCount);
                 $('#' + ICN + 'DateMax').html(data.date);
-
             });
         }
 
