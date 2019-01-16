@@ -1614,6 +1614,8 @@ router.get('/newPeripheral', function (req, res, next) {
         })
         .then(rows => {
             itemOptions = rows;
+            itemOptions[itemOptions.length] = {Item: 'None'};
+            itemOptions[itemOptions.length] = {Item: 'Add a New Option'};
             return database.close();
         })
         .then(() => {
