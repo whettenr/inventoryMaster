@@ -105,7 +105,7 @@ function checkInventoried(items) {
     let date = new Date();
     for(computer of items){
         let computerDate = new Date(computer['MAX(Inventory.CurrentDate)']);
-        computer.Inventoried = computerDate.getFullYear() === date.getFullYear();
+        computer.Inventoried = computerDate.getFullYear() === date.getFullYear() || computerDate.getFullYear() === date.getFullYear() - 1;
     }
 }
 
@@ -2910,7 +2910,7 @@ router.get('/email', function (req, res, next) {
                 if (computer['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(computer['MAX(Inventory.CurrentDate)']);
                     computer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
-                    if(date.getFullYear() === currentDate.getFullYear()){
+                    if(date.getFullYear() === currentDate.getFullYear() || date.getFullYear() === currentDate.getFullYear() -1){
                         computer.order = 1;
                     }
                     else {
@@ -2936,7 +2936,7 @@ router.get('/email', function (req, res, next) {
                 if (monitor['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(monitor['MAX(Inventory.CurrentDate)']);
                     monitor['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
-                    if(date.getFullYear() === currentDate.getFullYear()){
+                    if(date.getFullYear() === currentDate.getFullYear() || date.getFullYear() === currentDate.getFullYear() -1){
                         monitor.order = 1;
                     }
                     else {
@@ -2962,7 +2962,7 @@ router.get('/email', function (req, res, next) {
                 if (printer['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(printer['MAX(Inventory.CurrentDate)']);
                     printer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
-                    if(date.getFullYear() === currentDate.getFullYear()){
+                    if(date.getFullYear() === currentDate.getFullYear() || date.getFullYear() === currentDate.getFullYear() -1){
                         printer.order = 1;
                     }
                     else {
@@ -2987,7 +2987,7 @@ router.get('/email', function (req, res, next) {
                 if (peripheral['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(peripheral['MAX(Inventory.CurrentDate)']);
                     peripheral['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
-                    if(date.getFullYear() === currentDate.getFullYear()){
+                    if(date.getFullYear() === currentDate.getFullYear() || date.getFullYear() === currentDate.getFullYear() -1){
                         peripheral.order = 1;
                     }
                     else {
