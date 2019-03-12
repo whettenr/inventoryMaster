@@ -140,9 +140,11 @@ block content
 
     br
     script.
-        $(document).ready(function () {
-            $('.table').DataTable();
-        });
+        if("#{employee.EmployeeID}" === "300"){
+            $(document).ready(function () {
+                $('.table').DataTable();
+            });
+        }
         function surplus(ICN, table) {
             $.ajax({
                 type: "GET",
