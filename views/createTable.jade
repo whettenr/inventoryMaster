@@ -1,5 +1,5 @@
 mixin createTable(showOptions, computers, table)
-    table.table
+    table.table(style="width:90%")
         thead#myHeader
             each showOption, key in showOptions
                 if(showOption && key !== 'FirstName' && key !== 'LastName')
