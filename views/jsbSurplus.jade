@@ -78,6 +78,9 @@ block content
                 td= peripheral.Model
     br
     script.
+        $(document).ready(function(){
+            $('.table').DataTable();
+        })
         function getComputerInfo(ICN, EmployeeID) {
             window.location.href = '#{location}/computer?EmployeeID=' + EmployeeID + '&ICN=' + ICN;
             console.log(ICN);
