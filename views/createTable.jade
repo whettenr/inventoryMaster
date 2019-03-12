@@ -1,16 +1,15 @@
 mixin createTable(showOptions, computers, table)
     table.table
+        thead#myHeader
+            each showOption, key in showOptions
+                if(showOption && key !== 'FirstName' && key !== 'LastName')
+                    td
+                        if(key === 'MAX(Inventory.CurrentDate)')
+                            div= 'Inventory'
+                        else
+                            //.replace(/([A-Z])/g, ' $1')
+                            div=key
         tbody
-            tr#myHeader
-                each showOption, key in showOptions
-                    if(showOption && key !== 'FirstName' && key !== 'LastName')
-                        td
-                            if(key === 'MAX(Inventory.CurrentDate)')
-                                div= 'Inventory'
-                            else
-                                //.replace(/([A-Z])/g, ' $1')
-                                div=key
-
             each computer in computers
                 tr
                     each showOption, key in showOptions
