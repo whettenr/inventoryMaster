@@ -206,6 +206,14 @@ div.checked + .slider:before {
   border-radius: 50%;
 }
 
+.dataTables_wrapper{
+  margin: 25px;
+  min-width: 90%;
+}
+
+.dataTables_filter input {
+  border: 1px solid gray;
+}
 
 @media only screen and (max-width: 600px) {
   .sendToStorage {

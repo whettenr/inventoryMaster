@@ -27,7 +27,7 @@ block content
                         .col-25
                             label(for='make') Make:
                         .col-75
-                            select#make.custom-select.sources(name='make', placeholder='Make' onchange='refreshModelOptions()')
+                            select#make.custom-select.sources(name='make', onchange='refreshModelOptions()')
                                 each makeOption in makeOptions
                                     if(makeOption.Make === computer.Make)
                                         option(value=makeOption.Make selected) #{makeOption.Make}
@@ -37,7 +37,7 @@ block content
                         .col-25
                             label(for='model') Model:
                         .col-75
-                            select#model.custom-select.sources(name='model', placeholder='Model' onchange='changeModel()')
+                            select#model.custom-select.sources(name='model', onchange='changeModel()')
                                 each modelOption in modelOptions
                                     if(modelOption.Model === computer.Model)
                                         option(value=modelOption.Model selected) #{modelOption.Model}
@@ -47,7 +47,7 @@ block content
                         .col-25
                             label(for='type') Type:
                         .col-75
-                            select#type.custom-select.sources(name='type', placeholder='Computer Type')
+                            select#type.custom-select.sources(name='type')
                                 each typeOption in typeOptions
                                     if(typeOption.Type === computer.Type)
                                         option(value=typeOption.Type selected) #{typeOption.Type}

@@ -568,8 +568,6 @@ router.get('/monitorTable', function (req, res, next) {
         .catch(err => {
             console.log(err);
         });
-
-
 });
 
 router.get('/peripheralTable', function (req, res, next) {
