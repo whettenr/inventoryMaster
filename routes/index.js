@@ -103,7 +103,7 @@ function daysInThisMonth(date) {
 
 function checkInventoried(items) {
     let date = new Date();
-    for(computer of items){
+    for (computer of items) {
         let computerDate = new Date(computer['MAX(Inventory.CurrentDate)']);
         computer.Inventoried = computerDate.getFullYear() === date.getFullYear() || computerDate.getFullYear() === date.getFullYear() - 1;
     }
@@ -188,7 +188,7 @@ router.get('/employeeTable', function (req, res, next) {
     if (req.query.sortby) {
         query += ` Order BY ${req.query.sortby}`;
     }
-    if(req.query.order){
+    if (req.query.order) {
         query += ` ${req.query.order}`;
         order = req.query.order;
     }
@@ -273,10 +273,10 @@ router.get('/computerTable', function (req, res, next) {
             if (req.query.not) {
                 if (filters[req.query.not].includes('!='))
                     filters[req.query.not] = filters[req.query.not].replace('!=', '=');
-                else if (filters[req.query.not].includes('!(')){
+                else if (filters[req.query.not].includes('!(')) {
                     filters[req.query.not] = filters[req.query.not].replace('!(', '(');
                 }
-                else if (filters[req.query.not].includes('(')){
+                else if (filters[req.query.not].includes('(')) {
                     filters[req.query.not] = filters[req.query.not].replace('(', '!(');
                 }
 
@@ -393,7 +393,7 @@ router.get('/computerTable', function (req, res, next) {
             for (let computer of computers) {
                 if (computer.DateAcquired) {
                     let date = new Date(computer.DateAcquired + ' MST');
-                    computer.DateAcquiredFilter = 'DateAcquired LIKE \''+computer.DateAcquired.substr(0, computer.DateAcquired.length - 3) + '%\'';
+                    computer.DateAcquiredFilter = 'DateAcquired LIKE \'' + computer.DateAcquired.substr(0, computer.DateAcquired.length - 3) + '%\'';
                     computer.DateAcquired = monthNames[date.getMonth()] + ' ' + date.getFullYear();
                 }
                 else {
@@ -401,7 +401,7 @@ router.get('/computerTable', function (req, res, next) {
                 }
                 if (computer.Warranty) {
                     let date = new Date(computer.Warranty + ' MST');
-                    computer.WarrantyFilter = 'Warranty LIKE \''+ computer.Warranty.substr(0, computer.Warranty.length - 3) + '%\'';
+                    computer.WarrantyFilter = 'Warranty LIKE \'' + computer.Warranty.substr(0, computer.Warranty.length - 3) + '%\'';
                     computer.Warranty = monthNames[date.getMonth()] + ' ' + date.getFullYear();
                 }
                 else {
@@ -466,10 +466,10 @@ router.get('/monitorTable', function (req, res, next) {
             if (req.query.not) {
                 if (monitorFilters[req.query.not].includes('!='))
                     monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('!=', '=');
-                else if (monitorFilters[req.query.not].includes('!(')){
+                else if (monitorFilters[req.query.not].includes('!(')) {
                     monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('!(', '(');
                 }
-                else if (monitorFilters[req.query.not].includes('(')){
+                else if (monitorFilters[req.query.not].includes('(')) {
                     monitorFilters[req.query.not] = monitorFilters[req.query.not].replace('(', '!(');
                 }
 
@@ -523,7 +523,7 @@ router.get('/monitorTable', function (req, res, next) {
             else if (req.query.sortby === 'lastName') {
                 query += ' ORDER BY lastName';
             }
-            else if(req.query.sortby){
+            else if (req.query.sortby) {
                 query += ' ORDER BY ';
                 query += req.query.sortby;
             }
@@ -595,10 +595,10 @@ router.get('/peripheralTable', function (req, res, next) {
             if (req.query.not) {
                 if (peripheralFilters[req.query.not].includes('!='))
                     peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('!=', '=');
-                else if (peripheralFilters[req.query.not].includes('!(')){
+                else if (peripheralFilters[req.query.not].includes('!(')) {
                     peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('!(', '(');
                 }
-                else if (peripheralFilters[req.query.not].includes('(')){
+                else if (peripheralFilters[req.query.not].includes('(')) {
                     peripheralFilters[req.query.not] = peripheralFilters[req.query.not].replace('(', '!(');
                 }
 
@@ -656,7 +656,7 @@ router.get('/peripheralTable', function (req, res, next) {
             else if (req.query.sortby === 'Item') {
                 query += ' ORDER BY Item';
             }
-            else if(req.query.sortby){
+            else if (req.query.sortby) {
                 query += ' ORDER BY ';
                 query += req.query.sortby;
             }
@@ -728,10 +728,10 @@ router.get('/printerTable', function (req, res, next) {
             if (req.query.not) {
                 if (printerFilters[req.query.not].includes('!='))
                     printerFilters[req.query.not] = printerFilters[req.query.not].replace('!=', '=');
-                else if (printerFilters[req.query.not].includes('!(')){
+                else if (printerFilters[req.query.not].includes('!(')) {
                     printerFilters[req.query.not] = printerFilters[req.query.not].replace('!(', '(');
                 }
-                else if (printerFilters[req.query.not].includes('(')){
+                else if (printerFilters[req.query.not].includes('(')) {
                     printerFilters[req.query.not] = printerFilters[req.query.not].replace('(', '!(');
                 }
 
@@ -787,7 +787,7 @@ router.get('/printerTable', function (req, res, next) {
             else if (req.query.sortby === 'LesOlsonID') {
                 query += ' ORDER BY LesOlsonID';
             }
-            else if(req.query.sortby){
+            else if (req.query.sortby) {
                 query += ' ORDER BY ';
                 query += req.query.sortby;
             }
@@ -899,10 +899,10 @@ router.get('/card', function (req, res, next) {
     let monitorShowOptions = {};
     let printerShowOptions = {};
     let peripheralShowOptions = {};
-    if(!req.query.surplussing || req.query.surplussing === ''){
+    if (!req.query.surplussing || req.query.surplussing === '') {
         surplussing = 'false';
     }
-    else{
+    else {
         surplussing = req.query.surplussing;
     }
 
@@ -958,7 +958,7 @@ router.get('/card', function (req, res, next) {
             if (surplussing === 'true') {
                 query += ' AND Surplussing = true';
             }
-            query  += ' GROUP BY Printer.ICN;';
+            query += ' GROUP BY Printer.ICN;';
             return database.query(query);
         })
         .then(rows => {
@@ -2678,12 +2678,17 @@ router.get('/updatePageCounts', function (req, res, next) {
 router.get('/search', function (req, res, next) {
     console.log(req.query.searchTerms);
     let searchTerms = req.query.searchTerms;
-    if(searchTerms[searchTerms.length -1] === ' '){
-        searchTerms = searchTerms.substr(0, searchTerms.length -1);
+    if (searchTerms[searchTerms.length - 1] === ' ') {
+        searchTerms = searchTerms.substr(0, searchTerms.length - 1);
     }
     let user = JSON.parse(vault.read(req));
     let filterQuery = 'SELECT * FROM Filters WHERE user = \'' + user.netId + '\'';
-    searchTerms = "%" + searchTerms + "%";
+    if (isNaN(searchTerms)) {
+        searchTerms = "%" + searchTerms + "%";
+    }
+    else{
+        searchTerms = parseInt(searchTerms);
+    }
     let database = new Database(config.getConfig());
     let showOptions = {};
     let employeeRows = {};
@@ -2880,12 +2885,20 @@ router.get('/email', function (req, res, next) {
     let inventoriedArr = [];
     let notInventoriedArr = [];
     let total = [];
-    let showOptions = {Item: true, ICN: true, Make: true, Model: true,  SerialNumber: true};
-    let peripheralShowOptions = {ICN: true, SerialNumber: true, Item: true, Make: true, Model: true, "MAX(Inventory.CurrentDate)": true, order: true};
-    if(!req.query.surplussing || req.query.surplussing === ''){
+    let showOptions = {Item: true, ICN: true, Make: true, Model: true, SerialNumber: true};
+    let peripheralShowOptions = {
+        ICN: true,
+        SerialNumber: true,
+        Item: true,
+        Make: true,
+        Model: true,
+        "MAX(Inventory.CurrentDate)": true,
+        order: true
+    };
+    if (!req.query.surplussing || req.query.surplussing === '') {
         surplussing = 'false';
     }
-    else{
+    else {
         surplussing = req.query.surplussing;
     }
 
@@ -2908,7 +2921,7 @@ router.get('/email', function (req, res, next) {
                 if (computer['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(computer['MAX(Inventory.CurrentDate)']);
                     computer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
-                    if(date.getFullYear() === currentDate.getFullYear() || date.getFullYear() === currentDate.getFullYear() -1){
+                    if (date.getFullYear() === currentDate.getFullYear() || date.getFullYear() === currentDate.getFullYear() - 1) {
                         computer.order = 1;
                     }
                     else {
@@ -2934,7 +2947,7 @@ router.get('/email', function (req, res, next) {
                 if (monitor['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(monitor['MAX(Inventory.CurrentDate)']);
                     monitor['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
-                    if(date.getFullYear() === currentDate.getFullYear() || date.getFullYear() === currentDate.getFullYear() -1){
+                    if (date.getFullYear() === currentDate.getFullYear() || date.getFullYear() === currentDate.getFullYear() - 1) {
                         monitor.order = 1;
                     }
                     else {
@@ -2950,7 +2963,7 @@ router.get('/email', function (req, res, next) {
             if (surplussing === 'true') {
                 query += ' AND Surplussing = true';
             }
-            query  += ' GROUP BY Printer.ICN;';
+            query += ' GROUP BY Printer.ICN;';
             return database.query(query);
         })
         .then(rows => {
@@ -2960,7 +2973,7 @@ router.get('/email', function (req, res, next) {
                 if (printer['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(printer['MAX(Inventory.CurrentDate)']);
                     printer['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
-                    if(date.getFullYear() === currentDate.getFullYear() || date.getFullYear() === currentDate.getFullYear() -1){
+                    if (date.getFullYear() === currentDate.getFullYear() || date.getFullYear() === currentDate.getFullYear() - 1) {
                         printer.order = 1;
                     }
                     else {
@@ -2985,7 +2998,7 @@ router.get('/email', function (req, res, next) {
                 if (peripheral['MAX(Inventory.CurrentDate)']) {
                     let date = new Date(peripheral['MAX(Inventory.CurrentDate)']);
                     peripheral['MAX(Inventory.CurrentDate)'] = monthNames[date.getMonth()] + ' ' + date.getFullYear();
-                    if(date.getFullYear() === currentDate.getFullYear() || date.getFullYear() === currentDate.getFullYear() -1){
+                    if (date.getFullYear() === currentDate.getFullYear() || date.getFullYear() === currentDate.getFullYear() - 1) {
                         peripheral.order = 1;
                     }
                     else {
@@ -3001,28 +3014,28 @@ router.get('/email', function (req, res, next) {
         })
         .then(() => {
             total = [...computerRows, ...monitorRows, ...printerRows, ...peripheralRows];
-            for(let row of total) {
-                if(row.order === 1){
+            for (let row of total) {
+                if (row.order === 1) {
                     inventoriedArr.push(row);
                 }
                 else {
                     notInventoriedArr.push(row);
                 }
             }
-            inventoriedArr.sort(function (a,b) {
+            inventoriedArr.sort(function (a, b) {
                 return a.ICN - b.ICN;
             });
-            notInventoriedArr.sort(function (a,b) {
+            notInventoriedArr.sort(function (a, b) {
                 return a.ICN - b.ICN;
             });
         })
         .then(() => {
             // do something with someRows and otherRows
-            if(!notInventoriedArr.length){
+            if (!notInventoriedArr.length) {
                 res.status(500);
-                res.render('error', { error: 'Everything has been inventoried' });
+                res.render('error', {error: 'Everything has been inventoried'});
             }
-            else{
+            else {
                 res.render('email', {
                     employee: employeeRows[0],
                     computers: computerRows,
@@ -3304,7 +3317,7 @@ router.post('/updatePageCount', function (req, res, next) {
     let Type = req.query.Type;
     database.query('SELECT MAX(PageCount) FROM PageCounts WHERE ICN = ' + ICN)
         .then(rows => {
-            if(rows[0]['MAX(PageCount)'] <= parseInt(PageCount)){
+            if (rows[0]['MAX(PageCount)'] <= parseInt(PageCount)) {
                 return database.query('INSERT INTO PageCounts (ICN, PageCount, Date, Type) VALUES (?,?, ?, ?)', [ICN, PageCount, getCurrentDate(), Type]);
             }
             else {
@@ -3363,7 +3376,7 @@ router.get('/accordian', function (req, res, next) {
             checkInventoried(peripherals);
             return database.close();
         })
-        .then(()=> {
+        .then(() => {
             res.render('Accordian', {
                 location,
                 employees,

@@ -26,6 +26,10 @@ block content
                 div.mobileButton.byu-button.royal(href='/computerTable') New Printer
                 div.mobileButton.byu-button.royal(onclick='newPeripheral(#{employee.EmployeeID})') New Peripheral
             if(employee.EmployeeID === 300)
+                script.
+                    $(document).ready(function () {
+                        $('.table').DataTable();
+                    });
                 br
                 br
                 if(surplussing === 'false')
@@ -140,11 +144,6 @@ block content
 
     br
     script.
-        if("#{employee.EmployeeID}" === "300"){
-            $(document).ready(function () {
-                $('.table').DataTable();
-            });
-        }
         function surplus(ICN, table) {
             $.ajax({
                 type: "GET",
