@@ -32,9 +32,9 @@ mixin createTable(showOptions, computers, table)
                                             i(class='material-icons')= 'touch_app'
                                     else if(key === 'Surplussing')
                                         if(computer[key] === 0)
-                                            button.byu-button.navy(onclick='surplus(#{computer.ICN})' id='surplusButton#{computer.ICN}') Surplus
+                                            button.byu-button.navy(onclick='surplus(#{computer.ICN}, "#{table}")' id='surplusButton#{computer.ICN}') Surplus
                                         else
-                                            button.byu-button.whitenavy(onclick='undo(#{computer.ICN})' id='surplusButton#{computer.ICN}') Undo
+                                            button.byu-button.whitenavy(onclick='undo(#{computer.ICN}, "#{table}")' id='surplusButton#{computer.ICN}') Undo
                                     else
                                         div= computer[key]
                 .miniCard
