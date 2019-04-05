@@ -115,7 +115,7 @@ block content
                 h3.left= Object.keys(computers).length
         .test
             div(style='overflow-x:auto;')
-                +createTable(computerShowOptions, computers, 'computer', true, 'asc')
+                +createTable(computerShowOptions, computers, 'Computer', true, 'asc')
 
 
     if(Object.keys(monitors).length)
@@ -124,7 +124,7 @@ block content
             if(!employee)
                 h3.left= Object.keys(monitors).length
         .test
-            +createTable(monitorShowOptions, monitors, 'monitor')
+            +createTable(monitorShowOptions, monitors, 'Monitor')
 
     if(Object.keys(printers).length)
         .titles
@@ -132,7 +132,7 @@ block content
             if(!employee)
                 h3.left= Object.keys(printers).length
         .test
-            +createTable(printerShowOptions, printers, 'printer')
+            +createTable(printerShowOptions, printers, 'Printer')
 
     if(Object.keys(peripherals).length)
         .titles
@@ -140,7 +140,7 @@ block content
             if(!employee)
                 h3.left= Object.keys(peripherals).length
         .test
-            +createTable(peripheralShowOptions, peripherals, 'peripheral')
+            +createTable(peripheralShowOptions, peripherals, 'Peripheral')
 
     br
     script.
