@@ -3334,6 +3334,40 @@ router.post('/updatePageCount', function (req, res, next) {
         })
 });
 
+router.get('/selectSurplussing', function(req,res,next) {
+    let database = new Database(config.getConfig());
+    let computerQuery = `SELECT * FROM Computer WHERE Surplussing = 1`;
+    let monitorQuery = `SELECT * FROM Monitor WHERE Surplussing = 1`;
+    let printerQuery = `SELECT * FROM Printer WHERE Surplussing = 1`;
+    let peripheralQuery = `SELECT * FROM Peripheral WHERE Surplussing = 1`;
+
+    let computers = {};
+    let monitors = {};
+    let printers = {};
+    let peripherals = {};
+
+    database.query(computerQuery)
+        .then(rows => {
+            computers = rows;
+            return database.query(monitorQuery);
+        })
+        .then(rows => {
+            monitors = rows;
+            return database.query(printerQuery);
+        })
+        .then(rows => {
+            printers = rows;
+            return database.query(peripheralQuery);
+        })
+        .then(rows => {
+            peripherals = rows;
+            return database.close();
+        })
+        .then(() => {
+            res.send(`This action will move ${computers.length} Computers, ${monitors.length} Monitors, ${printers.length} Printers, and ${peripherals.length} Peripherals to the BYU Surplus user.`)
+        })
+});
+
 router.get('/test', function (req, res, next) {
     let test = {
         test1: 'test1',
