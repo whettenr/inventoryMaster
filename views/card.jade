@@ -28,7 +28,9 @@ block content
             if(employee.EmployeeID === 300)
                 script.
                     $(document).ready(function () {
-                        $('.table').DataTable();
+                        $('.table').DataTable({
+                            "paging": false
+                        });
                     });
                 br
                 br
