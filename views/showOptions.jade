@@ -9,16 +9,16 @@ block content
                             div.byu-button.navy(onclick='change("pageCount")' id='pageCountDiv') Page Count
                             input(type='hidden' id='pageCount' name=i value='#{showOption}')
                         else
-                            div.byu-button.navy(onclick='change(#{i})' id=i+'Div')= i
-                                input(type='hidden' id=i name=i value='#{showOption}')
+                            div.byu-button.navy(onclick='change("#{i}")' id=i.replace(/\./g, '').replace('(', '').replace(')', '')+'Div')= i
+                                input(type='hidden' id=i.replace(/\./g, '').replace('(', '').replace(')', '') name=i value='#{showOption}')
                         br
                     else
                         if(i === 'Max(PageCounts.PageCount)')
                             div.byu-button.whitenavy(onclick='change("pageCount")' id='pageCountDiv') Page Count
                             input(type='hidden' id='pageCount' name=i value='#{showOption}')
                         else
-                            div.byu-button.whitenavy(onclick='change(#{i})' id=i+'Div')= i
-                                input(type='hidden' id=i name=i value='#{showOption}')
+                            div.byu-button.whitenavy(onclick='change("#{i}")' id=i.replace(/\./g, '').replace('(', '').replace(')', '')+'Div')= i
+                                input(type='hidden' id=i.replace(/\./g, '').replace('(', '').replace(')', '') name=i value='#{showOption}')
                         br
                 input(type='hidden' name='table' value='#{table}')
                 div(style='max-width: 100px;')
@@ -29,7 +29,7 @@ block content
             $("#form").submit();
         }
         function change(id){
-            let trueId = id;
+            let trueId = id.replace(/\./g, '').replace('(', '').replace(')', '');
             if(id.id){
                 trueId = id.id;
             }
