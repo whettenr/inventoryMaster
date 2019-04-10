@@ -2768,6 +2768,7 @@ router.get('/search', function (req, res, next) {
 
 router.get('/showOptions', function (req, res, next) {
     let database = new Database(config.getConfig());
+    let jsbStorage = req.query.jsbStorage;
     let user = JSON.parse(vault.read(req));
     let table = req.query.table;
     let properTable = '';
@@ -2791,6 +2792,7 @@ router.get('/showOptions', function (req, res, next) {
                 title: table + ' Show Options',
                 table: properTable,
                 location,
+                jsbStorage,
                 user: JSON.parse(vault.read(req))
             })
         })
@@ -3065,10 +3067,11 @@ router.get('/email', function (req, res, next) {
 router.post('/showOptions', function (req, res, next) {
     let database = new Database(config.getConfig());
     let user = JSON.parse(vault.read(req));
+    let jsbStorage = req.body.jsbStorage;
     let table = req.body.table;
     let showOptions = {};
     for (let showOption in req.body) {
-        if (showOption !== 'table') {
+        if (showOption !== 'table' && showOption !== 'jsbStorage') {
             if (req.body[showOption] === 'true') {
                 showOptions[showOption] = true;
             }
@@ -3080,7 +3083,12 @@ router.post('/showOptions', function (req, res, next) {
 
     database.query('UPDATE Filters SET ' + table + 'ShowOptions = \'' + JSON.stringify(showOptions) + '\' WHERE User = \'' + user.netId + '\'')
         .then(rows => {
-            res.redirect(location + '/' + table + 'Table');
+            if(jsbStorage !== 'undefined'){
+                res.redirect(location + '/card?EmployeeID=300');
+            }
+            else {
+                res.redirect(location + '/' + table + 'Table');
+            }
         })
         .catch(err => {
             console.log(err);

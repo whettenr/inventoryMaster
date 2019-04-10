@@ -115,6 +115,7 @@ block content
     if(Object.keys(computers).length)
         .titles
             h4 Computers:
+            a.byu-button.royal(href=location+'/showOptions?table=computer&jsbStorage=1') Computer Show Options
             if(!employee)
                 h3.left= Object.keys(computers).length
         .test
@@ -125,6 +126,7 @@ block content
     if(Object.keys(monitors).length)
         .titles
             h4 Monitors:
+            a.byu-button.royal(href=location + '/showOptions?table=monitor&jsbStorage=1') Monitor Show Options
             if(!employee)
                 h3.left= Object.keys(monitors).length
         .test
@@ -133,6 +135,7 @@ block content
     if(Object.keys(printers).length)
         .titles
             h4 Printers:
+            a.byu-button.royal(href=location + '/showOptions?table=printer&jsbStorage=1') Printer Show Options
             if(!employee)
                 h3.left= Object.keys(printers).length
         .test
@@ -141,6 +144,7 @@ block content
     if(Object.keys(peripherals).length)
         .titles
             h4 Peripherals:
+            a.byu-button.royal(href=location + '/showOptions?table=peripheral&jsbStorage=1') Peripheral Show Options
             if(!employee)
                 h3.left= Object.keys(peripherals).length
         .test

@@ -21,6 +21,7 @@ block content
                                 input(type='hidden' id=i.replace(/\./g, '').replace('(', '').replace(')', '') name=i value='#{showOption}')
                         br
                 input(type='hidden' name='table' value='#{table}')
+                input(type='hidden' name='jsbStorage' value='#{jsbStorage}')
                 div(style='max-width: 100px;')
                     button.byu-button.green(onclick='submit()')= 'Submit'
 
