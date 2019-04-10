@@ -35,18 +35,18 @@ block content
                                 option(value=makeOption.Make) #{makeOption.Make}
                 .row
                     .col-25
-                        label(for='model') Model:
-                    .col-75
-                        select#model.custom-select.sources(name='model', placeholder='Model' onchange='newModel();')
-                            each modelOption in modelOptions
-                                option(value=modelOption.Model) #{modelOption.Model}
-                .row
-                    .col-25
                         label(for='item') Item:
                     .col-75
                         select#item.custom-select.sources(name='item', placeholder='Item' onChange='newItem();')
                             each itemOption in itemOptions
                                 option(value=itemOption.Item) #{itemOption.Item}
+                .row
+                    .col-25
+                        label(for='model') Model:
+                    .col-75
+                        select#model.custom-select.sources(name='model', placeholder='Model' onchange='newModel();')
+                            each modelOption in modelOptions
+                                option(value=modelOption.Model) #{modelOption.Model}
                 .row
                     .col-25
                         label(for='serialNumber') Serial Number:
@@ -124,15 +124,7 @@ block content
                     $("#model").val(model);
                 }
             }
-            else {
-                $.ajax({
-                    type: "GET",
-                    url: "#{location}/getItemOptions?model=" + $("#model").val(),
-                    data: {format: 'html'}
-                }).done(function (data) {
-                    $("#item").html(data);
-                });
-            }
+
         }
 
         function newItem() {
@@ -143,6 +135,16 @@ block content
                     $("#item").append(new Option(item, item));
                     $("#item").val(item);
                 }
+            }
+            else {
+                $.ajax({
+                    type: "GET",
+                    url: "#{location}/getPeripheralModelOptions?item=" + $("#item").val(),
+                    data: {format: 'html'}
+                }).done(function (data) {
+                    $("#model").html(data);
+                });
+
             }
         }
 
@@ -159,10 +161,11 @@ block content
             else {
                 $.ajax({
                     type: "GET",
-                    url: "#{location}/getPeripheralModelOptions?make=" + $("#make").val(),
+                    url: "#{location}/getItemOptions?make=" + $("#make").val(),
                     data: {format: 'html'}
                 }).done(function (data) {
-                    $("#model").html(data);
+                    $("#item").html(data);
+                    console.log(data);
                 });
             }
         }

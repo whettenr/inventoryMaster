@@ -29,7 +29,8 @@ block content
                 script.
                     $(document).ready(function () {
                         $('.table').DataTable({
-                            "paging": false
+                            "paging": false,
+                            "bInfo" : false
                         });
                     });
                 br
@@ -38,6 +39,7 @@ block content
                     a.byu-button.royal(href='#{location}/card?EmployeeID=300&surplussing=true')= 'Show only surplussing'
                 else
                     a.byu-button.royal(href='#{location}/card?EmployeeID=300&surplussing=false')= 'Show Everything'
+                    button.byu-button.royal(onclick='selectSurplussing();') Send to BYU Surplus
 
             br
         br
@@ -146,6 +148,24 @@ block content
 
     br
     script.
+        function selectSurplussing(){
+            $.ajax({
+                type: "GET",
+                url: "#{location}/selectSurplussing",
+                data: {format: 'html'}
+            }).done(function (data) {
+                let confirmation = confirm(data);
+                if(confirmation){
+                    $.ajax({
+                        type: "GET",
+                        url: "#{location}/sendToSurplus"
+                    }).done(function (data) {
+                        window.location.href = "#{location}/card?EmployeeID=400";
+                    });
+                }
+            });
+        }
+
         function surplus(ICN, table) {
             $.ajax({
                 type: "GET",

@@ -1149,12 +1149,12 @@ router.get('/getGraphicsCardOptions', function (req, res, next) {
 });
 
 router.get('/getPeripheralModelOptions', function (req, res, next) {
-    let Make = req.query.make;
+    let Item = req.query.item;
     let database = new Database(config.getConfig());
 
     let modelOptions = {};
 
-    database.query('SELECT DISTINCT Model FROM Peripheral WHERE Make = ? AND EmployeeID != 400 ORDER BY Model', [Make])
+    database.query('SELECT DISTINCT Model FROM Peripheral WHERE Item = ? AND EmployeeID != 400 ORDER BY Model', [Item])
         .then(rows => {
             modelOptions = rows;
             modelOptions[modelOptions.length] = {Model: 'None'};
@@ -1171,12 +1171,12 @@ router.get('/getPeripheralModelOptions', function (req, res, next) {
 });
 
 router.get('/getItemOptions', function (req, res, next) {
-    let Model = req.query.model;
+    let Make = req.query.make;
     let database = new Database(config.getConfig());
 
     let itemOptions = {};
 
-    database.query('SELECT DISTINCT Item FROM Peripheral WHERE Model = ? AND EmployeeID != 400 ORDER BY Item', [Model])
+    database.query('SELECT DISTINCT Item FROM Peripheral WHERE Make = ? AND EmployeeID != 400 ORDER BY Item', [Make])
         .then(rows => {
             itemOptions = rows;
             itemOptions[itemOptions.length] = {Item: 'None'};
@@ -2686,7 +2686,7 @@ router.get('/search', function (req, res, next) {
     if (isNaN(searchTerms)) {
         searchTerms = "%" + searchTerms + "%";
     }
-    else{
+    else {
         searchTerms = parseInt(searchTerms);
     }
     let database = new Database(config.getConfig());
@@ -3334,12 +3334,12 @@ router.post('/updatePageCount', function (req, res, next) {
         })
 });
 
-router.get('/selectSurplussing', function(req,res,next) {
+router.get('/selectSurplussing', function (req, res, next) {
     let database = new Database(config.getConfig());
-    let computerQuery = `SELECT * FROM Computer WHERE Surplussing = 1`;
-    let monitorQuery = `SELECT * FROM Monitor WHERE Surplussing = 1`;
-    let printerQuery = `SELECT * FROM Printer WHERE Surplussing = 1`;
-    let peripheralQuery = `SELECT * FROM Peripheral WHERE Surplussing = 1`;
+    let computerQuery = `SELECT * FROM Computer WHERE Surplussing = 1 AND EmployeeID = 300`;
+    let monitorQuery = `SELECT * FROM Monitor WHERE Surplussing = 1 AND EmployeeID = 300`;
+    let printerQuery = `SELECT * FROM Printer WHERE Surplussing = 1 AND EmployeeID = 300`;
+    let peripheralQuery = `SELECT * FROM Peripheral WHERE Surplussing = 1 AND EmployeeID = 300`;
 
     let computers = {};
     let monitors = {};
@@ -3365,6 +3365,32 @@ router.get('/selectSurplussing', function(req,res,next) {
         })
         .then(() => {
             res.send(`This action will move ${computers.length} Computers, ${monitors.length} Monitors, ${printers.length} Printers, and ${peripherals.length} Peripherals to the BYU Surplus user.`)
+        })
+});
+
+router.get('/sendToSurplus', function (req, res, next) {
+    let database = new Database(config.getConfig());
+    let date = new Date();
+    let name = JSON.parse(vault.read(req)).name;
+    if (!name) {
+        name = JSON.parse(vault.read(req)).netId;
+    }
+    let computerQuery = `UPDATE Computer SET EmployeeID = 400, History = CONCAT(History, '${date.toDateString()} Surplussed by ${name} \n') WHERE Surplussing = 1 AND EmployeeID = 300`;
+    let monitorQuery = `UPDATE Monitor SET EmployeeID = 400, History = CONCAT(History, '${date.toDateString()} Surplussed by ${name} \n') WHERE Surplussing = 1 AND EmployeeID = 300`;
+    let printerQuery = `UPDATE Printer SET EmployeeID = 400, History = CONCAT(History, '${date.toDateString()} Surplussed by ${name} \n') WHERE Surplussing = 1 AND EmployeeID = 300`;
+    let peripheralQuery = `UPDATE Peripheral SET EmployeeID = 400, History = CONCAT(History, '${date.toDateString()} Surplussed by ${name} \n') WHERE Surplussing = 1 AND EmployeeID = 300`;
+    database.query(computerQuery)
+        .then(() => {
+            return database.query(monitorQuery);
+        })
+        .then(() => {
+            return database.query(printerQuery);
+        })
+        .then(() => {
+            return database.query(peripheralQuery);
+        })
+        .then(() => {
+            res.send('done');
         })
 });
 
