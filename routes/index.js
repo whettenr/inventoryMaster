@@ -3305,7 +3305,7 @@ router.post('/employee', function (req, res, next) {
         req.body.homeCheckout = 'off';
     }
     database.query("UPDATE Employee SET FirstName = ?, LastName = ?, Category = ?, Office = ?, Building = ?, Email = ?, UserName = ?, RotationGroup = ?, DateSwitched = ?, `Employee Notes` = ?, PictureURL = ? WHERE EmployeeID = ?",
-        [req.body.firstName, req.body.lastName, req.body.category, req.body.office, req.body.building, req.body.email, req.body.userName, req.body.rotationGroup, req.body.dateSwitched, req.body.notes, req.body.pictureURL, req.body.employeeId])
+        [req.body.firstName, req.body.lastName, req.body.category, req.body.office, req.body.building, req.body.email, req.body.username, req.body.rotationGroup, req.body.dateSwitched, req.body.notes, req.body.pictureURL, req.body.employeeId])
         .then(rows => {
             return database.close();
         })
