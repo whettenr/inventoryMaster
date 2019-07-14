@@ -3457,7 +3457,69 @@ router.get('/accordian', function (req, res, next) {
         .catch(err => {
             console.log(err);
         });
+});
 
+router.get('/oldToNew', function (req, res, next){
+    let database = new Database(config.getConfig());
+    let tables = [];
+    let columns = {};
+    database.query(`SHOW TABLES;`)
+        .then(results => {
+            tables = results;
+            console.log(results);
+        })
+        .then(async ()=>{
+            for(table of tables){
+                columns[table.Tables_in_inventory] = await database.query(`SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'${table.Tables_in_inventory}';`);
+            }
+        })
+        .then(()=>{
+            database.close();
+            res.render('oldToNew', {
+                tables,
+                location,
+                columns: JSON.stringify(columns)
+            })
+        })
+        .catch(err => {
+            database.close();
+            console.log(err);
+        })
+});
+
+router.get('/values', function(req, res, next){
+    let database = new Database(config.getConfig());
+    let {table, column} = req.query;
+    let query = `SELECT DISTINCT ?? FROM ??;`;
+    let options = [column, table];
+    database.query(query, options)
+        .then(results => {
+            console.log(results);
+            database.close();
+            res.send(results);
+        })
+        .catch(err => {
+            database.close();
+            console.log(err);
+        })
+});
+
+router.post('/updateValues', function(req, res, next){
+    let database = new Database(config.getConfig());
+    let {table, column, value, newValue} = req.body;
+    let query = `UPDATE ?? SET ?? = ? WHERE ?? = ?;`;
+    let options = [table, column, newValue, column, value];
+    database.query(query, options)
+        .then(results => {
+            console.log(results);
+            database.close();
+            res.send(results);
+        })
+        .catch(err => {
+            database.close();
+            console.log(err);
+        });
+    console.log(req.body);
 });
 
 module.exports = router;

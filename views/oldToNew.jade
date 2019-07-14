@@ -1,0 +1,72 @@
+extends layout
+
+block content
+    script.
+        function updateColumns() {
+            let columns = JSON.parse(document.querySelector('#columnsJSON').innerHTML);
+            let table = document.querySelector('#table').value;
+            let domColumns = document.querySelector('#columns');
+            domColumns.innerHTML = '';
+            for (let column of columns[table]) {
+                let option = document.createElement('option');
+                option.value = column.COLUMN_NAME;
+                option.innerHTML = column.COLUMN_NAME;
+                domColumns.appendChild(option);
+            }
+        }
+        function updateValues() {
+            let table = document.querySelector('#table').value;
+            let column = document.querySelector('#columns').value;
+            let values = document.querySelector('#values');
+            values.innerHTML = '';
+            $.ajax({
+                type: "GET",
+                url: `#{location}/values?table=${table}&column=${column}`,
+                data: {format: 'html'}
+            }).done(function (data) {
+                for (let value of data) {
+                    let option = document.createElement('option');
+                    option.value = value[column];
+                    option.innerHTML = value[column];
+                    values.appendChild(option);
+                }
+            });
+        }
+
+        function submit() {
+            let table = document.querySelector('#table').value;
+            let column = document.querySelector('#columns').value;
+            let value = document.querySelector('#values').value;
+            let newValue = document.querySelector('#newValue').value;
+            let json = {table, column, value, newValue};
+            $.ajax({
+                type: "POST",
+                url: `#{location}/updateValues`,
+                dataType: "json",
+                data: json,
+                headers: {
+                    contentType: 'application/json'
+                },
+            }).done(function (data) {
+                console.log(data);
+                alert(`Successfully changed ${data.affectedRows} Rows`);
+            });
+        }
+
+    body
+        div#columnsJSON(style='display: none;')=columns
+        | Table:
+        select#table(onchange='updateColumns();')
+            option
+                | None
+            each option in tables
+                option= option.Tables_in_inventory
+        | Column:
+        select#columns(onchange='updateValues();')
+        | Old Value:
+        select#values
+        div(style='display:inline-block')
+            | New Value:
+            input#newValue(type='text' style='width: 50%; border: 1px solid black;')
+        button.byu-button.royal(onclick='submit();')
+            | Submit

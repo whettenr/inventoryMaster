@@ -64,7 +64,7 @@ module.exports = function (req, res, next) {
         // console.log("goto2: " + goTo);
         let service = URL + '/getTicket?goTo=' + goTo;
         let user = '';
-        if (goTo = '') {
+        if (goTo === '') {
             goTo = '/'
         }
         let query = req.query;

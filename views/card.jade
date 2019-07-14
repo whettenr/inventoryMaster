@@ -26,6 +26,9 @@ block content
                 div.mobileButton.byu-button.royal(href='/computerTable') New Printer
                 div.mobileButton.byu-button.royal(onclick='newPeripheral(#{employee.EmployeeID})') New Peripheral
             if(employee.EmployeeID === 300)
+                br
+                br
+                a.byu-button.royal(href='#{location}/oldToNew') Update Tables
                 script.
                     $(document).ready(function () {
                         $('.table').DataTable({
