@@ -7,7 +7,7 @@ block content
         .titles
             if(employee.PictureURL)
                 img.pic(src='#{employee.PictureURL}' onerror='javascript:this.src="images/default.png"')
-            if(employee.FirstName)
+            if(employee.FirstName || employee.LastName)
                 h1.left
                     a(href='#{location}/employee?EmployeeID=#{employee.EmployeeID}') #{employee.FirstName} #{employee.LastName}
             else
