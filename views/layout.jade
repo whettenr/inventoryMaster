@@ -28,7 +28,7 @@ html
             if(actionButton)
                 a(slot='actions' href='#{location}/#{actionButton.href}' style='padding-right: 25px;')= actionButton.name
 
-            byu-search(slot="search", action="submit-form", method="get", placeholder="search")
+            byu-search(slot="search", action="submit-form", method="get", placeholder="Search")
                 form(method="get" action="#{location}/search")
                     input(type="search" name="searchTerms")
             byu-user-info(slot="user")
