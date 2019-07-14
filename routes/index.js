@@ -3477,6 +3477,7 @@ router.get('/oldToNew', function (req, res, next){
             database.close();
             res.render('oldToNew', {
                 tables,
+                user: JSON.parse(vault.read(req)),
                 location,
                 columns: JSON.stringify(columns)
             })
