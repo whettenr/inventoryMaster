@@ -46,7 +46,7 @@ function checkUser(user) {
         return false;
     }
     else {
-        let possiblities = ['mmcourt', 'bquinlan', 'rbc9', 'mr28'];
+        let possiblities = ['mmcourt', 'bquinlan', 'rbc9', 'mr28', 'rmw78'];
         for (let i in possiblities) {
             if (possiblities[i] === user.netId) {
                 return true;
