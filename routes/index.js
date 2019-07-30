@@ -3491,7 +3491,13 @@ router.get('/oldToNew', function (req, res, next){
 router.get('/values', function(req, res, next){
     let database = new Database(config.getConfig());
     let {table, column} = req.query;
-    let query = `SELECT DISTINCT ?? FROM ??;`;
+    let query = `SELECT DISTINCT ?? FROM ?? WHERE EmployeeID != 400`;
+    if(table === 'Filters'){
+        query = `SELECT DISTINCT ?? FROM ??`;
+    }
+    if(table === 'Hardware'){
+        query = `SELECT DISTINCT ?? FROM ?? join Computer on Computer.HardwareID = Hardware.HardwareID WHERE EmployeeID != 400`;
+    }
     let options = [column, table];
     database.query(query, options)
         .then(results => {
