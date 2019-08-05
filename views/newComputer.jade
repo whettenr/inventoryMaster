@@ -97,40 +97,40 @@ block content
                     .col-25
                         label(for='screenResolution') Screen Resolution:
                     .col-75
-                        input#screenResolution(type='text' name='screenResolution', placeholder='3840x2160')
+                        input#screenResolution(type='text' name='screenResolution', placeholder='3840x2160' required)
                 .row
                     .col-25
                         label(for='processorType') Processor Type:
                     .col-75
-                        select#processorType.custom-select.sources(name='processorType' onchange='newProcessorType();')
+                        select#processorType.custom-select.sources(name='processorType' onchange='newProcessorType();' required)
                             each processorType in processorTypeOptions
                                 option(value=processorType.ProcessorType) #{processorType.ProcessorType}
                 .row
                     .col-25
                         label(for='processorSpeed') Processor Speed:
                     .col-75
-                        select#processorSpeed.custom-select.sources(name='processorSpeed' onchange='newProcessorSpeed();')
+                        select#processorSpeed.custom-select.sources(name='processorSpeed' onchange='newProcessorSpeed();' required)
                             each processorSpeed in processorSpeedOptions
                                 option(value=processorSpeed.ProcessorSpeed) #{processorSpeed.ProcessorSpeed}
                 .row
                     .col-25
                         label(for='memory') Memory:
                     .col-75
-                        select#memory.custom-select.sources(name='memory' onchange='newMemory();')
+                        select#memory.custom-select.sources(name='memory' onchange='newMemory();' required)
                             each memory in memoryOptions
                                 option(value=memory.Memory) #{memory.Memory}
                 .row
                     .col-25
                         label(for='hardDrive') Hard Drive:
                     .col-75
-                        select#hardDrive.custom-select.sources(name='hardDrive' onchange='newHardDrive();')
+                        select#hardDrive.custom-select.sources(name='hardDrive' onchange='newHardDrive();' required)
                             each hardDrive in hardDriveOptions
                                 option(value=hardDrive.HardDrive) #{hardDrive.HardDrive}
                 .row
                     .col-25
                         label(for='graphicsCard') Graphics Card:
                     .col-75
-                        select#graphicsCard.custom-select.sources(name='graphicsCard' onchange='newGraphicsCard();')
+                        select#graphicsCard.custom-select.sources(name='graphicsCard' onchange='newGraphicsCard();' required)
                             each graphicsCard in graphicsCardOptions
                                 option(value=graphicsCard.VCName) #{graphicsCard.VCName}
                 .row
