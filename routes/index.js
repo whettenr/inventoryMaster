@@ -13,6 +13,11 @@ let vault = cookiee('ciao');
 let axios = require('axios');
 // let users = require('./users')();
 // let axios = require('axios');
+var expressValidator = require('express-validator');
+
+
+let morgan = require('morgan')
+router.use(morgan('short'))
 
 class Database {
     constructor(config) {
@@ -1650,6 +1655,7 @@ router.get('/newComputer', function (req, res, next) {
     let hardDriveOptions = {};
     let graphicsCardOptions = {};
 
+
     let database = new Database(config.getConfig());
     database.query('SELECT * FROM Computer ORDER BY ICN DESC LIMIT 1')
         .then(rows => {
@@ -1709,8 +1715,10 @@ router.get('/newComputer', function (req, res, next) {
             graphicsCardOptions[graphicsCardOptions.length] = {VCName: 'Add a New Option'};
             return database.close();
         })
+
         .then(() => {
             res.render('newComputer', {
+
                 title: employee.FirstName + ' ' + employee.LastName + '\'s New Computer',
                 makeOptions,
                 modelOptions,
@@ -3104,6 +3112,16 @@ router.post('/newComputer', function (req, res, next) {
     if (!req.body.touch) {
         req.body.touch = 'off';
     }
+    console.log("right before new Database");
+
+    // check data here?
+    console.log(req.body);
+    if(req.body.make) {
+        console.log(req.body.make);
+    } else {
+        console.log("got no make")
+    }
+
 
     database.query('SELECT * FROM Hardware WHERE ProcessorType = ? and ProcessorSpeed = ? and Memory = ? and HardDrive = ? and VCName = ? and ScreenResolution = ? and Touch = ?', [req.body.processorType, req.body.processorSpeed, req.body.memory, req.body.hardDrive, req.body.graphicsCard, req.body.screenResolution, req.body.touch])
         .then(rows => {
@@ -3127,6 +3145,7 @@ router.post('/newComputer', function (req, res, next) {
             }
         })
         .then(() => {
+            console.log("after render new computer");
             return database.close();
         })
         .then(() => {

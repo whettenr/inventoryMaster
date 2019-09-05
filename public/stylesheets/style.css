@@ -45,11 +45,11 @@ a:visited{
   text-decoration: none;
 }
 
-.dropdown {
-  overflow: hidden;
-}
+/*.dropdown {
+  overflow: visible;
+}*/
 
-.dropdown .dropbtn {
+/*.dropdown .dropbtn {
   font-size: 16px;
   border: none;
   outline: none;
@@ -101,7 +101,7 @@ a:visited{
 
 .dropdown:hover .dropdown-content {
   display: block;
-}
+}*/
 
 .filterButton, .filterButton:visited{
   text-decoration: none;

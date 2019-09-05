@@ -9,14 +9,14 @@ block content
     body
         .container
             include itemInfo
-            form#form(action='#{location}/newComputer', method='post')
+            form#form(action='#{location}/newComputer', method='post', novalidate, class="needs-validation")
 
                 br
                 .row
                     .col-25
                         label(for='icn') ICN:
                     .col-75
-                        input#icn(type='text', name='icn', placeholder='ICN' value='#{ICN}')
+                        input#icn(type='text', name='icn', placeholder='ICN', value='#{ICN}')
                 .row
                     .col-25
                         label(for='employee') Employee:
@@ -31,7 +31,7 @@ block content
                     .col-25
                         label(for='make') Make:
                     .col-75
-                        select#make.custom-select.sources(name='make', placeholder='Make' onchange='refreshModelOptions()')
+                        select#make.custom-select.sources(name='make', placeholder='Make', onchange='refreshModelOptions()')
                             each makeOption in makeOptions
                                 if(makeOption.Make === "None")
                                     option(value=makeOption.Make selected) #{makeOption.Make}
@@ -58,27 +58,27 @@ block content
                     .col-25
                         label(for='serialNumber') Serial Number:
                     .col-75
-                        input#serialNumber(type='text', name='serialNumber', placeholder='Serial Number')
+                        input#serialNumber(type='text', name='serialNumber', placeholder='Serial Number', class='form-control', required)
                 .row
                     .col-25
                         label(for='serviceTag') Service Tag:
                     .col-75
-                        input#serviceTag(type='text', name='serviceTag', placeholder='Service Tag')
+                        input#serviceTag(type='text', name='serviceTag', placeholder='Service Tag', class='form-control', required)
                 .row
                     .col-25
                         label(for='expressServiceCode') Express Service Code:
                     .col-75
-                        input#expressServiceCode(type='text', name='expressServiceCode', placeholder='Express Service Code')
+                        input#expressServiceCode(type='text', name='expressServiceCode', placeholder='Express Service Code', class='form-control', required)
                 .row
                     .col-25
                         label(for='dateAcquired') Date Acquired:
                     .col-75
-                        input#dateAcquired(type='date', name='dateAcquired', placeholder='YYYY-MM-DD' value='#{date}')
+                        input#dateAcquired(type='date', name='dateAcquired', placeholder='YYYY-MM-DD' value='#{date}', class='form-control', required)
                 .row
                     .col-25
                         label(for='warranty') Warranty:
                     .col-75
-                        input#warranty(type='date', name='warranty', placeholder='YYYY-MM-DD')
+                        input#warranty(type='date', name='warranty', placeholder='YYYY-MM-DD', class='form-control', required)
                 .row
                     .col-25
                         label(for='homeCheckout') Home Checkout:
@@ -97,40 +97,40 @@ block content
                     .col-25
                         label(for='screenResolution') Screen Resolution:
                     .col-75
-                        input#screenResolution(type='text' name='screenResolution', placeholder='3840x2160' required)
+                        input#screenResolution(type='text' name='screenResolution', placeholder='Ex. 3840x2160', class='form-control', required)
                 .row
                     .col-25
                         label(for='processorType') Processor Type:
                     .col-75
-                        select#processorType.custom-select.sources(name='processorType' onchange='newProcessorType();' required)
+                        select#processorType.custom-select.sources(name='processorType' onchange='newProcessorType();', required="true")
                             each processorType in processorTypeOptions
                                 option(value=processorType.ProcessorType) #{processorType.ProcessorType}
                 .row
                     .col-25
                         label(for='processorSpeed') Processor Speed:
                     .col-75
-                        select#processorSpeed.custom-select.sources(name='processorSpeed' onchange='newProcessorSpeed();' required)
+                        select#processorSpeed.custom-select.sources(name='processorSpeed' onchange='newProcessorSpeed();', required)
                             each processorSpeed in processorSpeedOptions
                                 option(value=processorSpeed.ProcessorSpeed) #{processorSpeed.ProcessorSpeed}
                 .row
                     .col-25
                         label(for='memory') Memory:
                     .col-75
-                        select#memory.custom-select.sources(name='memory' onchange='newMemory();' required)
+                        select#memory.custom-select.sources(name='memory' onchange='newMemory();', required)
                             each memory in memoryOptions
                                 option(value=memory.Memory) #{memory.Memory}
                 .row
                     .col-25
                         label(for='hardDrive') Hard Drive:
                     .col-75
-                        select#hardDrive.custom-select.sources(name='hardDrive' onchange='newHardDrive();' required)
+                        select#hardDrive.custom-select.sources(name='hardDrive' onchange='newHardDrive();', required)
                             each hardDrive in hardDriveOptions
                                 option(value=hardDrive.HardDrive) #{hardDrive.HardDrive}
                 .row
                     .col-25
                         label(for='graphicsCard') Graphics Card:
                     .col-75
-                        select#graphicsCard.custom-select.sources(name='graphicsCard' onchange='newGraphicsCard();' required)
+                        select#graphicsCard.custom-select.sources(name='graphicsCard' onchange='newGraphicsCard();', required)
                             each graphicsCard in graphicsCardOptions
                                 option(value=graphicsCard.VCName) #{graphicsCard.VCName}
                 .row
@@ -138,6 +138,68 @@ block content
                         label(for='notes') Notes:
                     .col-75
                         textarea#notes(name='notes', placeholder='Write something..', style='height:200px')
+
+
+
+        form(action='/',method='post',novalidate).needs-validation
+            fieldset
+                legend Enter your user info
+                p
+                    label
+                        | Name
+                        input(type='text',name='user[name]',placeholder='Enter your name',required)
+                p
+                    label
+                        | Email
+                        input(type='email',name='user[email]',placeholder='Enter your email',required)
+                p
+                    label
+                        | Password
+                        input(type='password',name='user[password]',placeholder='Enter your password',required)
+
+
+        button.btn.btn-primary(onclick='go();') Submit
+
+    script.
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict';
+            console.log("in funky")
+            window.addEventListener('change', function () {
+                // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                console.log(forms);
+                // Loop over them and prevent submission
+
+
+
+                var validation = Array.prototype.filter.call(forms, function (form) {
+
+                    var resolutionRegex = RegExp('[0-9]{3,4}x[0-9]{3,4}');
+                    var screenResolution = document.getElementById("screenResolution").value;
+
+                    //document.getElementById("screenResolution").addEventListener('change', function(event_){
+                        console.log("resolution = " + document.getElementById("screenResolution").value);
+                        console.log(resolutionRegex.test(screenResolution));
+                    //}, false);
+
+
+
+
+                    form.addEventListener('click', function (event) {
+                        if (form.checkValidity() === false) {
+                            console.log("false");
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+
+
+
     script.
         function goBack() {
             $("#cardInfo").css('display', 'block');
@@ -300,6 +362,8 @@ block content
         }
 
         function go() {
+            console.log("in")
+            $("#form").click();
             $("#form").submit();
 
         }
